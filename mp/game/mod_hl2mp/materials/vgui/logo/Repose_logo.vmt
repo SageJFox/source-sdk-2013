@@ -1,0 +1,5 @@
+"UnlitGeneric"
+{
+	$basetexture	"vgui/logo/repose_logo"
+	$translucent	1
+}

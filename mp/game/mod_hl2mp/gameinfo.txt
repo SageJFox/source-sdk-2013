@@ -1,18 +1,20 @@
 "GameInfo"
 {
-	game	"My First HL2MP Mod"
-	title	"HALF+LIFE'"
-	title2	"deathmatch mod"
+	game	"Repose"
+	title	""
+	title2	""
 	type multiplayer_only
-	nomodels 0
-	nohimodel 1
-	nocrosshair 1
+	gamelogo	1
+	nomodels		0
+	nohimodel	1
+	nocrosshair	1
+	icon		"resource/Repose"
 	hidden_maps
 	{
 		"test_speakers"		1
 		"test_hardware"		1
 	}
-	supportsvr	1
+	supportsvr	0
 
 
 	FileSystem
