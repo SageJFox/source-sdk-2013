@@ -645,7 +645,8 @@ public:
 	void EmitCloseCaption( IRecipientFilter& filter, int entindex, bool fromplayer, char const *token, CUtlVector< Vector >& originlist, float duration, bool warnifmissing /*= false*/ )
 	{
 		// No close captions in multiplayer...
-		if ( gpGlobals->maxClients > 1 || (gpGlobals->maxClients==1 && !g_pClosecaption->GetBool()))
+		//- REPOSE: Let there be close captions!
+		if (!g_pClosecaption->GetBool()) //( gpGlobals->maxClients > 1 || (gpGlobals->maxClients==1 && !g_pClosecaption->GetBool()))
 		{
 			return;
 		}
@@ -756,7 +757,8 @@ public:
 	void EmitCloseCaption( IRecipientFilter& filter, int entindex, const CSoundParameters & params, const EmitSound_t & ep )
 	{
 		// No close captions in multiplayer...
-		if ( gpGlobals->maxClients > 1 || (gpGlobals->maxClients==1 && !g_pClosecaption->GetBool()))
+		//- REPOSE: Let there be close captions!
+		if (!g_pClosecaption->GetBool()) //if ( gpGlobals->maxClients > 1 || (gpGlobals->maxClients==1 && !g_pClosecaption->GetBool()))
 		{
 			return;
 		}

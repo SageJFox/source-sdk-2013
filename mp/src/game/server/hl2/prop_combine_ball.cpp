@@ -706,10 +706,12 @@ void CPropCombineBall::WhizSoundThink()
 	pPhysicsObject->GetPosition( &vecPosition, NULL );
 	pPhysicsObject->GetVelocity( &vecVelocity, NULL );
 	
-	//if ( gpGlobals->maxClients == 1 )
+	// Handle all clients
+	for (int i = 1; i <= gpGlobals->maxClients; i++)
 	{
-		CBasePlayer *pPlayer = UTIL_GetNearestPlayer(this,true)/*UTIL_GetLocalPlayer()*/;
-		if ( pPlayer )
+		CBasePlayer *pPlayer = UTIL_PlayerByIndex(i);
+
+		if (pPlayer != NULL)
 		{
 			Vector vecDelta;
 			VectorSubtract( pPlayer->GetAbsOrigin(), vecPosition, vecDelta );

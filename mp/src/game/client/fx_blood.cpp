@@ -312,13 +312,14 @@ void FX_BloodBulletImpact( const Vector &origin, const Vector &normal, float sca
 	//Find area ambient light color and use it to tint smoke
 	Vector worldLight = WorldGetLightForPoint( origin, true );
 	
-	if ( gpGlobals->maxClients > 1 )
+	//- REPOSE: Hopefully this comment out just lets our blood use regular lighting and not horrendously break everything.
+	/*if ( gpGlobals->maxClients > 1 )
 	{
 		worldLight = Vector( 1.0, 1.0, 1.0 );
 		r = 96;
 		g = 0;
 		b = 10;
-	}
+	}*/
 
 	Vector color = Vector( (float)(worldLight[0] * r) / 255.0f, (float)(worldLight[1] * g) / 255.0f, (float)(worldLight[2] * b) / 255.0f );
 	float colorRamp;

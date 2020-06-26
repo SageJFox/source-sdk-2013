@@ -53,6 +53,11 @@ public:
 	bool	CanHolster( void );
 	bool	Reload( void );
 
+#ifndef CLIENT_DLL
+	int		CapabilitiesGet(void) { return bits_CAP_WEAPON_RANGE_ATTACK1; }
+#endif // !CLIENT_DLL
+
+
 	Activity	GetPrimaryAttackActivity( void );
 	
 	void	DoImpactEffect( trace_t &tr, int nDamageType );
@@ -74,6 +79,7 @@ public:
 #ifndef CLIENT_DLL
 	void	FireNPCPrimaryAttack(CBaseCombatCharacter *pOperator, bool bUseWeaponAngles);
 	void	FireNPCSecondaryAttack(CBaseCombatCharacter *pOperator, bool bUseWeaponAngles);
+	void	Operator_ForceNPCFire(CBaseCombatCharacter  *pOperator, bool bSecondary);
 	void	Operator_HandleAnimEvent(animevent_t *pEvent, CBaseCombatCharacter *pOperator);
 #endif
 

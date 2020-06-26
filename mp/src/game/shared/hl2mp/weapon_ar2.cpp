@@ -59,7 +59,7 @@ acttable_t	CWeaponAR2::m_acttable[] =
 	{ ACT_HL2MP_JUMP,					ACT_HL2MP_JUMP_AR2,					false },
 	{ ACT_RANGE_ATTACK1,				ACT_RANGE_ATTACK_AR2,				false },
 	//NPC
-	//{ ACT_RANGE_ATTACK1, ACT_RANGE_ATTACK_AR2, true },
+	//{ ACT_RANGE_ATTACK1,				ACT_RANGE_ATTACK_AR2,				true },
 	{ ACT_RELOAD,						ACT_RELOAD_SMG1,					true },		// FIXME: hook to AR2 unique
 	{ ACT_IDLE,							ACT_IDLE_SMG1,						true },		// FIXME: hook to AR2 unique
 	{ ACT_IDLE_ANGRY,					ACT_IDLE_ANGRY_SMG1,				true },		// FIXME: hook to AR2 unique
@@ -462,6 +462,24 @@ void CWeaponAR2::FireNPCSecondaryAttack(CBaseCombatCharacter *pOperator, bool bU
 		sk_weapon_ar2_alt_fire_mass.GetFloat(),
 		flDuration,
 		pNPC);
+}
+
+//-----------------------------------------------------------------------------
+// Purpose: 
+//-----------------------------------------------------------------------------
+void CWeaponAR2::Operator_ForceNPCFire(CBaseCombatCharacter *pOperator, bool bSecondary)
+{
+	if (bSecondary)
+	{
+		FireNPCSecondaryAttack(pOperator, true);
+	}
+	else
+	{
+		// Ensure we have enough rounds in the clip
+		m_iClip1++;
+
+		FireNPCPrimaryAttack(pOperator, true);
+	}
 }
 
 //-----------------------------------------------------------------------------
