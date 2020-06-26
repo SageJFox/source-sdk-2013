@@ -400,7 +400,7 @@ bool CGib::SUB_AllowedToFade( void )
 			return false;
 	}
 
-	CBasePlayer *pPlayer = ( AI_IsSinglePlayer() ) ? UTIL_GetLocalPlayer() : NULL;
+	CBasePlayer *pPlayer = UTIL_GetNearestPlayer(this,true); //TODO: move this check to cycling through all players, not just nearest!
 
 	if ( pPlayer && pPlayer->FInViewCone( this ) && m_bForceRemove == false )
 	{

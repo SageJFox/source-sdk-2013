@@ -4362,7 +4362,7 @@ void CFuncTankCombineCannon::Fire( int bulletCount, const Vector &barrelEnd, con
 void CFuncTankCombineCannon::MakeTracer( const Vector &vecTracerSrc, const trace_t &tr, int iTracerType )
 {
 	// If the shot passed near the player, shake the screen.
-	if( AI_IsSinglePlayer() )
+	if( AI_IsSinglePlayer() ) //TODO: iterate through list of players
 	{
 		Vector vecPlayer = AI_GetSinglePlayer()->EyePosition();
 

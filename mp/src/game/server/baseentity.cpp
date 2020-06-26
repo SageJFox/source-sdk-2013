@@ -1577,7 +1577,7 @@ int CBaseEntity::VPhysicsTakeDamage( const CTakeDamageInfo &info )
 		if ( gameFlags & FVPHYSICS_PLAYER_HELD )
 		{
 			// if the player is holding the object, use it's real mass (player holding reduced the mass)
-			CBasePlayer *pPlayer = UTIL_GetLocalPlayer();
+			CBasePlayer *pPlayer = UTIL_GetNearestPlayer(this)/*UTIL_GetLocalPlayer()*/;
 			if ( pPlayer )
 			{
 				float mass = pPlayer->GetHeldObjectMass( VPhysicsGetObject() );
@@ -6648,7 +6648,7 @@ void CBaseEntity::DispatchResponse( const char *conceptName )
 	ModifyOrAppendCriteria( set );
 
 	// Append local player criteria to set,too
-	CBasePlayer *pPlayer = UTIL_GetLocalPlayer();
+	CBasePlayer *pPlayer = UTIL_GetNearestPlayer(this,true)/*UTIL_GetLocalPlayer()*/;
 	if( pPlayer )
 		pPlayer->ModifyOrAppendPlayerCriteria( set );
 
@@ -6707,7 +6707,7 @@ void CBaseEntity::DumpResponseCriteria( void )
 	ModifyOrAppendCriteria( set );
 
 	// Append local player criteria to set,too
-	CBasePlayer *pPlayer = UTIL_GetLocalPlayer();
+	CBasePlayer *pPlayer = UTIL_GetNearestPlayer(this,true)/*UTIL_GetLocalPlayer()*/;
 	if ( pPlayer )
 	{
 		pPlayer->ModifyOrAppendPlayerCriteria( set );

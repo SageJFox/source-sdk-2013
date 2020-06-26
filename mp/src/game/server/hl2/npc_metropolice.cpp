@@ -3951,8 +3951,8 @@ float CNPC_MetroPolice::GetIdealAccel( void ) const
 //-----------------------------------------------------------------------------
 void CNPC_MetroPolice::AdministerJustice( void )
 {
-	if ( !AI_IsSinglePlayer() )
-		return;
+	/*if ( !AI_IsSinglePlayer() )
+		return;*/
 
 	// If we're allowed to chase the player, do so. Otherwise, just threaten.
 	if ( !IsInAScript() && (m_NPCState != NPC_STATE_SCRIPT) && HasSpawnFlags( SF_METROPOLICE_ALLOWED_TO_RESPOND ) )

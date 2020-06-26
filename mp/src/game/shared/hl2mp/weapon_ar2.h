@@ -17,6 +17,11 @@
 #include "basegrenade_shared.h"
 #include "weapon_hl2mpbase_machinegun.h"
 
+#ifndef CLIENT_DLL
+#include "npc_combine.h"
+#endif // !CLIENT_DLL
+
+
 #ifdef CLIENT_DLL
 #define CWeaponAR2 C_WeaponAR2
 #endif
@@ -65,6 +70,12 @@ public:
 	}
 	
 	const WeaponProficiencyInfo_t *GetProficiencyValues();
+
+#ifndef CLIENT_DLL
+	void	FireNPCPrimaryAttack(CBaseCombatCharacter *pOperator, bool bUseWeaponAngles);
+	void	FireNPCSecondaryAttack(CBaseCombatCharacter *pOperator, bool bUseWeaponAngles);
+	void	Operator_HandleAnimEvent(animevent_t *pEvent, CBaseCombatCharacter *pOperator);
+#endif
 
 private:
 	CWeaponAR2( const CWeaponAR2 & );

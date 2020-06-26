@@ -641,7 +641,7 @@ void CAI_BaseNPC::Event_Killed( const CTakeDamageInfo &info )
 void CAI_BaseNPC::Ignite( float flFlameLifetime, bool bNPCOnly, float flSize, bool bCalledByLevelDesigner )
 {
 	BaseClass::Ignite( flFlameLifetime, bNPCOnly, flSize, bCalledByLevelDesigner );
-
+/*
 #ifdef HL2_EPISODIC
 	CBasePlayer *pPlayer = AI_GetSinglePlayer();
 	if ( pPlayer->IRelationType( this ) != D_LI )
@@ -654,6 +654,7 @@ void CAI_BaseNPC::Ignite( float flFlameLifetime, bool bNPCOnly, float flSize, bo
 		}
 	}
 #endif
+//*/
 }
 
 //-----------------------------------------------------------------------------
@@ -4810,14 +4811,14 @@ void CAI_BaseNPC::RunAI( void )
 		}
 	}
 
-	if( ai_debug_loners.GetBool() && !IsInSquad() && AI_IsSinglePlayer() )
+	if( ai_debug_loners.GetBool() && !IsInSquad() /*&& AI_IsSinglePlayer()*/ )
 	{
 		Vector right;
 		Vector vecPoint;
 
 		vecPoint = EyePosition() + Vector( 0, 0, 12 );
 
-		UTIL_GetLocalPlayer()->GetVectors( NULL, &right, NULL );
+		UTIL_GetNearestPlayer(this)/*UTIL_GetLocalPlayer()*/->GetVectors(NULL, &right, NULL);
 
 		NDebugOverlay::Line( vecPoint, vecPoint + Vector( 0, 0, 64 ), 255, 0, 0, false , 0.1 );
 		NDebugOverlay::Line( vecPoint, vecPoint + Vector( 0, 0, 32 ) + right * 32, 255, 0, 0, false , 0.1 );
@@ -11386,6 +11387,8 @@ CAI_BaseNPC::CAI_BaseNPC(void)
 	m_bInChoreo = true; // assume so until call to UpdateEfficiency()
 	
 	SetCollisionGroup( COLLISION_GROUP_NPC );
+
+	m_LagTrack = new CUtlFixedLinkedList< LagRecordNPC >();
 }
 
 //-----------------------------------------------------------------------------
@@ -11395,6 +11398,9 @@ CAI_BaseNPC::CAI_BaseNPC(void)
 //-----------------------------------------------------------------------------
 CAI_BaseNPC::~CAI_BaseNPC(void)
 {
+	
+	m_LagTrack->Purge();
+	delete m_LagTrack;
 	g_AI_Manager.RemoveAI( this );
 
 	delete m_pLockedBestSound;
@@ -11916,7 +11922,7 @@ bool CAI_BaseNPC::CineCleanup()
 			{
 				SetLocalOrigin( origin );
 
-				int drop = UTIL_DropToFloor( this, MASK_NPCSOLID, UTIL_GetLocalPlayer() );
+				int drop = UTIL_DropToFloor(this, MASK_NPCSOLID, UTIL_GetNearestPlayer(this)/*UTIL_GetLocalPlayer()*/); //TODO: What? Why are we looking at the player at all here?
 
 				// Origin in solid?  Set to org at the end of the sequence
 				if ( ( drop < 0 ) || sv_test_scripted_sequences.GetBool() )
@@ -12523,17 +12529,17 @@ void DevMsg( CAI_BaseNPC *pAI, const char *pszFormat, ... )
 
 //-----------------------------------------------------------------------------
 
-bool CAI_BaseNPC::IsPlayerAlly( CBasePlayer *pPlayer )											
+bool CAI_BaseNPC::IsPlayerAlly(CBasePlayer *pPlayer)
 { 
 	if ( pPlayer == NULL )
 	{
 		// in multiplayer mode we need a valid pPlayer 
 		// or override this virtual function
-		if ( !AI_IsSinglePlayer() )
-			return false;
+		//if ( !AI_IsSinglePlayer() )
+		//	return false;
 
 		// NULL means single player mode
-		pPlayer = UTIL_GetLocalPlayer();
+		pPlayer = UTIL_GetNearestPlayer(this)/*UTIL_GetLocalPlayer()*/;
 	}
 
 	return ( !pPlayer || IRelationType( pPlayer ) == D_LI ); 

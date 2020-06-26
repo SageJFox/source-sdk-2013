@@ -291,8 +291,8 @@ void CItem_DynamicResupply::InputKill( inputdata_t &data )
 //-----------------------------------------------------------------------------
 void CItem_DynamicResupply::InputCalculateType( inputdata_t &data )
 {
-	CBasePlayer *pPlayer = UTIL_GetLocalPlayer();
-	SpawnDynamicItem( pPlayer );
+	CBasePlayer *pPlayer = UTIL_GetNearestPlayer(this,true)/*UTIL_GetLocalPlayer()*/;
+	if(pPlayer)SpawnDynamicItem( pPlayer );
 }
 
 //-----------------------------------------------------------------------------

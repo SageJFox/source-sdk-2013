@@ -62,29 +62,29 @@ END_DATADESC()
 
 const char *g_ppszRandomCitizenModels[] = 
 {
-	"models/humans/group03/male_01.mdl",
-	"models/humans/group03/male_02.mdl",
-	"models/humans/group03/female_01.mdl",
-	"models/humans/group03/male_03.mdl",
-	"models/humans/group03/female_02.mdl",
-	"models/humans/group03/male_04.mdl",
-	"models/humans/group03/female_03.mdl",
-	"models/humans/group03/male_05.mdl",
-	"models/humans/group03/female_04.mdl",
-	"models/humans/group03/male_06.mdl",
-	"models/humans/group03/female_06.mdl",
-	"models/humans/group03/male_07.mdl",
-	"models/humans/group03/female_07.mdl",
-	"models/humans/group03/male_08.mdl",
-	"models/humans/group03/male_09.mdl",
+	"models/players/male_01.mdl",
+	"models/players/male_02.mdl",
+	"models/players/female_01.mdl",
+	"models/players/male_03.mdl",
+	"models/players/female_02.mdl",
+	"models/players/male_04.mdl",
+	"models/players/female_03.mdl",
+	"models/players/male_05.mdl",
+	"models/players/female_04.mdl",
+	"models/players/male_06.mdl",
+	"models/players/female_06.mdl",
+	"models/players/male_07.mdl",
+	"models/players/female_07.mdl",
+	"models/players/male_08.mdl",
+	"models/players/male_09.mdl",
 };
 
 const char *g_ppszRandomCombineModels[] =
 {
-	"models/combine_soldier.mdl",
-	"models/combine_soldier_prisonguard.mdl",
-	"models/combine_super_soldier.mdl",
-	"models/police.mdl",
+	"models/players/combine_soldier.mdl",
+	"models/players/combine_soldier_prisonguard.mdl",
+	"models/players/combine_super_soldier.mdl",
+	"models/players/police.mdl",
 };
 
 
@@ -247,7 +247,7 @@ void CHL2MP_Player::PickDefaultSpawnTeam( void )
 				{
 					char szReturnString[512];
 
-					Q_snprintf( szReturnString, sizeof (szReturnString ), "cl_playermodel models/combine_soldier.mdl\n" );
+					Q_snprintf( szReturnString, sizeof (szReturnString ), "cl_playermodel models/players/combine_soldier.mdl\n" );
 					engine->ClientCommand ( edict(), szReturnString );
 				}
 
@@ -373,7 +373,7 @@ void CHL2MP_Player::SetPlayerTeamModel( void )
 
 	if ( modelIndex == -1 || ValidatePlayerModel( szModelName ) == false )
 	{
-		szModelName = "models/Combine_Soldier.mdl";
+		szModelName = "models/players/Combine_Soldier.mdl";
 		m_iModelType = TEAM_COMBINE;
 
 		char szReturnString[512];
@@ -384,7 +384,7 @@ void CHL2MP_Player::SetPlayerTeamModel( void )
 
 	if ( GetTeamNumber() == TEAM_COMBINE )
 	{
-		if ( Q_stristr( szModelName, "models/human") )
+		if (Q_stristr(szModelName, "male"))
 		{
 			int nHeads = ARRAYSIZE( g_ppszRandomCombineModels );
 		
@@ -396,7 +396,7 @@ void CHL2MP_Player::SetPlayerTeamModel( void )
 	}
 	else if ( GetTeamNumber() == TEAM_REBELS )
 	{
-		if ( !Q_stristr( szModelName, "models/human") )
+		if (!Q_stristr(szModelName, "male"))
 		{
 			int nHeads = ARRAYSIZE( g_ppszRandomCitizenModels );
 
@@ -426,7 +426,7 @@ void CHL2MP_Player::SetPlayerModel( void )
 
 		if ( ValidatePlayerModel( pszCurrentModelName ) == false )
 		{
-			pszCurrentModelName = "models/Combine_Soldier.mdl";
+			pszCurrentModelName = "models/players/Combine_Soldier.mdl";
 		}
 
 		Q_snprintf( szReturnString, sizeof (szReturnString ), "cl_playermodel %s\n", pszCurrentModelName );
@@ -460,7 +460,7 @@ void CHL2MP_Player::SetPlayerModel( void )
 			szModelName = g_ppszRandomCitizenModels[0];
 		}
 
-		if ( Q_stristr( szModelName, "models/human") )
+		if (Q_stristr(szModelName, "male"))
 		{
 			m_iModelType = TEAM_REBELS;
 		}
@@ -474,7 +474,7 @@ void CHL2MP_Player::SetPlayerModel( void )
 
 	if ( modelIndex == -1 )
 	{
-		szModelName = "models/Combine_Soldier.mdl";
+		szModelName = "models/players/Combine_Soldier.mdl";
 		m_iModelType = TEAM_COMBINE;
 
 		char szReturnString[512];
@@ -491,7 +491,7 @@ void CHL2MP_Player::SetPlayerModel( void )
 
 void CHL2MP_Player::SetupPlayerSoundsByModel( const char *pModelName )
 {
-	if ( Q_stristr( pModelName, "models/human") )
+	if (Q_stristr(pModelName, "male"))
 	{
 		m_iPlayerSoundType = (int)PLAYER_SOUNDS_CITIZEN;
 	}
@@ -616,40 +616,14 @@ void CHL2MP_Player::NoteWeaponFired( void )
 
 extern ConVar sv_maxunlag;
 
-bool CHL2MP_Player::WantsLagCompensationOnEntity( const CBasePlayer *pPlayer, const CUserCmd *pCmd, const CBitVec<MAX_EDICTS> *pEntityTransmitBits ) const
+bool CHL2MP_Player::WantsLagCompensationOnEntity( const CBaseEntity *pEntity, const CUserCmd *pCmd, const CBitVec<MAX_EDICTS> *pEntityTransmitBits ) const
 {
 	// No need to lag compensate at all if we're not attacking in this command and
 	// we haven't attacked recently.
 	if ( !( pCmd->buttons & IN_ATTACK ) && (pCmd->command_number - m_iLastWeaponFireUsercmd > 5) )
 		return false;
 
-	// If this entity hasn't been transmitted to us and acked, then don't bother lag compensating it.
-	if ( pEntityTransmitBits && !pEntityTransmitBits->Get( pPlayer->entindex() ) )
-		return false;
-
-	const Vector &vMyOrigin = GetAbsOrigin();
-	const Vector &vHisOrigin = pPlayer->GetAbsOrigin();
-
-	// get max distance player could have moved within max lag compensation time, 
-	// multiply by 1.5 to to avoid "dead zones"  (sqrt(2) would be the exact value)
-	float maxDistance = 1.5 * pPlayer->MaxSpeed() * sv_maxunlag.GetFloat();
-
-	// If the player is within this distance, lag compensate them in case they're running past us.
-	if ( vHisOrigin.DistTo( vMyOrigin ) < maxDistance )
-		return true;
-
-	// If their origin is not within a 45 degree cone in front of us, no need to lag compensate.
-	Vector vForward;
-	AngleVectors( pCmd->viewangles, &vForward );
-	
-	Vector vDiff = vHisOrigin - vMyOrigin;
-	VectorNormalize( vDiff );
-
-	float flCosAngle = 0.707107f;	// 45 degree angle
-	if ( vForward.Dot( vDiff ) < flCosAngle )
-		return false;
-
-	return true;
+	return BaseClass::WantsLagCompensationOnEntity(pEntity, pCmd, pEntityTransmitBits);
 }
 
 Activity CHL2MP_Player::TranslateTeamActivity( Activity ActToTranslate )

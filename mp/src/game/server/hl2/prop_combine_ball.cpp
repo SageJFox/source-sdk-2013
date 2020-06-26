@@ -706,9 +706,9 @@ void CPropCombineBall::WhizSoundThink()
 	pPhysicsObject->GetPosition( &vecPosition, NULL );
 	pPhysicsObject->GetVelocity( &vecVelocity, NULL );
 	
-	if ( gpGlobals->maxClients == 1 )
+	//if ( gpGlobals->maxClients == 1 )
 	{
-		CBasePlayer *pPlayer = UTIL_GetLocalPlayer();
+		CBasePlayer *pPlayer = UTIL_GetNearestPlayer(this,true)/*UTIL_GetLocalPlayer()*/;
 		if ( pPlayer )
 		{
 			Vector vecDelta;
