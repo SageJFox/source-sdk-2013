@@ -302,6 +302,8 @@ void CHL2MP_Player::Spawn(void)
 		RemoveEffects( EF_NODRAW );
 		
 		GiveDefaultItems();
+		statBasesInit();
+		statBaseInit(BASETYPE_PLAYER);
 	}
 
 	SetNumAnimOverlays( 3 );

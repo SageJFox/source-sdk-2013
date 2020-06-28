@@ -19,6 +19,7 @@ class CHL2MP_Player;
 #include "hl2mp_player_shared.h"
 #include "hl2mp_gamerules.h"
 #include "utldict.h"
+#include "repose_stats.h"
 
 //=============================================================================
 // >> HL2MP_Player
@@ -35,7 +36,7 @@ public:
 	void (CHL2MP_Player::*pfnPreThink)();	// Do a PreThink() in this state.
 };
 
-class CHL2MP_Player : public CHL2_Player
+class CHL2MP_Player : public CHL2_Player, public CReposeStats
 {
 public:
 	DECLARE_CLASS( CHL2MP_Player, CHL2_Player );
