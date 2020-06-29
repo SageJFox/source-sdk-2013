@@ -13,11 +13,12 @@ class C_HL2MP_Player;
 #include "c_basehlplayer.h"
 #include "hl2mp_player_shared.h"
 #include "beamdraw.h"
+#include "repose_stats.h"
 
 //=============================================================================
 // >> HL2MP_Player
 //=============================================================================
-class C_HL2MP_Player : public C_BaseHLPlayer
+class C_HL2MP_Player : public C_BaseHLPlayer, public CReposeStats
 {
 public:
 	DECLARE_CLASS( C_HL2MP_Player, C_BaseHLPlayer );

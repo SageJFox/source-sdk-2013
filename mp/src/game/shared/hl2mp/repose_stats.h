@@ -18,9 +18,9 @@ public:
 	{
 		STR,
 		DEX,
-		CON,
+		//CON,
 		INT,
-		WIS,
+		//WIS,
 		CHA,
 		STAT_COUNT,
 	};
@@ -42,6 +42,7 @@ public:
 	int calcStat(int);
 	void addToStatBase(int, int);
 	int checkStat(int);
+	int checkMod(int stat) { return modifiers[stat]; }
 	void checkStats(void);
 	void checkStatBase(int);
 

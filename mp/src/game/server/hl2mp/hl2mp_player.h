@@ -36,7 +36,7 @@ public:
 	void (CHL2MP_Player::*pfnPreThink)();	// Do a PreThink() in this state.
 };
 
-class CHL2MP_Player : public CHL2_Player, public CReposeStats
+class CHL2MP_Player : public CHL2_Player//, public CReposeStats
 {
 public:
 	DECLARE_CLASS( CHL2MP_Player, CHL2_Player );
@@ -138,6 +138,8 @@ public:
 
 	virtual bool	CanHearAndReadChatFrom( CBasePlayer *pPlayer );
 
+	void SetHealthMax(int h) { m_iHealthMax = h; }
+
 		
 private:
 
@@ -164,6 +166,8 @@ private:
 
     bool m_bEnterObserver;
 	bool m_bReady;
+
+	int m_iHealthMax;
 };
 
 inline CHL2MP_Player *ToHL2MPPlayer( CBaseEntity *pEntity )

@@ -304,6 +304,9 @@ void CHL2MP_Player::Spawn(void)
 		GiveDefaultItems();
 		statBasesInit();
 		statBaseInit(BASETYPE_PLAYER);
+		//set max health by CON
+		SetHealthMax(100 + (checkMod(STR/*CON*/) * 10));
+		m_iHealth = m_iMaxHealth = m_iHealthMax;
 	}
 
 	SetNumAnimOverlays( 3 );

@@ -76,7 +76,9 @@ void CReposeStats::calcMod(int stat)
 {
 	int statClean = checkStat(stat);
 	int& modRef = modifiers[stat];
-	modRef = (statClean - 10) / 2;
+	statClean -= 10;
+	statClean % 2 ? statClean-- : +statClean;
+	modRef = statClean / 2;
 }
 
 //Make sure one particular stat is in its usual bounds.
@@ -97,10 +99,10 @@ int CReposeStats::checkStat(int stat)
 		case DEX:
 			//TODO: DEX 0: unconsious (ragdoll [spasm]). Should it lead to death, or recovery?
 			break;
-		case CON:
+		//case CON:
 			//TODO: CON 0: death
 			break;
-		case WIS:
+		//case WIS:
 			//TODO: INT 0: unconsious (ragdoll)
 			break;
 		case INT:
@@ -193,14 +195,14 @@ void CReposeStats::dumpStat(int stat, int devLevel)
 	case DEX:
 		DevMsg("DEX:", devLevel);
 		break;
-	case CON:
-		DevMsg("CON:", devLevel);
+	//case CON:
+		//DevMsg("CON:", devLevel);
 		break;
 	case INT:
 		DevMsg("INT:", devLevel);
 		break;
-	case WIS:
-		DevMsg("WIS:", devLevel);
+	//case WIS:
+		//DevMsg("WIS:", devLevel);
 		break;
 	case CHA:
 		DevMsg("CHA:", devLevel);

@@ -14,6 +14,7 @@
 #include "hl2_playerlocaldata.h"
 #include "simtimer.h"
 #include "soundenvelope.h"
+#include "repose_stats.h"
 
 class CAI_Squad;
 class CPropCombineBall;
@@ -53,7 +54,7 @@ struct commandgoal_t
 
 //=============================================================================
 //=============================================================================
-class CSuitPowerDevice
+class CSuitPowerDevice : public CReposeStats
 {
 public:
 	CSuitPowerDevice( int bitsID, float flDrainRate ) { m_bitsDeviceID = bitsID; m_flDrainRate = flDrainRate; }
@@ -65,17 +66,16 @@ public:
 	int		GetDeviceID( void ) const { return m_bitsDeviceID; }
 	float	GetDeviceDrainRate( void ) const
 	{	
-		if( g_pGameRules->GetSkillLevel() == SKILL_EASY && hl2_episodic.GetBool() && !(GetDeviceID()&bits_SUIT_DEVICE_SPRINT) )
+		if (g_pGameRules->GetSkillLevel() == SKILL_EASY && hl2_episodic.GetBool() && !(GetDeviceID()&bits_SUIT_DEVICE_SPRINT))
 			return m_flDrainRate * 0.5f;
-		else
-			return m_flDrainRate; 
+		else	return m_flDrainRate; 
 	}
 };
 
 //=============================================================================
 // >> HL2_PLAYER
 //=============================================================================
-class CHL2_Player : public CBasePlayer
+class CHL2_Player : public CBasePlayer, public CReposeStats
 {
 public:
 	DECLARE_CLASS( CHL2_Player, CBasePlayer );

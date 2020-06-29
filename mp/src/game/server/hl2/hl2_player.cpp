@@ -46,6 +46,7 @@
 #include "gamestats.h"
 #include "filters.h"
 #include "tier0/icommandline.h"
+#include "repose_stats.h"
 
 #ifdef HL2_EPISODIC
 #include "npc_alyx_episodic.h"
@@ -403,7 +404,7 @@ CHL2_Player::CHL2_Player()
 #define SUITPOWER_CHARGE_RATE	12.5											// 100 units in 8 seconds
 
 #ifdef HL2MP
-	CSuitPowerDevice SuitDeviceSprint( bits_SUIT_DEVICE_SPRINT, 25.0f );				// 100 units in 4 seconds
+	CSuitPowerDevice SuitDeviceSprint(bits_SUIT_DEVICE_SPRINT, 20.0f); //100 units in 5 seconds			// 25.0f );				// 100 units in 4 seconds
 #else
 	CSuitPowerDevice SuitDeviceSprint( bits_SUIT_DEVICE_SPRINT, 12.5f );				// 100 units in 8 seconds
 #endif
@@ -1786,7 +1787,10 @@ void CHL2_Player::SuitPower_Update( void )
 {
 	if( SuitPower_ShouldRecharge() )
 	{
-		SuitPower_Charge( SUITPOWER_CHARGE_RATE * gpGlobals->frametime );
+		//REPOSE: Speed up/slow down recharge rate based on DEX
+		float rate = float(checkMod(DEX));
+		rate > 0 ? rate *= 2.0f : rate *= 1.7f; //nerf effects of rate for negative stats so they aren't quite such a terrible drain
+		SuitPower_Charge( (SUITPOWER_CHARGE_RATE + rate) * gpGlobals->frametime );
 	}
 	else if( m_HL2Local.m_bitsActiveDevices )
 	{
@@ -1917,6 +1921,19 @@ bool CHL2_Player::SuitPower_AddDevice( const CSuitPowerDevice &device )
 
 	m_HL2Local.m_bitsActiveDevices |= device.GetDeviceID();
 	m_flSuitPowerLoad += device.GetDeviceDrainRate();
+	//REPOSE: Drain more/less quickly based on DEX
+	if (device.GetDeviceID()&bits_SUIT_DEVICE_SPRINT)
+	{
+		int loops = -checkMod(DEX);
+		float rate;
+		if (loops <= 0) rate = float(loops) * 1.75f;
+		else
+		{
+			rate = 2.0f;
+			while (--loops > 0) rate *= 2.0f;
+		}
+		m_flSuitPowerLoad += rate;
+	}
 	return true;
 }
 
@@ -1966,7 +1983,10 @@ bool CHL2_Player::SuitPower_ShouldRecharge( void )
 
 	// Has the system been in a no-load state for long enough
 	// to begin recharging?
-	if( gpGlobals->curtime < m_flTimeAllSuitDevicesOff + SUITPOWER_BEGIN_RECHARGE_DELAY )
+	//REPOSE: add to/subtract from recharge delay based on DEX
+	float rate = float(checkMod(DEX));
+	rate > 0 ? rate *= -0.05f : rate *= -0.15f; //reduce wait time to recharge for high dex, delay it for low.
+	if( gpGlobals->curtime < m_flTimeAllSuitDevicesOff + SUITPOWER_BEGIN_RECHARGE_DELAY + rate)
 		return false;
 
 	return true;

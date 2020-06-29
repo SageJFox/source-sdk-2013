@@ -39,6 +39,7 @@ END_PREDICTION_DATA()
 #define	HL2_WALK_SPEED 150
 #define	HL2_NORM_SPEED 190
 #define	HL2_SPRINT_SPEED 320
+#define DEX_INCREMENT 15.0f
 
 static ConVar cl_playermodel( "cl_playermodel", "none", FCVAR_USERINFO | FCVAR_ARCHIVE | FCVAR_SERVER_CAN_EXECUTE, "Default Player Model");
 static ConVar cl_defaultweapon( "cl_defaultweapon", "weapon_physcannon", FCVAR_USERINFO | FCVAR_ARCHIVE, "Default Spawn Weapon");
@@ -580,7 +581,7 @@ void C_HL2MP_Player::StartSprinting( void )
 	filter.UsePredictionRules();
 	EmitSound( filter, entindex(), "HL2Player.SprintStart" );
 
-	SetMaxSpeed( HL2_SPRINT_SPEED );
+	SetMaxSpeed(HL2_SPRINT_SPEED + (DEX_INCREMENT * checkMod(DEX)));
 	m_fIsSprinting = true;
 }
 
@@ -589,7 +590,7 @@ void C_HL2MP_Player::StartSprinting( void )
 //-----------------------------------------------------------------------------
 void C_HL2MP_Player::StopSprinting( void )
 {
-	SetMaxSpeed( HL2_NORM_SPEED );
+	SetMaxSpeed(HL2_NORM_SPEED + (DEX_INCREMENT * checkMod(DEX)));
 	m_fIsSprinting = false;
 }
 
@@ -644,7 +645,7 @@ void C_HL2MP_Player::HandleSpeedChanges( void )
 //-----------------------------------------------------------------------------
 void C_HL2MP_Player::StartWalking( void )
 {
-	SetMaxSpeed( HL2_WALK_SPEED );
+	SetMaxSpeed( HL2_WALK_SPEED + (DEX_INCREMENT * checkMod(DEX)));
 	m_fIsWalking = true;
 }
 
@@ -652,7 +653,7 @@ void C_HL2MP_Player::StartWalking( void )
 //-----------------------------------------------------------------------------
 void C_HL2MP_Player::StopWalking( void )
 {
-	SetMaxSpeed( HL2_NORM_SPEED );
+	SetMaxSpeed(HL2_NORM_SPEED + (DEX_INCREMENT * checkMod(DEX)));
 	m_fIsWalking = false;
 }
 
