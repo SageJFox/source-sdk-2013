@@ -826,7 +826,8 @@ Class_T	CNPC_Citizen::Classify()
 	if (GlobalEntity_GetState("citizens_passive") == GLOBAL_ON)
 		return CLASS_CITIZEN_PASSIVE;
 
-	return CLASS_PLAYER_ALLY;
+	//REPOSE: most citizens aren't allies, don't automatically make them so.
+	return CLASS_CITIZEN_REBEL; //CLASS_PLAYER_ALLY;
 }
 
 //-----------------------------------------------------------------------------
@@ -1348,13 +1349,14 @@ int CNPC_Citizen::SelectScheduleRetrieveItem()
 
 	if( HasCondition(COND_HEALTH_ITEM_AVAILABLE) )
 	{
-		if( !IsInPlayerSquad() )
+		//REPOSE: citizens allowed to take kits outside of player squad
+		/*if( !IsInPlayerSquad() )
 		{
 			// Been kicked out of the player squad since the time I located the health.
 			ClearCondition( COND_HEALTH_ITEM_AVAILABLE );
 		}
 		else
-		{
+		{ */
 			CBaseEntity *pBase = FindHealthItem(m_FollowBehavior.GetFollowTarget()->GetAbsOrigin(), Vector( 120, 120, 120 ) );
 			CItem *pItem = dynamic_cast<CItem *>(pBase);
 
@@ -1363,7 +1365,7 @@ int CNPC_Citizen::SelectScheduleRetrieveItem()
 				SetTarget( pItem );
 				return SCHED_GET_HEALTHKIT;
 			}
-		}
+		//}
 	}
 	return SCHED_NONE;
 }
@@ -4274,3 +4276,6 @@ int CNPC_Citizen::DrawDebugTextOverlays( void )
 	}
 	return text_offset;
 }
+
+//REPOSE
+

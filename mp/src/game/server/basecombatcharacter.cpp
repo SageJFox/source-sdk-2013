@@ -1162,7 +1162,7 @@ bool CTraceFilterMelee::ShouldHitEntity( IHandleEntity *pHandleEntity, int conte
 		if ( pBCC && pVictimBCC )
 		{
 			// Can only damage other NPCs that we hate
-			if ( m_bDamageAnyNPC || pBCC->IRelationType( pEntity ) == D_HT )
+			if (m_bDamageAnyNPC || pBCC->IRelationType(pEntity) <= D_FR) //fix so we can melee targets that we fear as well
 			{
 				if ( info.GetDamage() )
 				{

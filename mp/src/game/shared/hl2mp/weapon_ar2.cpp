@@ -337,7 +337,7 @@ void CWeaponAR2::AddViewKick( void )
 	//Get the view kick
 	CBasePlayer *pPlayer = ToBasePlayer( GetOwner() );
 
-	if (!pPlayer)
+	if (pPlayer == NULL)
 		return;
 
 	DoMachineGunKick( pPlayer, EASY_DAMPEN, MAX_VERTICAL_KICK, m_fFireDuration, SLIDE_LIMIT );

@@ -1926,7 +1926,7 @@ bool CHL2_Player::SuitPower_AddDevice( const CSuitPowerDevice &device )
 	{
 		int loops = -checkMod(DEX);
 		float rate;
-		if (loops <= 0) rate = float(loops) * 1.75f;
+		if (loops <= 0) rate = float(loops) * 1.5f;
 		else
 		{
 			rate = 2.0f;
@@ -1958,8 +1958,23 @@ bool CHL2_Player::SuitPower_RemoveDevice( const CSuitPowerDevice &device )
 	m_HL2Local.m_bitsActiveDevices &= ~device.GetDeviceID();
 	m_flSuitPowerLoad -= device.GetDeviceDrainRate();
 
+	//REPOSE: Matches adjustments made above to remove the adjusted drain
+	if (device.GetDeviceID()&bits_SUIT_DEVICE_SPRINT)
+	{
+		int loops = -checkMod(DEX);
+		float rate;
+		if (loops <= 0) rate = float(loops) * 1.5f;
+		else
+		{
+			rate = 2.0f;
+			while (--loops > 0) rate *= 2.0f;
+		}
+		m_flSuitPowerLoad -= rate;
+	}
+
 	if( m_HL2Local.m_bitsActiveDevices == 0x00000000 )
 	{
+		m_flSuitPowerLoad = 0.0f; //REPOSE: safety added to make sure our drain is properly reset when no devices are in use
 		// With this device turned off, we can set this timer which tells us when the
 		// suit power system entered a no-load state.
 		m_flTimeAllSuitDevicesOff = gpGlobals->curtime;
