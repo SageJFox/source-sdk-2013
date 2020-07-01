@@ -1350,13 +1350,17 @@ int CNPC_Citizen::SelectScheduleRetrieveItem()
 	if( HasCondition(COND_HEALTH_ITEM_AVAILABLE) )
 	{
 		//REPOSE: citizens allowed to take kits outside of player squad
-		/*if( !IsInPlayerSquad() )
+	//REPOSE FIXME: disabling this check causes an instant crash if a citizen outside of the player squad is injured and in the presence of a healthkit.
+	//Citizens in the player's squad don't go after healthkits either way, and don't crash.
+	//We're likely going to be using our own health kit weapon anyway but allowing the citizen-derived units to interact with them would be nice.
+		//*
+		if( !IsInPlayerSquad() )
 		{
 			// Been kicked out of the player squad since the time I located the health.
 			ClearCondition( COND_HEALTH_ITEM_AVAILABLE );
 		}
 		else
-		{ */
+		{ //*/
 			CBaseEntity *pBase = FindHealthItem(m_FollowBehavior.GetFollowTarget()->GetAbsOrigin(), Vector( 120, 120, 120 ) );
 			CItem *pItem = dynamic_cast<CItem *>(pBase);
 
@@ -1365,7 +1369,7 @@ int CNPC_Citizen::SelectScheduleRetrieveItem()
 				SetTarget( pItem );
 				return SCHED_GET_HEALTHKIT;
 			}
-		//}
+		/**/}
 	}
 	return SCHED_NONE;
 }
