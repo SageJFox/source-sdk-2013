@@ -3562,6 +3562,9 @@
     <ClCompile Include="..\shared\hl2mp\repose_stats.cpp">
       <Filter>Source Files\HL2MP</Filter>
     </ClCompile>
+    <ClCompile Include="..\shared\hl2mp\weapon_healthkit.cpp">
+      <Filter>Source Files\HL2MP\Weapons</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
   </ItemGroup>

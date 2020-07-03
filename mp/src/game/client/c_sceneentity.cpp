@@ -813,7 +813,7 @@ CChoreoScene *C_SceneEntity::LoadScene(const char *filename)
 
 	void *pBuffer = 0;
 	CChoreoScene *pScene;
-	pScene = NULL;
+	pScene = NULL; //keeps the "potentially uninitilized" warning off our backs.
 
 	int fileSize = filesystem->ReadFileEx(loadfile, "MOD", &pBuffer, true);
 	if (fileSize)

@@ -543,7 +543,7 @@ int CAI_LeadBehavior::SelectSchedule()
 				if ( !m_flWeaponSafetyTimeOut || (m_flWeaponSafetyTimeOut > gpGlobals->curtime) )
 					return SCHED_LEAD_PLAYERNEEDSWEAPON;
 
-				string_t iszItem = AllocPooledString( "weapon_bugbait" );
+				string_t iszItem = AllocPooledString( STRING(m_weaponname) /*"weapon_bugbait"*/ );
 				pFollower->GiveNamedItem( STRING(iszItem) );
 			}
 		}
