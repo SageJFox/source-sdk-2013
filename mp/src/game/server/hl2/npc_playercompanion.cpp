@@ -514,7 +514,9 @@ void CNPC_PlayerCompanion::GatherConditions()
 //-----------------------------------------------------------------------------
 void CNPC_PlayerCompanion::DoCustomSpeechAI( void )
 {
-	CBasePlayer *pPlayer = AI_GetSinglePlayer();
+	CBasePlayer *pPlayer = UTIL_GetNearestPlayer((CBaseEntity*)this, true);
+	if (!pPlayer)
+		return;
 	
 	// Don't allow this when we're getting in the car
 #ifdef HL2_EPISODIC
@@ -547,7 +549,7 @@ void CNPC_PlayerCompanion::DoCustomSpeechAI( void )
 //-----------------------------------------------------------------------------
 void CNPC_PlayerCompanion::PredictPlayerPush()
 {
-	CBasePlayer *pPlayer = AI_GetSinglePlayer();
+	CBasePlayer *pPlayer = UTIL_GetNearestPlayer((CBaseEntity*)this, true);
 	if ( pPlayer && pPlayer->GetSmoothedVelocity().LengthSqr() >= Square(140))
 	{
 		Vector predictedPosition = pPlayer->WorldSpaceCenter() + pPlayer->GetSmoothedVelocity() * .4;
@@ -1512,8 +1514,9 @@ void CNPC_PlayerCompanion::Touch( CBaseEntity *pOther )
 		// Ignore if pissed at player
 		if ( m_afMemory & bits_MEMORY_PROVOKED )
 			return;
-			
-		TestPlayerPushing( ( pOther->IsPlayer() ) ? pOther : AI_GetSinglePlayer() );
+		CBasePlayer* pPlayer = UTIL_GetNearestPlayer((CBaseEntity*)this, true);
+		if (pPlayer)
+			TestPlayerPushing( ( pOther->IsPlayer() ) ? pOther : pPlayer );
 	}
 }
 
@@ -1897,7 +1900,10 @@ bool CNPC_PlayerCompanion::PickTacticalLookTarget( AILookTargetArgs_t *pArgs )
 		// 1/3rd chance to authoritatively look at player
 		if( random->RandomInt( 0, 2 ) == 0 )
 		{
-			pArgs->hTarget = AI_GetSinglePlayer();
+			CBasePlayer* pPlayer = UTIL_GetNearestPlayer((CBaseEntity*)this, true);
+			if (!pPlayer)
+				return false;
+			pArgs->hTarget = pPlayer;
 			return true;
 		}
 	}
@@ -2784,7 +2790,7 @@ void CNPC_PlayerCompanion::OnFriendDamaged( CBaseCombatCharacter *pSquadmate, CB
 			}
 		}
 
-		CBasePlayer *pPlayer = AI_GetSinglePlayer();
+		CBasePlayer *pPlayer = UTIL_GetNearestPlayer((CBaseEntity*)this, true);
 		if ( pPlayer && IsInPlayerSquad() && ( pPlayer->GetAbsOrigin().AsVector2D() - GetAbsOrigin().AsVector2D() ).LengthSqr() < Square( 25*12 ) && IsAllowedToSpeak( TLK_WATCHOUT ) )
 		{
 			if ( !pPlayer->FInViewCone( pAttacker ) )
@@ -3685,7 +3691,9 @@ bool CNPC_PlayerCompanion::IsNavigationUrgent( void )
 		// could not see the player but the player could in fact see them.  Now the NPC's facing is
 		// irrelevant and the player's viewcone is more authorative. -- jdw
 
-		CBasePlayer *pLocalPlayer = AI_GetSinglePlayer();
+		CBasePlayer *pLocalPlayer = UTIL_GetNearestPlayer((CBaseEntity*)this, true);
+		if (!pLocalPlayer)
+			return true;
 		if ( pLocalPlayer->FInViewCone( EyePosition() ) )
 			return false;
 

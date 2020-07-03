@@ -502,7 +502,7 @@ CAI_Hint *CAI_ActBusyBehavior::FindCombatActBusyHintNode()
 {
 	Assert( IsCombatActBusy() );
 
-	CBasePlayer *pPlayer = AI_GetSinglePlayer();
+	CBasePlayer *pPlayer = UTIL_GetNearestPlayer((CBaseEntity*)this, true);
 
 	if( !pPlayer )
 		return NULL;
@@ -547,7 +547,7 @@ CAI_Hint *CAI_ActBusyBehavior::FindCombatActBusyTeleportHintNode()
 {
 	Assert( IsCombatActBusy() );
 
-	CBasePlayer *pPlayer = AI_GetSinglePlayer();
+	CBasePlayer *pPlayer = UTIL_GetNearestPlayer((CBaseEntity*)this, true);
 
 	if( !pPlayer )
 		return NULL;
@@ -1168,7 +1168,9 @@ int CAI_ActBusyBehavior::SelectScheduleWhileNotBusy( int iBase )
 		{
 			if( IsCombatActBusy() )
 			{
-				if ( m_hActBusyGoal->IsCombatActBusyTeleportAllowed() && m_iNumConsecutivePathFailures >= 2 && !AI_GetSinglePlayer()->FInViewCone(GetOuter()) ) 
+				CBasePlayer* pPlayer = UTIL_GetNearestPlayer((CBaseEntity*)this, true);
+				if (!pPlayer) return SCHED_NONE;
+				if ( m_hActBusyGoal->IsCombatActBusyTeleportAllowed() && m_iNumConsecutivePathFailures >= 2 && !pPlayer->FInViewCone(GetOuter()) ) 
 				{
 					// Looks like I've tried several times to find a path to a valid hint node and
 					// haven't been able to. This means I'm on a patch of node graph that simply

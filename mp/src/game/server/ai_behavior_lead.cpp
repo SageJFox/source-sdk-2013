@@ -179,7 +179,8 @@ void CAI_LeadBehavior::StopLeading( void )
 
 bool CAI_LeadBehavior::CanSelectSchedule()
 {
- 	if ( !AI_GetSinglePlayer() || AI_GetSinglePlayer()->IsDead() )
+	CBasePlayer* pPlayer = UTIL_GetNearestPlayer((CBaseEntity*)this, true);
+ 	if ( !pPlayer || pPlayer->IsDead() )
 		return false;
 
 	bool fAttacked = ( HasCondition( COND_LIGHT_DAMAGE ) || HasCondition( COND_HEAVY_DAMAGE ) );
@@ -192,7 +193,10 @@ bool CAI_LeadBehavior::CanSelectSchedule()
 
 void CAI_LeadBehavior::BeginScheduleSelection()
 {
-	SetTarget( AI_GetSinglePlayer() );
+	CBasePlayer* pPlayer = UTIL_GetNearestPlayer((CBaseEntity*)this, true);
+	if (!pPlayer)
+		return;
+	SetTarget( pPlayer );
 	CAI_Expresser *pExpresser = GetOuter()->GetExpresser();
 	if ( pExpresser )
 		pExpresser->ClearSpokeConcept( TLK_LEAD_ARRIVAL );
@@ -326,7 +330,12 @@ bool CAI_LeadBehavior::PlayerIsAheadOfMe( bool bForce )
 	m_bInitialAheadTest = false;
 
 	Vector vecClosestPoint;
-	if ( GetClosestPointOnRoute( AI_GetSinglePlayer()->GetAbsOrigin(), &vecClosestPoint ) )
+	CBasePlayer* pPlayer = UTIL_GetNearestPlayer((CBaseEntity*)this, true);
+	if (!pPlayer)
+		pPlayer = UTIL_GetNearestPlayer((CBaseEntity*)this);
+	if (!pPlayer)
+		return false;
+	if ( GetClosestPointOnRoute( pPlayer->GetAbsOrigin(), &vecClosestPoint ) )
 	{
 		// If the closest point is not right next to me, then 
 		// the player is somewhere ahead of me on the route.
@@ -353,7 +362,7 @@ void CAI_LeadBehavior::GatherConditions( void )
 		}
 
 		// We have to collect data about the person we're leading around.
-		CBaseEntity *pFollower = AI_GetSinglePlayer();
+		CBaseEntity *pFollower = UTIL_GetNearestPlayer((CBaseEntity*)this, true);
 
 		if( pFollower )
 		{
@@ -536,7 +545,7 @@ int CAI_LeadBehavior::SelectSchedule()
 		// Player's here, but does he have the weapon we want him to have?
 		if ( m_weaponname != NULL_STRING )
 		{
-			CBasePlayer *pFollower = AI_GetSinglePlayer();
+			CBasePlayer *pFollower = UTIL_GetNearestPlayer((CBaseEntity*)this, true);
 			if ( pFollower && !pFollower->Weapon_OwnsThisType( STRING(m_weaponname) ) )
 			{
 				// If the safety timeout has run out, just give the player the weapon
@@ -565,7 +574,7 @@ int CAI_LeadBehavior::SelectSchedule()
 			else
 			{
 				// We have to collect data about the person we're leading around.
-				CBaseEntity *pFollower = AI_GetSinglePlayer();
+				CBaseEntity *pFollower = UTIL_GetNearestPlayer((CBaseEntity*)this, true);
 				if( pFollower )
 				{
 					float flFollowerDist = ( WorldSpaceCenter() - pFollower->WorldSpaceCenter() ).Length();
@@ -829,7 +838,10 @@ void CAI_LeadBehavior::StartTask( const Task_t *pTask )
 
 		case TASK_LEAD_RETRIEVE_WAIT:
 		{
-			m_MoveMonitor.SetMark( AI_GetSinglePlayer(), 24 );
+			CBasePlayer* pPlayer = UTIL_GetNearestPlayer((CBaseEntity*)this, true);
+			if (!pPlayer)
+				return;
+			m_MoveMonitor.SetMark( pPlayer, 24 );
 			ChainStartTask( TASK_WAIT_INDEFINITE );
 			break;
 		}

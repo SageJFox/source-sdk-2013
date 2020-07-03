@@ -940,12 +940,14 @@ void CBaseEntity::DrawDebugGeometryOverlays(void)
 			NDebugOverlay::EntityBounds(this, 255, 255, 255, 0, 0 );
 		}
 	}
-	if ( m_debugOverlays & OVERLAY_AUTOAIM_BIT && (GetFlags()&FL_AIMTARGET) && AI_GetSinglePlayer() != NULL )
+	CBasePlayer* pPlayer = UTIL_GetNearestPlayer((CBaseEntity*)this, true);
+	if (!pPlayer)
+		pPlayer = UTIL_GetNearestPlayer((CBaseEntity*)this);
+	if ( m_debugOverlays & OVERLAY_AUTOAIM_BIT && (GetFlags()&FL_AIMTARGET) && pPlayer != NULL )
 	{
 		// Crude, but it gets the point across.
 		Vector vecCenter = GetAutoAimCenter();
 		Vector vecRight, vecUp, vecDiag;
-		CBasePlayer *pPlayer = AI_GetSinglePlayer();
 		float radius = GetAutoAimRadius();
 
 		QAngle angles = pPlayer->EyeAngles();

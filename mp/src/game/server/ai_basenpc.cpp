@@ -643,8 +643,8 @@ void CAI_BaseNPC::Ignite( float flFlameLifetime, bool bNPCOnly, float flSize, bo
 	BaseClass::Ignite( flFlameLifetime, bNPCOnly, flSize, bCalledByLevelDesigner );
 /*
 #ifdef HL2_EPISODIC
-	CBasePlayer *pPlayer = AI_GetSinglePlayer();
-	if ( pPlayer->IRelationType( this ) != D_LI )
+	CBasePlayer *pPlayer = UTIL_GetNearestPlayer((CBaseEntity*)this, true);
+	if ( pPlayer && pPlayer->IRelationType( this ) != D_LI )
 	{
 		CNPC_Alyx *alyx = CNPC_Alyx::GetAlyx();
 
@@ -778,7 +778,7 @@ int CAI_BaseNPC::OnTakeDamage_Alive( const CTakeDamageInfo &info )
 		{
 			// See if the person that injured me is an NPC.
 			CAI_BaseNPC *pAttacker = dynamic_cast<CAI_BaseNPC *>( info.GetAttacker() );
-			CBasePlayer *pPlayer = AI_GetSinglePlayer();
+			CBasePlayer *pPlayer = UTIL_GetNearestPlayer((CBaseEntity*)this, true);
 
 			if( pAttacker && pAttacker->IsAlive() && pPlayer )
 			{
@@ -3111,7 +3111,13 @@ void CAI_BaseNPC::UpdateEfficiency( bool bInPVS )
 
 	//---------------------------------
 
-	CBasePlayer *pPlayer = AI_GetSinglePlayer(); 
+	CBasePlayer *pPlayer = UTIL_GetNearestPlayer((CBaseEntity*)this, true);
+	if (!pPlayer)
+	{
+		// No heuristic currently for dedicated servers
+		SetEfficiency(((gpGlobals->frametime < ai_frametime_limit.GetFloat())) ? AIE_EFFICIENT : AIE_VERY_EFFICIENT);
+		return;
+	}
 	static Vector vPlayerEyePosition;
 	static Vector vPlayerForward;
 	static int iPrevFrame = -1;
@@ -3355,7 +3361,7 @@ void CAI_BaseNPC::UpdateSleepState( bool bInPVS )
 {
 	if ( GetSleepState() > AISS_AWAKE )
 	{
-		CBasePlayer *pLocalPlayer = AI_GetSinglePlayer();
+		CBasePlayer *pLocalPlayer = UTIL_GetNearestPlayer((CBaseEntity*)this, true);
 		if ( !pLocalPlayer )
 		{
 			if ( gpGlobals->maxClients > 1 )
@@ -3555,7 +3561,7 @@ void CAI_BaseNPC::RebalanceThinks()
 
 		int i;
 
-		CBasePlayer *pPlayer = AI_GetSinglePlayer();
+		CBasePlayer *pPlayer = UTIL_GetNearestPlayer((CBaseEntity*)this, true);
 		Vector vPlayerForward;
 		Vector vPlayerEyePosition;
 
@@ -3836,7 +3842,7 @@ void CAI_BaseNPC::SetPlayerAvoidState( void )
 
 		GetPlayerAvoidBounds( &vMins, &vMaxs );
 
-		CBasePlayer *pLocalPlayer = AI_GetSinglePlayer();
+		CBasePlayer *pLocalPlayer = UTIL_GetNearestPlayer((CBaseEntity*)this);
 
 		if ( pLocalPlayer )
 		{
@@ -8678,7 +8684,8 @@ void CAI_BaseNPC::DrawDebugGeometryOverlays(void)
 
 		info.SetDamage( m_iHealth );
 		info.SetAttacker( this );
-		info.SetInflictor( ( AI_IsSinglePlayer() ) ? (CBaseEntity *)AI_GetSinglePlayer() : (CBaseEntity *)this );
+		CBasePlayer* pPlayer = UTIL_GetNearestPlayer((CBaseEntity*)this, true);
+		info.SetInflictor( pPlayer ? (CBaseEntity *)pPlayer : (CBaseEntity *)this );
 		info.SetDamageType( DMG_GENERIC );
 
 		m_debugOverlays &= ~OVERLAY_NPC_KILL_BIT;
@@ -9909,7 +9916,7 @@ CBaseEntity *CAI_BaseNPC::FindNamedEntity( const char *name, IEntityFindFilter *
 {
 	if ( !stricmp( name, "!player" ))
 	{
-		return ( CBaseEntity * )AI_GetSinglePlayer();
+		return (CBaseEntity *)UTIL_GetNearestPlayer((CBaseEntity*)this, true);
 	}
 	else if ( !stricmp( name, "!enemy" ) )
 	{
@@ -9924,7 +9931,7 @@ CBaseEntity *CAI_BaseNPC::FindNamedEntity( const char *name, IEntityFindFilter *
 	{
 		// FIXME: look at CBaseEntity *CNPCSimpleTalker::FindNearestFriend(bool fPlayer)
 		// punt for now
-		return ( CBaseEntity * )AI_GetSinglePlayer();
+		return (CBaseEntity *)UTIL_GetNearestPlayer((CBaseEntity*)this, true);
 	}
 	else if (!stricmp( name, "self" ))
 	{
@@ -9944,7 +9951,7 @@ CBaseEntity *CAI_BaseNPC::FindNamedEntity( const char *name, IEntityFindFilter *
 		{
 			DevMsg( "ERROR: \"player\" is no longer used, use \"!player\" in vcd instead!\n" );
 		}
-		return ( CBaseEntity * )AI_GetSinglePlayer();
+		return (CBaseEntity *)UTIL_GetNearestPlayer((CBaseEntity*)this, true);
 	}
 	else
 	{
@@ -11999,7 +12006,7 @@ void CAI_BaseNPC::Teleport( const Vector *newPosition, const QAngle *newAngles, 
 
 bool CAI_BaseNPC::FindSpotForNPCInRadius( Vector *pResult, const Vector &vStartPos, CAI_BaseNPC *pNPC, float radius, bool bOutOfPlayerViewcone )
 {
-	CBasePlayer *pPlayer = AI_GetSinglePlayer();
+	CBasePlayer *pPlayer = NULL;//UTIL_GetNearestPlayer((CBaseEntity*)this, true); //FIXME: need to get a player here somehow, can't cast "this"
 	QAngle fan;
 
 	fan.x = 0;
@@ -12833,7 +12840,8 @@ bool CAI_BaseNPC::FindNearestValidGoalPos( const Vector &vTestPoint, Vector *pRe
 
 	if ( vCandidate != vec3_invalid )
 	{
-		AI_Waypoint_t *pPathToPoint = GetPathfinder()->BuildRoute( GetAbsOrigin(), vCandidate, AI_GetSinglePlayer(), 5*12, NAV_NONE, true );
+		CBasePlayer* pPlayer = UTIL_GetNearestPlayer((CBaseEntity*)this, true);
+		AI_Waypoint_t *pPathToPoint = GetPathfinder()->BuildRoute( GetAbsOrigin(), vCandidate, pPlayer, 5*12, NAV_NONE, true );
 		if ( pPathToPoint )
 		{
 			GetPathfinder()->UnlockRouteNodes( pPathToPoint );

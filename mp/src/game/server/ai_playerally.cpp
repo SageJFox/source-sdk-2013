@@ -366,7 +366,7 @@ void CAI_PlayerAlly::DisplayDeathMessage( void )
 	if ( npc_ally_deathmessage.GetBool() == 0 )
 		return;
 
-	CBaseEntity *pPlayer = AI_GetSinglePlayer();
+	CBaseEntity *pPlayer = UTIL_GetNearestPlayer((CBaseEntity*)this, true);
 
 	if ( pPlayer )	
 	{
@@ -460,7 +460,7 @@ void CAI_PlayerAlly::GatherEnemyConditions( CBaseEntity *pEnemy )
 		{
 			if( Classify() == CLASS_PLAYER_ALLY_VITAL && hl2_episodic.GetBool() )
 			{
-				CBasePlayer *pPlayer = AI_GetSinglePlayer();
+				CBasePlayer *pPlayer = UTIL_GetNearestPlayer((CBaseEntity*)this, true);
 
 				if( pPlayer )
 				{
@@ -1173,7 +1173,7 @@ void CAI_PlayerAlly::Event_Killed( const CTakeDamageInfo &info )
 	// notify the player
 	if ( IsInPlayerSquad() )
 	{
-		CBasePlayer *player = AI_GetSinglePlayer();
+		CBasePlayer *player = UTIL_GetNearestPlayer((CBaseEntity*)this, true);
 		if ( player )
 		{
 			variant_t emptyVariant;
@@ -1460,7 +1460,7 @@ bool CAI_PlayerAlly::IsOkToSpeak( ConceptCategory_t category, bool fRespondingTo
 		}
 
 		// Don't talk if we're too far from the player
-		CBaseEntity *pPlayer = AI_GetSinglePlayer();
+		CBaseEntity *pPlayer = UTIL_GetNearestPlayer((CBaseEntity*)this, true);
 		if ( pPlayer )
 		{
 			float flDist = sv_npc_talker_maxdist.GetFloat();

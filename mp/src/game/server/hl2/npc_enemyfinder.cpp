@@ -416,7 +416,7 @@ bool CNPC_EnemyFinder::ShouldAlwaysThink()
 	if ( BaseClass::ShouldAlwaysThink() )
 		return true;
 		
-	CBasePlayer *pPlayer = AI_GetSinglePlayer();
+	CBasePlayer *pPlayer = UTIL_GetNearestPlayer((CBaseEntity*)this, true);
 	if ( pPlayer && IRelationType( pPlayer ) == D_HT )
 	{
 		float playerDistSqr = GetAbsOrigin().DistToSqr( pPlayer->GetAbsOrigin() );
@@ -673,7 +673,7 @@ bool CNPC_EnemyFinderCombineCannon::IsValidEnemy( CBaseEntity *pTarget )
 	}
 
 	/*
-	CBasePlayer *pPlayer = AI_GetSinglePlayer();
+	CBasePlayer *pPlayer = UTIL_GetNearestPlayer((CBaseEntity*)this, true);
 	int iPlayerRelationPriority = -1;
 
 	if( pPlayer != NULL )

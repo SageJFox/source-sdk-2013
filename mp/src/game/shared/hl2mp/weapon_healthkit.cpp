@@ -120,7 +120,7 @@ acttable_t	CWeaponHealthkit::m_acttable[] =
 	{ ACT_HL2MP_IDLE_CROUCH,			ACT_HL2MP_IDLE_CROUCH_SLAM,				false },
 	{ ACT_HL2MP_WALK_CROUCH,			ACT_HL2MP_WALK_CROUCH_SLAM,				false },
 	{ ACT_HL2MP_GESTURE_RANGE_ATTACK,	ACT_HL2MP_GESTURE_RANGE_ATTACK_SLAM,	false },
-	{ ACT_HL2MP_GESTURE_RELOAD,			ACT_HL2MP_GESTURE_RELOAD_SLAM,			false },
+	{ ACT_HL2MP_GESTURE_RELOAD,			ACT_HL2MP_GESTURE_RELOAD_SMG1,			false },
 	{ ACT_HL2MP_JUMP,					ACT_HL2MP_JUMP_SLAM,					false },
 	{ ACT_RANGE_ATTACK1,				ACT_RANGE_ATTACK_SLAM,					false },
 
@@ -330,10 +330,8 @@ void CWeaponHealthkit::PrimaryAttack( void )
 
 	//We can't heal ourself if our health is full
 	if (pPlayer->HealthFraction() >= 1.0f)
-	{
-		PlayDenySound(HEALTHKIT_DENY_SOUNDTIMER);
-		return;
-	}
+		return PlayDenySound(HEALTHKIT_DENY_SOUNDTIMER);
+	else m_flNextDenySound = gpGlobals->curtime + 0.01f + GetFireRate();
 #ifndef CLIENT_DLL
 	m_nShotsFired++;
 
@@ -406,18 +404,11 @@ void CWeaponHealthkit::SecondaryAttack(void)
 	UTIL_TraceLine(m_vecSrc, m_vecSrc + m_vecDirShooting * m_flDistance, MASK_ALL, pPlayer, COLLISION_GROUP_PLAYER, &check);
 
 	if (!check.m_pEnt) //we're aiming at absolutely nothing
-	{
-		PlayDenySound(HEALTHKIT_DENY_SOUNDTIMER);
-		return;
-	}
+		return PlayDenySound(HEALTHKIT_DENY_SOUNDTIMER);
 
 	CBaseCombatCharacter *pTarget = dynamic_cast<CBaseCombatCharacter*>(check.m_pEnt);
 	if (pTarget == NULL) //we're aiming at something we can't heal
-	{
-		PlayDenySound(HEALTHKIT_DENY_SOUNDTIMER);
-		return;
-	}
-
+		return PlayDenySound(HEALTHKIT_DENY_SOUNDTIMER);
 
 
 	// Abort here to handle burst and auto fire modes
@@ -426,10 +417,8 @@ void CWeaponHealthkit::SecondaryAttack(void)
 
 	//We can't heal our target if their health is full
 	if (pTarget->HealthFraction() >= 1.0f)
-	{
-		PlayDenySound(HEALTHKIT_DENY_SOUNDTIMER);
-		return;
-	}
+		return PlayDenySound(HEALTHKIT_DENY_SOUNDTIMER);
+	else m_flNextDenySound = gpGlobals->curtime + 0.01f + GetFireRate();
 #ifndef CLIENT_DLL
 	m_nShotsFired++;
 
@@ -504,9 +493,28 @@ const WeaponProficiencyInfo_t *CWeaponHealthkit::GetProficiencyValues()
 //-----------------------------------------------------------------------------
 void CWeaponHealthkit::PlayDenySound(float flDelay)
 {
+#ifndef CLIENT_DLL
 	if (gpGlobals->curtime > m_flNextDenySound)
 	{
 		m_flNextDenySound = gpGlobals->curtime + flDelay; //don't let us play a sound again until we've expired our delay
-		EmitSound("Weapon_Healthkit.Empty");
+		//DevMsg("[Deny Sound] at %.2f\n",m_flNextDenySound);
+
+		CBasePlayer *pPlayer = ToBasePlayer(GetOwner());
+		if (!pPlayer)
+			return;
+		const char* szSoundName = "Weapon_Healthkit.Empty";
+		CHL2MP_Player *pHL2MPPlayer = ToHL2MPPlayer(pPlayer);
+		Vector m_vecSrc = pHL2MPPlayer->Weapon_ShootPosition();
+		CRecipientFilter filter;
+		filter.AddRecipientsByPAS(m_vecSrc);
+		IRecipientFilter& rFilter = filter;
+		//this is so fucking stupid
+		float flZero = 0.0f;
+		float* pZero = &flZero;
+		
+		EmitSound(rFilter, entindex(), szSoundName, &m_vecSrc, 0.0f, pZero);
+		SendWeaponAnim(ACT_VM_DRYFIRE);
 	}
+#endif
+	return;
 }

@@ -933,7 +933,7 @@ void CNPC_Citizen::GatherConditions()
 	// assume the player is 'staring' and wants health.
 	if( CanHeal() )
 	{
-		CBasePlayer *pPlayer = AI_GetSinglePlayer();
+		CBasePlayer *pPlayer = UTIL_GetNearestPlayer(this,true);
 
 		if ( !pPlayer )
 		{
@@ -1369,6 +1369,7 @@ int CNPC_Citizen::SelectScheduleRetrieveItem()
 				SetTarget( pItem );
 				return SCHED_GET_HEALTHKIT;
 			}
+			else return SCHED_NONE;
 		/**/}
 	}
 	return SCHED_NONE;
@@ -1447,7 +1448,7 @@ bool CNPC_Citizen::ShouldDeferToFollowBehavior()
 //-----------------------------------------------------------------------------
 int CNPC_Citizen::TranslateSchedule( int scheduleType ) 
 {
-	CBasePlayer *pLocalPlayer = AI_GetSinglePlayer();
+	CBasePlayer *pLocalPlayer = UTIL_GetNearestPlayer(this);
 
 	switch( scheduleType )
 	{
@@ -1502,7 +1503,7 @@ int CNPC_Citizen::TranslateSchedule( int scheduleType )
 			}
 			else
 			{
-				CBasePlayer *pPlayer = AI_GetSinglePlayer();
+				CBasePlayer *pPlayer = UTIL_GetNearestPlayer(GetEnemy(),true);
 				if ( pPlayer && GetEnemy() && ( ( GetEnemy()->GetAbsOrigin() - 
 					pPlayer->GetAbsOrigin() ).LengthSqr() < RPG_SAFE_DISTANCE * RPG_SAFE_DISTANCE ) )
 				{
@@ -1775,7 +1776,7 @@ void CNPC_Citizen::RunTask( const Task_t *pTask )
 					}
 
 					Vector vecEnemyPos = GetEnemy()->BodyTarget(GetAbsOrigin(), false);
-					CBasePlayer *pPlayer = AI_GetSinglePlayer();
+					CBasePlayer *pPlayer = UTIL_GetNearestPlayer(GetEnemy(), true); //AI_GetSinglePlayer();
 					if ( pPlayer && ( ( vecEnemyPos - pPlayer->GetAbsOrigin() ).LengthSqr() < RPG_SAFE_DISTANCE * RPG_SAFE_DISTANCE ) )
 					{
 						m_bRPGAvoidPlayer = true;
@@ -2513,11 +2514,13 @@ bool CNPC_Citizen::IsValidCommandTarget( CBaseEntity *pTarget )
 //-----------------------------------------------------------------------------
 bool CNPC_Citizen::SpeakCommandResponse( AIConcept_t concept, const char *modifiers )
 {
+	CBasePlayer* pPlayer = UTIL_GetNearestPlayer(this, true);
+	if (!pPlayer) return false;
 	return SpeakIfAllowed( concept, 
 						   CFmtStr( "numselected:%d,"
 									"useradio:%d%s",
 									( GetSquad() ) ? GetSquad()->NumMembers() : 1,
-									ShouldSpeakRadio( AI_GetSinglePlayer() ),
+									ShouldSpeakRadio( pPlayer ),
 									( modifiers ) ? CFmtStr(",%s", modifiers).operator const char *() : "" ) );
 }
 

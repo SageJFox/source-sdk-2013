@@ -468,15 +468,19 @@ void CAI_ScriptConditions::UpdateOnRemove( void )
 
 void CAI_ScriptConditions::EvaluationThink()
 {
-	if ( m_fDisabled == true )
+	if (m_fDisabled == true)
 		return;
 
 	int iActorsDone = 0;
 
 #ifdef HL2_DLL
-	if( AI_GetSinglePlayer()->GetFlags() & FL_NOTARGET )
+	CBasePlayer* pPlayer = UTIL_GetNearestPlayer((CBaseEntity*)this);
+	if (pPlayer)
 	{
-		ScrCondDbgMsg( ("%s WARNING: Player is NOTARGET. This will affect all LOS conditiosn involving the player!\n", GetDebugName()) );
+		if (pPlayer->GetFlags() & FL_NOTARGET)
+		{
+			ScrCondDbgMsg(("%s WARNING: Player is NOTARGET. This will affect all LOS conditiosn involving the player!\n", GetDebugName()));
+		}
 	}
 #endif
 
