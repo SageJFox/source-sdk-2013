@@ -148,9 +148,12 @@ void CAI_LeadBehavior::LeadPlayer( const AI_LeadArgs_t &leadArgs, CAI_LeadBehavi
 {
 #ifndef CSTRIKE_DLL
 	CAI_PlayerAlly *pOuter = dynamic_cast<CAI_PlayerAlly*>(GetOuter());
-	if ( pOuter /*&& AI_IsSinglePlayer()*/ )
+	CBasePlayer* pPlayer = UTIL_GetNearestPlayer((CBaseEntity*)this, true);
+	if (!pPlayer)
+		pPlayer = UTIL_GetNearestPlayer((CBaseEntity*)this);
+	if ( pOuter && pPlayer )
 	{
-		//pOuter->SetSpeechTarget( UTIL_GetNearestPlayer(this,true)/*UTIL_GetLocalPlayer()*/ ); //TODO: Get CAI_LeadBehavior to work with this
+		pOuter->SetSpeechTarget( pPlayer );
 	}
 #endif
 

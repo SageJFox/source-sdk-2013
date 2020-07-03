@@ -123,16 +123,14 @@ void CAI_AllyManager::WatchCounts()
 void CAI_AllyManager::CountAllies( int *pTotal, int *pMedics )
 {
 	(*pTotal) = (*pMedics) = 0;
-
-	/* -We're not single player!
-	if ( !AI_IsSinglePlayer() )
+	CBasePlayer* pPlayer = UTIL_GetNearestPlayer(this);
+	if ( !pPlayer )
 	{
 		// @TODO (toml 10-22-04): no MP support right now
 		return;
 	}
-	//*/
 
-	const Vector &	vPlayerPos = UTIL_GetNearestPlayer(this)/*UTIL_GetLocalPlayer()*/->GetAbsOrigin();
+	const Vector &	vPlayerPos = pPlayer->GetAbsOrigin();
 	CAI_BaseNPC **	ppAIs 	= g_AI_Manager.AccessAIs();
 	int 			nAIs 	= g_AI_Manager.NumAIs();
 

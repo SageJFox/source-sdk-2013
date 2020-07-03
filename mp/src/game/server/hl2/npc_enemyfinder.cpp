@@ -343,8 +343,10 @@ void CNPC_EnemyFinder::StartNPC ( void )
 	AddSpawnFlags(SF_NPC_FALL_TO_GROUND);	// this prevents CAI_BaseNPC from slamming the finder to 
 											// the ground just because it's not MOVETYPE_FLY
 	BaseClass::StartNPC();
-
-	if ( /*AI_IsSinglePlayer() &&*/ m_PlayerFreePass.GetParams().duration > 0.1 )
+	CBasePlayer* pPlayer = UTIL_GetNearestPlayer(this, true);
+	if (!pPlayer)
+		pPlayer = UTIL_GetNearestPlayer(this);
+	if ( pPlayer && m_PlayerFreePass.GetParams().duration > 0.1 )
 	{
 		m_PlayerFreePass.SetPassTarget( UTIL_PlayerByIndex(1) );
 

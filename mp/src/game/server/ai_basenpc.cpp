@@ -4816,15 +4816,17 @@ void CAI_BaseNPC::RunAI( void )
 			}
 		}
 	}
-
-	if( ai_debug_loners.GetBool() && !IsInSquad() /*&& AI_IsSinglePlayer()*/ )
+	CBasePlayer* pPlayer = UTIL_GetNearestPlayer(this, true);
+	if (!pPlayer)
+		pPlayer = UTIL_GetNearestPlayer(this);
+	if( ai_debug_loners.GetBool() && !IsInSquad() && pPlayer )
 	{
 		Vector right;
 		Vector vecPoint;
 
 		vecPoint = EyePosition() + Vector( 0, 0, 12 );
 
-		UTIL_GetNearestPlayer(this)/*UTIL_GetLocalPlayer()*/->GetVectors(NULL, &right, NULL);
+		pPlayer->GetVectors(NULL, &right, NULL);
 
 		NDebugOverlay::Line( vecPoint, vecPoint + Vector( 0, 0, 64 ), 255, 0, 0, false , 0.1 );
 		NDebugOverlay::Line( vecPoint, vecPoint + Vector( 0, 0, 32 ) + right * 32, 255, 0, 0, false , 0.1 );
@@ -12546,7 +12548,10 @@ bool CAI_BaseNPC::IsPlayerAlly(CBasePlayer *pPlayer)
 		//	return false;
 
 		// NULL means single player mode
-		pPlayer = UTIL_GetNearestPlayer(this)/*UTIL_GetLocalPlayer()*/;
+		pPlayer = UTIL_GetNearestPlayer(this, true);
+		if (!pPlayer)
+			pPlayer = UTIL_GetNearestPlayer(this);
+		pPlayer = UTIL_GetNearestPlayer(this);
 	}
 
 	return ( !pPlayer || IRelationType( pPlayer ) == D_LI ); 

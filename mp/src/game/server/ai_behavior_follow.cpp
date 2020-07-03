@@ -2130,11 +2130,14 @@ void CAI_FollowGoal::EnableGoal( CAI_BaseNPC *pAI )
 		return;
 	
 	CBaseEntity *pGoalEntity = GetGoalEntity();
-	if ( !pGoalEntity /*&& AI_IsSinglePlayer()*/ )
+	CBasePlayer* pPlayer = UTIL_GetNearestPlayer(this, true);
+	if (!pPlayer)
+		pPlayer = UTIL_GetNearestPlayer(this);
+	if ( !pGoalEntity && pPlayer )
 	{
-		if (pAI->IRelationType(UTIL_GetNearestPlayer(this)/*UTIL_GetLocalPlayer()*/) == D_LI)
+		if (pAI->IRelationType(pPlayer) == D_LI)
 		{
-			pGoalEntity = UTIL_GetNearestPlayer(this)/*UTIL_GetLocalPlayer()*/;
+			pGoalEntity = pPlayer;
 			SetGoalEntity( pGoalEntity );
 		}
 	}

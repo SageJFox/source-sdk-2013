@@ -218,6 +218,9 @@ void CNPCSimpleTalker::StartTask( const Task_t *pTask )
 
 void CNPCSimpleTalker::RunTask( const Task_t *pTask )
 {
+	CBasePlayer* pPlayer = UTIL_GetNearestPlayer(this, true);
+	if (!pPlayer)
+		pPlayer = UTIL_GetNearestPlayer(this);
 	switch( pTask->iTask )
 	{
 	case TASK_TALKER_WAIT_FOR_SEMAPHORE:
@@ -227,11 +230,9 @@ void CNPCSimpleTalker::RunTask( const Task_t *pTask )
 
 	case TASK_TALKER_CLIENT_STARE:
 	case TASK_TALKER_LOOK_AT_CLIENT:
-
-		if ( pTask->iTask == TASK_TALKER_CLIENT_STARE /*&& AI_IsSinglePlayer()*/ )
+		if ( pTask->iTask == TASK_TALKER_CLIENT_STARE && pPlayer )
 		{
 			// Get edict for one player
-			CBasePlayer *pPlayer = UTIL_GetNearestPlayer(this,true)/*UTIL_GetLocalPlayer()*/;
 			Assert( pPlayer );
 
 			// fail out if the player looks away or moves away.
@@ -822,9 +823,11 @@ int CNPCSimpleTalker::SelectNonCombatSpeechSchedule()
 	}
 	
 	// failed to speak, so look at the player if he's around
-	if ( /*AI_IsSinglePlayer() &&*/ GetExpresser()->CanSpeak() && HasCondition ( COND_SEE_PLAYER ) && random->RandomInt( 0, 6 ) == 0 )
+	CBasePlayer* pPlayer = UTIL_GetNearestPlayer(this, true);
+	if (!pPlayer)
+		pPlayer = UTIL_GetNearestPlayer(this);
+	if ( pPlayer && GetExpresser()->CanSpeak() && HasCondition ( COND_SEE_PLAYER ) && random->RandomInt( 0, 6 ) == 0 )
 	{
-		CBasePlayer *pPlayer = UTIL_GetNearestPlayer(this,true)/*UTIL_GetLocalPlayer()*/;
 		Assert( pPlayer );
 
 		if ( pPlayer )
