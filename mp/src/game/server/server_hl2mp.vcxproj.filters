@@ -40,6 +40,9 @@
     <Filter Include="VPC Scripts">
       <UniqueIdentifier>{A40EE377-781A-C6B9-0C7C-B3BE118D248E}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\Repose">
+      <UniqueIdentifier>{b75d4de6-ce54-4b1c-81fd-68e365facb3e}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Library Include="..\..\lib\public\choreoobjects.lib">
@@ -3564,6 +3567,12 @@
     </ClCompile>
     <ClCompile Include="..\shared\hl2mp\weapon_healthkit.cpp">
       <Filter>Source Files\HL2MP\Weapons</Filter>
+    </ClCompile>
+    <ClCompile Include="hl2\npc_fastzombie.cpp">
+      <Filter>Source Files\HL2 DLL</Filter>
+    </ClCompile>
+    <ClCompile Include="repose\npc_hound.cpp">
+      <Filter>Source Files\Repose</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

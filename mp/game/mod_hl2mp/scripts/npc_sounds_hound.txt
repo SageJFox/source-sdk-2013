@@ -1,0 +1,248 @@
+"NPC_Hound.LeapAttack"
+{
+	"channel"		"CHAN_WEAPON"
+	"volume"		"0.400"
+	"pitch"			"95, 105"
+
+	"soundlevel"	"SNDLVL_NORM"
+
+	"wave"			"npc/hound/dogbrk.wav"
+	"wave"			"npc/hound/bite.wav"
+}
+
+"NPC_Hound.FootstepRight"
+{
+	"channel"		"CHAN_BODY"
+	"volume"		"0.500"
+	"pitch"			"PITCH_NORM"
+
+	"soundlevel"	"SNDLVL_IDLE"
+
+	"rndwave"
+	{
+		"wave"	"npc/fast_zombie/foot4.wav"
+	}
+}
+
+"NPC_Hound.FootstepLeft"
+{
+	"channel"		"CHAN_BODY"
+	"volume"		"0.500"
+	"pitch"			"PITCH_NORM"
+
+	"soundlevel"	"SNDLVL_IDLE"
+
+	"rndwave"
+	{
+		"wave"	"npc/fast_zombie/foot1.wav"
+		"wave"	"npc/fast_zombie/foot2.wav"
+		"wave"	"npc/fast_zombie/foot3.wav"
+	}
+}
+
+"NPC_Hound.AttackHit"
+{
+	"channel"		"CHAN_WEAPON"
+	"volume"		"VOL_NORM"
+	"pitch"			"95, 105"
+
+	"soundlevel"	"SNDLVL_NORM"
+
+	"rndwave"
+	{
+		"wave"	"npc/fast_zombie/claw_strike1.wav"
+		"wave"	"npc/fast_zombie/claw_strike2.wav"
+		"wave"	"npc/fast_zombie/claw_strike3.wav"
+		"wave"	"npc/hound/bite.wav"
+	}
+}
+
+"NPC_Hound.AttackMiss"
+{
+	"channel"		"CHAN_WEAPON"
+	"volume"		"VOL_NORM"
+	"pitch"			"95, 105"
+
+	"soundlevel"	"SNDLVL_NORM"
+
+	"rndwave"
+	{
+		"wave"	"npc/fast_zombie/claw_miss1.wav"
+		"wave"	"npc/fast_zombie/claw_miss2.wav"
+		"wave"	"npc/hound/bite.wav"
+	}
+}
+
+"NPC_Hound.Attack"
+{
+	"channel"		"CHAN_WEAPON"
+	"volume"		"0.600"
+	"pitch"			"95, 105"
+
+	"soundlevel"	"SNDLVL_NORM"
+
+	"wave"			"npc/hound/dogbrk.wav"
+	"wave"			"npc/hound/bite.wav"
+}
+
+"NPC_Hound.Pain"
+{
+	"channel"		"CHAN_BODY"
+	"volume"		"1.000" //0.600
+	"pitch"			"95, 105"
+
+	"soundlevel"		"SNDLVL_NORM"
+
+	"wave"			"npc/hound/pupwhimper.wav"
+}
+
+"NPC_Hound.Die"
+{
+	"channel"		"CHAN_BODY"
+	"volume"		"1.000" //0.600
+	"pitch"			"95, 105"
+
+	"soundlevel"		"SNDLVL_NORM"
+
+	"wave"			"npc/hound/pupwhimper.wav"
+}
+
+"NPC_Hound.Idle"
+{
+	"channel"		"CHAN_WEAPON"
+	"volume"		"0.600"
+	"pitch"			"95, 105"
+
+	"soundlevel"	"SNDLVL_NORM"
+
+	"rndwave"
+	{
+		"wave"	"npc/hound/growl1.wav"
+		"wave"	"npc/hound/pant2.wav"
+		"wave"	"npc/hound/lickchops.wav"
+	}
+}
+
+"NPC_Hound.AlertFar"
+{
+	"channel"		"CHAN_ITEM"
+	"volume"		"VOL_NORM"
+	"pitch"			"PITCH_NORM"
+
+	"soundlevel"	"SNDLVL_NORM"
+
+	"wave"			"npc/hound/howl.wav"
+}
+
+"NPC_Hound.AlertNear"
+{
+	"channel"		"CHAN_ITEM"
+	"volume"		"VOL_NORM"
+	"pitch"			"PITCH_NORM"
+
+	"soundlevel"	"SNDLVL_NORM"
+
+	"wave"			"npc/hound/deepbark.wav"
+}
+
+"NPC_Hound.GallopLeft"
+{
+	"channel"		"CHAN_BODY"
+	"volume"		"VOL_NORM"
+	"pitch"			"PITCH_NORM"
+
+	"soundlevel"	"SNDLVL_NORM"
+
+	"rndwave"
+	{
+		"wave"	"npc/fast_zombie/foot1.wav"
+		"wave"	"npc/fast_zombie/foot2.wav"
+	}
+}
+
+"NPC_Hound.GallopRight"
+{
+	"channel"		"CHAN_BODY"
+	"volume"		"VOL_NORM"
+	"pitch"			"PITCH_NORM"
+
+	"soundlevel"	"SNDLVL_NORM"
+
+	"rndwave"
+	{
+		"wave"	"npc/fast_zombie/foot3.wav"
+		"wave"	"npc/fast_zombie/foot4.wav"
+	}
+}
+
+"NPC_Hound.Scream"
+{
+	"channel"		"CHAN_ITEM"
+	"volume"		"VOL_NORM"
+	"pitch"			"PITCH_NORM"
+
+	"soundlevel"	"SNDLVL_NORM"
+
+	"wave"			"npc/hound/dogbrk.wav"
+	"wave"			"npc/hound/bite.wav"
+	"wave"			"npc/hound/deepbark.wav"
+}
+
+"NPC_Hound.RangeAttack"
+{
+	"channel"		"CHAN_ITEM"
+	"volume"		"VOL_NORM"
+	"pitch"			"95, 105"
+
+	"soundlevel"	"SNDLVL_NORM"
+
+	"wave"			"npc/hound/dogbrk.wav"
+	"wave"			"npc/hound/bite.wav"
+}
+
+"NPC_Hound.Frenzy"
+{
+	"channel"		"CHAN_ITEM"
+	"volume"		"VOL_NORM"
+	"pitch"			"PITCH_NORM"
+
+	"soundlevel"	"SNDLVL_NORM"
+
+	"wave"			"npc/hound/deepbark.wav"
+	"wave"			"npc/hound/dogbrk.wav"
+	"wave"			"npc/hound/bite.wav"
+}
+
+"NPC_Hound.Moan1"
+{
+	"channel"		"CHAN_STATIC"
+	"volume"		"VOL_NORM"
+	"pitch"			"PITCH_NORM"
+
+	"soundlevel"	"SNDLVL_NORM"
+
+	"wave"			"npc/hound/growl_loop.wav"
+}
+
+
+"NPC_Hound.Gurgle"
+{
+	"channel"		"CHAN_VOICE"
+	"volume"		"VOL_NORM"
+	"pitch"			"PITCH_NORM"
+
+	"soundlevel"	"SNDLVL_NORM"
+
+	"wave"			"npc/hound/dogpant_loop.wav"
+}
+
+"NPC_Hound.NoSound"
+{
+	"channel"		"CHAN_ITEM"
+	"volume"		"VOL_NORM"
+	"pitch"			"PITCH_NORM"
+
+	"soundlevel"	"SNDLVL_NORM"
+
+	"wave"			"common/null.wav"
+}

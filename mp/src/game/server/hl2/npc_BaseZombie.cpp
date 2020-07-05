@@ -1380,7 +1380,8 @@ CBaseEntity *CNPC_BaseZombie::ClawAttack( float flDist, int iDamage, QAngle &qaV
 				break;
 
 			case ZOMBIE_BLOOD_BITE:
-				// No blood for these.
+				if (GetAttachment("blood_mouth", vecBloodPos))
+					SpawnBlood(vecBloodPos, g_vecAttackDir, pHurt->BloodColor(), MIN(iDamage, 30));
 				break;
 			}
 		}
