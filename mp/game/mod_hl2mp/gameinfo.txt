@@ -8,7 +8,7 @@
 	nomodels		0
 	nohimodel	1
 	nocrosshair	1
-	icon		"resource/game"
+	icon		"resource/icon_repose"
 	hidden_maps
 	{
 		"test_speakers"		1

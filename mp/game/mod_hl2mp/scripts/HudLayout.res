@@ -5,17 +5,19 @@
 		"fieldName"		"HudHealth"
 		"xpos"	"16"
 		"ypos"	"432"
-		"wide"	"102"
-		"tall"  "36"
+		"wide"	"76"	//Set in the "HealthNotMaxed"/"HeathMaxedOut" Hud Animations!
+		"tall"  "36"		//Set in the "HealthNotMaxed"/"HeathMaxedOut" Hud Animations!
 		"visible" "1"
 		"enabled" "1"
 
 		"PaintBackgroundType"	"2"
 		
 		"text_xpos" "8"
-		"text_ypos" "20"
-		"digit_xpos" "50"
+		"text_ypos" "8"
+		"digit_xpos" "22"
 		"digit_ypos" "2"
+		"digit2_xpos" "68"
+		"digit2_ypos" "40" //Set in the "HealthNotMaxed" Hud Animation!
 	}
 
 	TargetID

@@ -279,6 +279,7 @@ END_RECV_TABLE()
 		RecvPropEHandle( RECVINFO(m_hVehicle) ),
 		RecvPropEHandle( RECVINFO(m_hUseEntity) ),
 
+		RecvPropInt		(RECVINFO(m_iMaxHealth)),
 		RecvPropInt		(RECVINFO(m_iHealth)),
 		RecvPropInt		(RECVINFO(m_lifeState)),
 

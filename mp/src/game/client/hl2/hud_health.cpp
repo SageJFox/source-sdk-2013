@@ -50,10 +50,13 @@ public:
 	virtual void Reset( void );
 	virtual void OnThink();
 			void MsgFunc_Damage( bf_read &msg );
+	virtual void Paint(void);
 
 private:
 	// old variables
 	int		m_iHealth;
+	int		m_iMaxHealth;
+	bool	m_bHealthHitMax = true;
 	
 	int		m_bitsDamage;
 };	
@@ -67,6 +70,7 @@ DECLARE_HUD_MESSAGE( CHudHealth, Damage );
 CHudHealth::CHudHealth( const char *pElementName ) : CHudElement( pElementName ), CHudNumericDisplay(NULL, "HudHealth")
 {
 	SetHiddenBits( HIDEHUD_HEALTH | HIDEHUD_PLAYERDEAD | HIDEHUD_NEEDSUIT );
+	SetShouldDisplaySecondaryValue(true);
 }
 
 //-----------------------------------------------------------------------------
@@ -84,9 +88,10 @@ void CHudHealth::Init()
 void CHudHealth::Reset()
 {
 	m_iHealth		= INIT_HEALTH;
-	m_bitsDamage	= 0;
+	m_iMaxHealth = m_iHealth;
+	m_bitsDamage = 0;
 
-	wchar_t *tempString = g_pVGuiLocalize->Find("#Valve_Hud_HEALTH");
+	wchar_t *tempString = g_pVGuiLocalize->Find("#Repose_Hud_HEALTH");
 
 	if (tempString)
 	{
@@ -94,9 +99,11 @@ void CHudHealth::Reset()
 	}
 	else
 	{
-		SetLabelText(L"HEALTH");
+		SetLabelText(L"HP");
 	}
+	SetShouldDisplaySecondaryValue(true);
 	SetDisplayValue(m_iHealth);
+	SetSecondaryValue(m_iMaxHealth);
 }
 
 //-----------------------------------------------------------------------------
@@ -118,6 +125,7 @@ void CHudHealth::OnThink()
 	{
 		// Never below zero
 		newHealth = MAX( local->GetHealth(), 0 );
+		m_iMaxHealth = local->GetMaxHealth();
 	}
 
 	// Only update the fade if we've changed health
@@ -138,7 +146,20 @@ void CHudHealth::OnThink()
 		g_pClientMode->GetViewportAnimationController()->StartAnimationSequence("HealthLow");
 	}
 
+	//uncomment to hide max health when at full health
+	if (m_iHealth >= m_iMaxHealth)
+	{
+		g_pClientMode->GetViewportAnimationController()->StartAnimationSequence("HealthMaxedOut");
+		m_bHealthHitMax = true;
+	}
+	else if (m_bHealthHitMax)
+	{
+		g_pClientMode->GetViewportAnimationController()->StartAnimationSequence("HealthNotMaxed");
+		m_bHealthHitMax = false;
+	}
+
 	SetDisplayValue(m_iHealth);
+	SetSecondaryValue(m_iMaxHealth);
 }
 
 //-----------------------------------------------------------------------------
@@ -167,4 +188,42 @@ void CHudHealth::MsgFunc_Damage( bf_read &msg )
 			g_pClientMode->GetViewportAnimationController()->StartAnimationSequence("HealthDamageTaken");
 		}
 	}
+}
+
+void CHudHealth::Paint(void)
+{
+	if (m_bDisplayValue)
+	{
+		// draw our numbers
+		surface()->DrawSetTextColor(GetFgColor());
+		m_bIndent = true;
+		PaintNumbers(m_hNumberFont, digit_xpos, digit_ypos, m_iValue);
+
+		// draw the overbright blur
+		for (float fl = m_flBlur; fl > 0.0f; fl -= 1.0f)
+		{
+			if (fl >= 1.0f)
+			{
+				PaintNumbers(m_hNumberGlowFont, digit_xpos, digit_ypos, m_iValue);
+			}
+			else
+			{
+				// draw a percentage of the last one
+				Color col = GetFgColor();
+				col[3] *= fl;
+				surface()->DrawSetTextColor(col);
+				PaintNumbers(m_hNumberGlowFont, digit_xpos, digit_ypos, m_iValue);
+			}
+		}
+	}
+
+	// total ammo
+	if (m_bDisplaySecondaryValue)
+	{
+		surface()->DrawSetTextColor(GetFgColor());
+		m_bIndent = false;
+		PaintSlashNumbers(m_hSmallNumberFont, digit2_xpos, digit2_ypos, m_iSecondaryValue);
+	}
+
+	PaintLabel();
 }

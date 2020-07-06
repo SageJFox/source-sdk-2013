@@ -259,6 +259,20 @@ event HealthIncreasedBelow20
 	Animate HudHealth		Blur		"0"			Deaccel	0.1		2.0
 }
 
+event HealthMaxedOut
+{
+	//Animate HudHealth digit2_ypos	12			Linear 0.0		0.05
+	Animate HudHealth digit2_ypos	40			Linear 0.05		0.20
+	Animate HudHealth size			"76 36"	Linear 0.05		0.2
+}
+
+event HealthNotMaxed
+{
+	Animate HudHealth digit2_ypos	12			Linear 0.0		0.2
+	Animate HudHealth digit2_ypos	16			Linear 0.2		0.05
+	Animate HudHealth size			"102 36"	Linear 0.05		0.2
+}
+
 event SuitPowerIncreasedAbove20
 {
 	StopEvent	SuitLoop 0.0

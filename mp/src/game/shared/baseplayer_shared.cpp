@@ -1817,7 +1817,7 @@ void CBasePlayer::MakeTracer( const Vector &vecTracerSrc, const trace_t &tr, int
 	BaseClass::MakeTracer( vecTracerSrc, tr, iTracerType );
 }
 
-
+//client/server
 void CBasePlayer::SharedSpawn()
 {
 	SetMoveType( MOVETYPE_WALK );
@@ -1828,6 +1828,7 @@ void CBasePlayer::SharedSpawn()
 	pl.deadflag	= false;
 	m_lifeState	= LIFE_ALIVE;
 	m_iHealth = 100;
+	m_iMaxHealth = m_iHealth;
 	m_takedamage		= DAMAGE_YES;
 
 	m_Local.m_bDrawViewmodel = true;
