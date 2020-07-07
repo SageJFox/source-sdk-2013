@@ -43,6 +43,12 @@
     <Filter Include="Source Files\Repose">
       <UniqueIdentifier>{b75d4de6-ce54-4b1c-81fd-68e365facb3e}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\unsorted">
+      <UniqueIdentifier>{4e33b1e9-359e-493c-95bd-0d60eeeff515}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\unsorted\ai_entities">
+      <UniqueIdentifier>{0598b17e-303f-4587-a20a-67bba2c1ca2f}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Library Include="..\..\lib\public\choreoobjects.lib">
@@ -710,840 +716,6 @@
     <ClInclude Include="..\..\common\replay\ireplaysessionrecorder.h">
       <Filter>Replay</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\game\shared\achievement_saverestore.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\game\shared\achievementmgr.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\game\shared\activitylist.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\game\shared\ai_activity.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="ai_baseactor.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="ai_basehumanoid.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="ai_basenpc.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="ai_basenpc_flyer.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="ai_basenpc_flyer_new.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="ai_basenpc_physicsflyer.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="ai_behavior.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="ai_behavior_assault.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="ai_behavior_fear.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="ai_behavior_follow.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="ai_behavior_lead.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="ai_behavior_rappel.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="ai_behavior_standoff.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="ai_blended_movement.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="ai_component.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="ai_condition.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="AI_Criteria.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="ai_debug.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\game\shared\ai_debug_shared.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="ai_default.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="ai_dynamiclink.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="ai_goalentity.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="ai_hint.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="ai_hull.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="ai_initutils.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="AI_Interest_Target.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="ai_link.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="ai_localnavigator.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="ai_looktarget.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="ai_memory.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="ai_motor.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="ai_moveprobe.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="ai_moveshoot.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="ai_movesolver.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="ai_movetypes.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="ai_namespaces.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="ai_navgoaltype.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="ai_navigator.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="ai_navtype.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="ai_network.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="ai_networkmanager.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="ai_node.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="ai_npcstate.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="ai_obstacle_type.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="ai_pathfinder.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="ai_planesolver.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="ai_playerally.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="AI_ResponseSystem.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="ai_route.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="ai_routedist.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="ai_saverestore.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="ai_schedule.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="ai_scriptconditions.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="ai_senses.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="ai_sentence.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="ai_speech.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="ai_speechfilter.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="ai_squad.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="ai_squadslot.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="ai_tacticalservices.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="ai_task.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="ai_trackpather.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="ai_utils.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="ai_waypoint.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\game\shared\animation.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\game\shared\apparent_velocity_helper.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\game\shared\baseachievement.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="baseanimating.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="BaseAnimatingOverlay.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="basecombatcharacter.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="basecombatweapon.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\game\shared\basecombatweapon_shared.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="baseentity.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\game\shared\baseentity_shared.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="baseflex.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\game\shared\basegrenade_shared.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="basemultiplayerplayer.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\game\shared\baseparticleentity.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\game\shared\baseplayer_shared.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\game\shared\baseprojectile.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="BasePropDoor.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="basetoggle.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="baseviewmodel.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\game\shared\baseviewmodel_shared.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\game\shared\beam_shared.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="bitstring.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\public\bone_setup.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="buttons.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="cbase.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\game\shared\choreoactor.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\game\shared\choreochannel.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\game\shared\choreoevent.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\game\shared\choreoscene.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="client.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\game\shared\collisionproperty.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\public\collisionutils.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="CRagdollMagnet.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\game\shared\debugoverlay_shared.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="doors.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\public\edict.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\public\editor_sendcommand.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\game\shared\effect_color_tables.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="effects.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\public\eiface.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="enginecallback.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="entityapi.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="entityblocker.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="EntityDissolve.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="EntityFlame.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="entityinput.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="entitylist.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="entityoutput.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="EntityParticleTrail.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\game\shared\entityparticletrail_shared.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="env_debughistory.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="env_player_surface_trigger.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\game\shared\env_wind_shared.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="env_zoom.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="EnvLaser.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="EnvMessage.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="envmicrophone.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="envspark.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\public\event_flags.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="event_tempentity_tester.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\game\shared\eventlist.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="eventqueue.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="explode.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="filters.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="fire.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="fire_smoke.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="fish.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="fourwheelvehiclephysics.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="func_areaportalbase.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="func_areaportalwindow.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="func_break.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="func_breakablesurf.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\game\shared\func_dust_shared.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="func_movelinear.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="game.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="gameinterface.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\game\shared\gamemovement.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\game\shared\gamerules.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\game\shared\gamestats.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\game\shared\gamestringpool.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\game\shared\gamevars_shared.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="gameweaponmanager.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="gib.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="globalstate.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="globalstate_private.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="grenadethrown.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="h_cycler.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="hierarchy.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\game\shared\hintmessage.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\game\shared\hintsystem.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\common\hl2orange.spa.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="hltvdirector.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\game\shared\ichoreoeventcallback.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\game\shared\igamesystem.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="info_camera_link.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="init_factory.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\public\interpolatortypes.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\game\shared\interval.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\public\iregistry.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\game\shared\iscenetokenprocessor.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="iservervehicle.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="items.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\public\ivoiceserver.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\public\keyframe\keyframe.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="lights.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="locksounds.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="maprules.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\public\mathlib\mathlib.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\public\model_types.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="monstermaker.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="movehelper_server.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="movie_explosion.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\game\shared\multiplay_gamerules.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="ndebugoverlay.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="networkstringtable_gamedll.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\public\networkstringtabledefs.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\game\shared\obstacle_pushaway.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="particle_fire.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="particle_light.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\game\shared\particle_parse.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="particle_smokegrenade.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="pathtrack.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\public\vphysics\performance.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="phys_controller.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="physconstraint.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="physics.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="physics_bone_follower.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="physics_collisionevent.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="physics_npc_solver.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="physics_prop_ragdoll.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\game\shared\physics_saverestore.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\game\shared\physics_shared.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="physobj.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="player.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="player_command.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="player_pickup.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="player_resource.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="playerlocaldata.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\game\shared\point_bonusmaps_accessor.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="point_camera.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\game\shared\point_posecontroller.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="point_template.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\public\mathlib\polyhedron.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\game\shared\positionwatcher.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\game\shared\precache_register.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\game\shared\predictableid.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\game\shared\predicted_viewmodel.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="props.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="pushentity.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\game\shared\ragdoll_shared.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="RagdollBoogie.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="recipientfilter.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="rope.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\public\rope_physics.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\public\rope_shared.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\game\shared\saverestore.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\game\shared\saverestore_bitstring.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\game\shared\saverestore_utlsymbol.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\game\shared\saverestore_utlvector.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="sceneentity.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="scripted.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="scriptedtarget.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\game\shared\scriptevent.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\public\server_class.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\game\server\serverbenchmark_base.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="ServerNetworkProperty.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\game\shared\SharedFunctorUtils.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\public\shattersurfacetypes.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\game\shared\sheetsimulator.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\public\simple_physics.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\game\shared\simtimer.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\game\shared\singleplay_gamerules.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\game\shared\solidsetdefaults.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="soundent.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="soundscape.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="spark.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="spotlightend.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\game\shared\Sprite.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\game\shared\SpriteTrail.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\public\vphysics\stats.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\public\steam\steam_api.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\public\stringregistry.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="tactical_mission.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="team.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="team_control_point.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="team_control_point_master.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="team_control_point_round.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="team_objectiveresource.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="team_spawnpoint.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="team_train_watcher.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\game\shared\teamplay_gamerules.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\game\shared\teamplay_round_timer.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\game\shared\tempentity.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="TemplateEntities.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\game\shared\touchlink.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="trains.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="trigger_area_capture.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="triggers.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="util.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="vehicle_sounds.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="vguiscreen.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\public\mathlib\vmatrix.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\game\shared\voice_common.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\game\shared\voice_gamemgr.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\game\server\vote_controller.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="waterbullet.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="wcedit.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\game\shared\weapon_parse.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\game\shared\weapon_proficiency.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="world.h">
-      <Filter>Source Files</Filter>
-    </ClInclude>
     <ClInclude Include="hl2\ai_behavior_actbusy.h">
       <Filter>Source Files\HL2 DLL</Filter>
     </ClInclude>
@@ -1832,1120 +1004,844 @@
     <ClInclude Include="..\shared\hl2mp\repose_stats.h">
       <Filter>Source Files\HL2MP</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\game\shared\ai_activity.h">
+      <Filter>Source Files\unsorted\ai_entities</Filter>
+    </ClInclude>
+    <ClInclude Include="ai_baseactor.h">
+      <Filter>Source Files\unsorted\ai_entities</Filter>
+    </ClInclude>
+    <ClInclude Include="ai_basehumanoid.h">
+      <Filter>Source Files\unsorted\ai_entities</Filter>
+    </ClInclude>
+    <ClInclude Include="ai_basenpc.h">
+      <Filter>Source Files\unsorted\ai_entities</Filter>
+    </ClInclude>
+    <ClInclude Include="ai_basenpc_flyer.h">
+      <Filter>Source Files\unsorted\ai_entities</Filter>
+    </ClInclude>
+    <ClInclude Include="ai_basenpc_flyer_new.h">
+      <Filter>Source Files\unsorted\ai_entities</Filter>
+    </ClInclude>
+    <ClInclude Include="ai_basenpc_physicsflyer.h">
+      <Filter>Source Files\unsorted\ai_entities</Filter>
+    </ClInclude>
+    <ClInclude Include="ai_behavior.h">
+      <Filter>Source Files\unsorted\ai_entities</Filter>
+    </ClInclude>
+    <ClInclude Include="ai_behavior_assault.h">
+      <Filter>Source Files\unsorted\ai_entities</Filter>
+    </ClInclude>
+    <ClInclude Include="ai_behavior_fear.h">
+      <Filter>Source Files\unsorted\ai_entities</Filter>
+    </ClInclude>
+    <ClInclude Include="ai_behavior_follow.h">
+      <Filter>Source Files\unsorted\ai_entities</Filter>
+    </ClInclude>
+    <ClInclude Include="ai_behavior_lead.h">
+      <Filter>Source Files\unsorted\ai_entities</Filter>
+    </ClInclude>
+    <ClInclude Include="ai_behavior_rappel.h">
+      <Filter>Source Files\unsorted\ai_entities</Filter>
+    </ClInclude>
+    <ClInclude Include="ai_behavior_standoff.h">
+      <Filter>Source Files\unsorted\ai_entities</Filter>
+    </ClInclude>
+    <ClInclude Include="ai_blended_movement.h">
+      <Filter>Source Files\unsorted\ai_entities</Filter>
+    </ClInclude>
+    <ClInclude Include="ai_component.h">
+      <Filter>Source Files\unsorted\ai_entities</Filter>
+    </ClInclude>
+    <ClInclude Include="ai_condition.h">
+      <Filter>Source Files\unsorted\ai_entities</Filter>
+    </ClInclude>
+    <ClInclude Include="AI_Criteria.h">
+      <Filter>Source Files\unsorted\ai_entities</Filter>
+    </ClInclude>
+    <ClInclude Include="ai_debug.h">
+      <Filter>Source Files\unsorted\ai_entities</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\game\shared\ai_debug_shared.h">
+      <Filter>Source Files\unsorted\ai_entities</Filter>
+    </ClInclude>
+    <ClInclude Include="ai_default.h">
+      <Filter>Source Files\unsorted\ai_entities</Filter>
+    </ClInclude>
+    <ClInclude Include="ai_dynamiclink.h">
+      <Filter>Source Files\unsorted\ai_entities</Filter>
+    </ClInclude>
+    <ClInclude Include="ai_goalentity.h">
+      <Filter>Source Files\unsorted\ai_entities</Filter>
+    </ClInclude>
+    <ClInclude Include="ai_hint.h">
+      <Filter>Source Files\unsorted\ai_entities</Filter>
+    </ClInclude>
+    <ClInclude Include="ai_hull.h">
+      <Filter>Source Files\unsorted\ai_entities</Filter>
+    </ClInclude>
+    <ClInclude Include="ai_initutils.h">
+      <Filter>Source Files\unsorted\ai_entities</Filter>
+    </ClInclude>
+    <ClInclude Include="AI_Interest_Target.h">
+      <Filter>Source Files\unsorted\ai_entities</Filter>
+    </ClInclude>
+    <ClInclude Include="ai_link.h">
+      <Filter>Source Files\unsorted\ai_entities</Filter>
+    </ClInclude>
+    <ClInclude Include="ai_localnavigator.h">
+      <Filter>Source Files\unsorted\ai_entities</Filter>
+    </ClInclude>
+    <ClInclude Include="ai_looktarget.h">
+      <Filter>Source Files\unsorted\ai_entities</Filter>
+    </ClInclude>
+    <ClInclude Include="ai_memory.h">
+      <Filter>Source Files\unsorted\ai_entities</Filter>
+    </ClInclude>
+    <ClInclude Include="ai_motor.h">
+      <Filter>Source Files\unsorted\ai_entities</Filter>
+    </ClInclude>
+    <ClInclude Include="ai_moveprobe.h">
+      <Filter>Source Files\unsorted\ai_entities</Filter>
+    </ClInclude>
+    <ClInclude Include="ai_moveshoot.h">
+      <Filter>Source Files\unsorted\ai_entities</Filter>
+    </ClInclude>
+    <ClInclude Include="ai_movesolver.h">
+      <Filter>Source Files\unsorted\ai_entities</Filter>
+    </ClInclude>
+    <ClInclude Include="ai_movetypes.h">
+      <Filter>Source Files\unsorted\ai_entities</Filter>
+    </ClInclude>
+    <ClInclude Include="ai_namespaces.h">
+      <Filter>Source Files\unsorted\ai_entities</Filter>
+    </ClInclude>
+    <ClInclude Include="ai_navgoaltype.h">
+      <Filter>Source Files\unsorted\ai_entities</Filter>
+    </ClInclude>
+    <ClInclude Include="ai_navigator.h">
+      <Filter>Source Files\unsorted\ai_entities</Filter>
+    </ClInclude>
+    <ClInclude Include="ai_navtype.h">
+      <Filter>Source Files\unsorted\ai_entities</Filter>
+    </ClInclude>
+    <ClInclude Include="ai_network.h">
+      <Filter>Source Files\unsorted\ai_entities</Filter>
+    </ClInclude>
+    <ClInclude Include="ai_networkmanager.h">
+      <Filter>Source Files\unsorted\ai_entities</Filter>
+    </ClInclude>
+    <ClInclude Include="ai_node.h">
+      <Filter>Source Files\unsorted\ai_entities</Filter>
+    </ClInclude>
+    <ClInclude Include="ai_npcstate.h">
+      <Filter>Source Files\unsorted\ai_entities</Filter>
+    </ClInclude>
+    <ClInclude Include="ai_obstacle_type.h">
+      <Filter>Source Files\unsorted\ai_entities</Filter>
+    </ClInclude>
+    <ClInclude Include="ai_pathfinder.h">
+      <Filter>Source Files\unsorted\ai_entities</Filter>
+    </ClInclude>
+    <ClInclude Include="ai_planesolver.h">
+      <Filter>Source Files\unsorted\ai_entities</Filter>
+    </ClInclude>
+    <ClInclude Include="ai_playerally.h">
+      <Filter>Source Files\unsorted\ai_entities</Filter>
+    </ClInclude>
+    <ClInclude Include="AI_ResponseSystem.h">
+      <Filter>Source Files\unsorted\ai_entities</Filter>
+    </ClInclude>
+    <ClInclude Include="ai_route.h">
+      <Filter>Source Files\unsorted\ai_entities</Filter>
+    </ClInclude>
+    <ClInclude Include="ai_routedist.h">
+      <Filter>Source Files\unsorted\ai_entities</Filter>
+    </ClInclude>
+    <ClInclude Include="ai_saverestore.h">
+      <Filter>Source Files\unsorted\ai_entities</Filter>
+    </ClInclude>
+    <ClInclude Include="ai_schedule.h">
+      <Filter>Source Files\unsorted\ai_entities</Filter>
+    </ClInclude>
+    <ClInclude Include="ai_scriptconditions.h">
+      <Filter>Source Files\unsorted\ai_entities</Filter>
+    </ClInclude>
+    <ClInclude Include="ai_senses.h">
+      <Filter>Source Files\unsorted\ai_entities</Filter>
+    </ClInclude>
+    <ClInclude Include="ai_sentence.h">
+      <Filter>Source Files\unsorted\ai_entities</Filter>
+    </ClInclude>
+    <ClInclude Include="ai_speech.h">
+      <Filter>Source Files\unsorted\ai_entities</Filter>
+    </ClInclude>
+    <ClInclude Include="ai_speechfilter.h">
+      <Filter>Source Files\unsorted\ai_entities</Filter>
+    </ClInclude>
+    <ClInclude Include="ai_squad.h">
+      <Filter>Source Files\unsorted\ai_entities</Filter>
+    </ClInclude>
+    <ClInclude Include="ai_squadslot.h">
+      <Filter>Source Files\unsorted\ai_entities</Filter>
+    </ClInclude>
+    <ClInclude Include="ai_tacticalservices.h">
+      <Filter>Source Files\unsorted\ai_entities</Filter>
+    </ClInclude>
+    <ClInclude Include="ai_task.h">
+      <Filter>Source Files\unsorted\ai_entities</Filter>
+    </ClInclude>
+    <ClInclude Include="ai_trackpather.h">
+      <Filter>Source Files\unsorted\ai_entities</Filter>
+    </ClInclude>
+    <ClInclude Include="ai_utils.h">
+      <Filter>Source Files\unsorted\ai_entities</Filter>
+    </ClInclude>
+    <ClInclude Include="ai_waypoint.h">
+      <Filter>Source Files\unsorted\ai_entities</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\game\shared\achievement_saverestore.h">
+      <Filter>Source Files\unsorted</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\game\shared\achievementmgr.h">
+      <Filter>Source Files\unsorted</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\game\shared\activitylist.h">
+      <Filter>Source Files\unsorted</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\game\shared\animation.h">
+      <Filter>Source Files\unsorted</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\game\shared\apparent_velocity_helper.h">
+      <Filter>Source Files\unsorted</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\game\shared\baseachievement.h">
+      <Filter>Source Files\unsorted</Filter>
+    </ClInclude>
+    <ClInclude Include="baseanimating.h">
+      <Filter>Source Files\unsorted</Filter>
+    </ClInclude>
+    <ClInclude Include="BaseAnimatingOverlay.h">
+      <Filter>Source Files\unsorted</Filter>
+    </ClInclude>
+    <ClInclude Include="basecombatcharacter.h">
+      <Filter>Source Files\unsorted</Filter>
+    </ClInclude>
+    <ClInclude Include="basecombatweapon.h">
+      <Filter>Source Files\unsorted</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\game\shared\basecombatweapon_shared.h">
+      <Filter>Source Files\unsorted</Filter>
+    </ClInclude>
+    <ClInclude Include="baseentity.h">
+      <Filter>Source Files\unsorted</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\game\shared\baseentity_shared.h">
+      <Filter>Source Files\unsorted</Filter>
+    </ClInclude>
+    <ClInclude Include="baseflex.h">
+      <Filter>Source Files\unsorted</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\game\shared\basegrenade_shared.h">
+      <Filter>Source Files\unsorted</Filter>
+    </ClInclude>
+    <ClInclude Include="basemultiplayerplayer.h">
+      <Filter>Source Files\unsorted</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\game\shared\baseparticleentity.h">
+      <Filter>Source Files\unsorted</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\game\shared\baseplayer_shared.h">
+      <Filter>Source Files\unsorted</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\game\shared\baseprojectile.h">
+      <Filter>Source Files\unsorted</Filter>
+    </ClInclude>
+    <ClInclude Include="BasePropDoor.h">
+      <Filter>Source Files\unsorted</Filter>
+    </ClInclude>
+    <ClInclude Include="basetoggle.h">
+      <Filter>Source Files\unsorted</Filter>
+    </ClInclude>
+    <ClInclude Include="baseviewmodel.h">
+      <Filter>Source Files\unsorted</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\game\shared\baseviewmodel_shared.h">
+      <Filter>Source Files\unsorted</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\game\shared\beam_shared.h">
+      <Filter>Source Files\unsorted</Filter>
+    </ClInclude>
+    <ClInclude Include="bitstring.h">
+      <Filter>Source Files\unsorted</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\public\bone_setup.h">
+      <Filter>Source Files\unsorted</Filter>
+    </ClInclude>
+    <ClInclude Include="buttons.h">
+      <Filter>Source Files\unsorted</Filter>
+    </ClInclude>
+    <ClInclude Include="cbase.h">
+      <Filter>Source Files\unsorted</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\game\shared\choreoactor.h">
+      <Filter>Source Files\unsorted</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\game\shared\choreochannel.h">
+      <Filter>Source Files\unsorted</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\game\shared\choreoevent.h">
+      <Filter>Source Files\unsorted</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\game\shared\choreoscene.h">
+      <Filter>Source Files\unsorted</Filter>
+    </ClInclude>
+    <ClInclude Include="client.h">
+      <Filter>Source Files\unsorted</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\game\shared\collisionproperty.h">
+      <Filter>Source Files\unsorted</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\public\collisionutils.h">
+      <Filter>Source Files\unsorted</Filter>
+    </ClInclude>
+    <ClInclude Include="CRagdollMagnet.h">
+      <Filter>Source Files\unsorted</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\game\shared\debugoverlay_shared.h">
+      <Filter>Source Files\unsorted</Filter>
+    </ClInclude>
+    <ClInclude Include="doors.h">
+      <Filter>Source Files\unsorted</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\public\edict.h">
+      <Filter>Source Files\unsorted</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\public\editor_sendcommand.h">
+      <Filter>Source Files\unsorted</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\game\shared\effect_color_tables.h">
+      <Filter>Source Files\unsorted</Filter>
+    </ClInclude>
+    <ClInclude Include="effects.h">
+      <Filter>Source Files\unsorted</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\public\eiface.h">
+      <Filter>Source Files\unsorted</Filter>
+    </ClInclude>
+    <ClInclude Include="enginecallback.h">
+      <Filter>Source Files\unsorted</Filter>
+    </ClInclude>
+    <ClInclude Include="entityapi.h">
+      <Filter>Source Files\unsorted</Filter>
+    </ClInclude>
+    <ClInclude Include="entityblocker.h">
+      <Filter>Source Files\unsorted</Filter>
+    </ClInclude>
+    <ClInclude Include="EntityDissolve.h">
+      <Filter>Source Files\unsorted</Filter>
+    </ClInclude>
+    <ClInclude Include="EntityFlame.h">
+      <Filter>Source Files\unsorted</Filter>
+    </ClInclude>
+    <ClInclude Include="entityinput.h">
+      <Filter>Source Files\unsorted</Filter>
+    </ClInclude>
+    <ClInclude Include="entitylist.h">
+      <Filter>Source Files\unsorted</Filter>
+    </ClInclude>
+    <ClInclude Include="entityoutput.h">
+      <Filter>Source Files\unsorted</Filter>
+    </ClInclude>
+    <ClInclude Include="EntityParticleTrail.h">
+      <Filter>Source Files\unsorted</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\game\shared\entityparticletrail_shared.h">
+      <Filter>Source Files\unsorted</Filter>
+    </ClInclude>
+    <ClInclude Include="env_debughistory.h">
+      <Filter>Source Files\unsorted</Filter>
+    </ClInclude>
+    <ClInclude Include="env_player_surface_trigger.h">
+      <Filter>Source Files\unsorted</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\game\shared\env_wind_shared.h">
+      <Filter>Source Files\unsorted</Filter>
+    </ClInclude>
+    <ClInclude Include="env_zoom.h">
+      <Filter>Source Files\unsorted</Filter>
+    </ClInclude>
+    <ClInclude Include="EnvLaser.h">
+      <Filter>Source Files\unsorted</Filter>
+    </ClInclude>
+    <ClInclude Include="EnvMessage.h">
+      <Filter>Source Files\unsorted</Filter>
+    </ClInclude>
+    <ClInclude Include="envmicrophone.h">
+      <Filter>Source Files\unsorted</Filter>
+    </ClInclude>
+    <ClInclude Include="envspark.h">
+      <Filter>Source Files\unsorted</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\public\event_flags.h">
+      <Filter>Source Files\unsorted</Filter>
+    </ClInclude>
+    <ClInclude Include="event_tempentity_tester.h">
+      <Filter>Source Files\unsorted</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\game\shared\eventlist.h">
+      <Filter>Source Files\unsorted</Filter>
+    </ClInclude>
+    <ClInclude Include="eventqueue.h">
+      <Filter>Source Files\unsorted</Filter>
+    </ClInclude>
+    <ClInclude Include="explode.h">
+      <Filter>Source Files\unsorted</Filter>
+    </ClInclude>
+    <ClInclude Include="filters.h">
+      <Filter>Source Files\unsorted</Filter>
+    </ClInclude>
+    <ClInclude Include="fire.h">
+      <Filter>Source Files\unsorted</Filter>
+    </ClInclude>
+    <ClInclude Include="fire_smoke.h">
+      <Filter>Source Files\unsorted</Filter>
+    </ClInclude>
+    <ClInclude Include="fish.h">
+      <Filter>Source Files\unsorted</Filter>
+    </ClInclude>
+    <ClInclude Include="fourwheelvehiclephysics.h">
+      <Filter>Source Files\unsorted</Filter>
+    </ClInclude>
+    <ClInclude Include="func_areaportalbase.h">
+      <Filter>Source Files\unsorted</Filter>
+    </ClInclude>
+    <ClInclude Include="func_areaportalwindow.h">
+      <Filter>Source Files\unsorted</Filter>
+    </ClInclude>
+    <ClInclude Include="func_break.h">
+      <Filter>Source Files\unsorted</Filter>
+    </ClInclude>
+    <ClInclude Include="func_breakablesurf.h">
+      <Filter>Source Files\unsorted</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\game\shared\func_dust_shared.h">
+      <Filter>Source Files\unsorted</Filter>
+    </ClInclude>
+    <ClInclude Include="func_movelinear.h">
+      <Filter>Source Files\unsorted</Filter>
+    </ClInclude>
+    <ClInclude Include="game.h">
+      <Filter>Source Files\unsorted</Filter>
+    </ClInclude>
+    <ClInclude Include="gameinterface.h">
+      <Filter>Source Files\unsorted</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\game\shared\gamemovement.h">
+      <Filter>Source Files\unsorted</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\game\shared\gamerules.h">
+      <Filter>Source Files\unsorted</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\game\shared\gamestats.h">
+      <Filter>Source Files\unsorted</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\game\shared\gamestringpool.h">
+      <Filter>Source Files\unsorted</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\game\shared\gamevars_shared.h">
+      <Filter>Source Files\unsorted</Filter>
+    </ClInclude>
+    <ClInclude Include="gameweaponmanager.h">
+      <Filter>Source Files\unsorted</Filter>
+    </ClInclude>
+    <ClInclude Include="gib.h">
+      <Filter>Source Files\unsorted</Filter>
+    </ClInclude>
+    <ClInclude Include="globalstate.h">
+      <Filter>Source Files\unsorted</Filter>
+    </ClInclude>
+    <ClInclude Include="globalstate_private.h">
+      <Filter>Source Files\unsorted</Filter>
+    </ClInclude>
+    <ClInclude Include="grenadethrown.h">
+      <Filter>Source Files\unsorted</Filter>
+    </ClInclude>
+    <ClInclude Include="h_cycler.h">
+      <Filter>Source Files\unsorted</Filter>
+    </ClInclude>
+    <ClInclude Include="hierarchy.h">
+      <Filter>Source Files\unsorted</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\game\shared\hintmessage.h">
+      <Filter>Source Files\unsorted</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\game\shared\hintsystem.h">
+      <Filter>Source Files\unsorted</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\common\hl2orange.spa.h">
+      <Filter>Source Files\unsorted</Filter>
+    </ClInclude>
+    <ClInclude Include="hltvdirector.h">
+      <Filter>Source Files\unsorted</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\game\shared\ichoreoeventcallback.h">
+      <Filter>Source Files\unsorted</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\game\shared\igamesystem.h">
+      <Filter>Source Files\unsorted</Filter>
+    </ClInclude>
+    <ClInclude Include="info_camera_link.h">
+      <Filter>Source Files\unsorted</Filter>
+    </ClInclude>
+    <ClInclude Include="init_factory.h">
+      <Filter>Source Files\unsorted</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\public\interpolatortypes.h">
+      <Filter>Source Files\unsorted</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\game\shared\interval.h">
+      <Filter>Source Files\unsorted</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\public\iregistry.h">
+      <Filter>Source Files\unsorted</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\game\shared\iscenetokenprocessor.h">
+      <Filter>Source Files\unsorted</Filter>
+    </ClInclude>
+    <ClInclude Include="iservervehicle.h">
+      <Filter>Source Files\unsorted</Filter>
+    </ClInclude>
+    <ClInclude Include="items.h">
+      <Filter>Source Files\unsorted</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\public\ivoiceserver.h">
+      <Filter>Source Files\unsorted</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\public\keyframe\keyframe.h">
+      <Filter>Source Files\unsorted</Filter>
+    </ClInclude>
+    <ClInclude Include="lights.h">
+      <Filter>Source Files\unsorted</Filter>
+    </ClInclude>
+    <ClInclude Include="locksounds.h">
+      <Filter>Source Files\unsorted</Filter>
+    </ClInclude>
+    <ClInclude Include="maprules.h">
+      <Filter>Source Files\unsorted</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\public\mathlib\mathlib.h">
+      <Filter>Source Files\unsorted</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\public\model_types.h">
+      <Filter>Source Files\unsorted</Filter>
+    </ClInclude>
+    <ClInclude Include="monstermaker.h">
+      <Filter>Source Files\unsorted</Filter>
+    </ClInclude>
+    <ClInclude Include="movehelper_server.h">
+      <Filter>Source Files\unsorted</Filter>
+    </ClInclude>
+    <ClInclude Include="movie_explosion.h">
+      <Filter>Source Files\unsorted</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\game\shared\multiplay_gamerules.h">
+      <Filter>Source Files\unsorted</Filter>
+    </ClInclude>
+    <ClInclude Include="ndebugoverlay.h">
+      <Filter>Source Files\unsorted</Filter>
+    </ClInclude>
+    <ClInclude Include="networkstringtable_gamedll.h">
+      <Filter>Source Files\unsorted</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\public\networkstringtabledefs.h">
+      <Filter>Source Files\unsorted</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\game\shared\obstacle_pushaway.h">
+      <Filter>Source Files\unsorted</Filter>
+    </ClInclude>
+    <ClInclude Include="particle_fire.h">
+      <Filter>Source Files\unsorted</Filter>
+    </ClInclude>
+    <ClInclude Include="particle_light.h">
+      <Filter>Source Files\unsorted</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\game\shared\particle_parse.h">
+      <Filter>Source Files\unsorted</Filter>
+    </ClInclude>
+    <ClInclude Include="particle_smokegrenade.h">
+      <Filter>Source Files\unsorted</Filter>
+    </ClInclude>
+    <ClInclude Include="pathtrack.h">
+      <Filter>Source Files\unsorted</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\public\vphysics\performance.h">
+      <Filter>Source Files\unsorted</Filter>
+    </ClInclude>
+    <ClInclude Include="phys_controller.h">
+      <Filter>Source Files\unsorted</Filter>
+    </ClInclude>
+    <ClInclude Include="physconstraint.h">
+      <Filter>Source Files\unsorted</Filter>
+    </ClInclude>
+    <ClInclude Include="physics.h">
+      <Filter>Source Files\unsorted</Filter>
+    </ClInclude>
+    <ClInclude Include="physics_bone_follower.h">
+      <Filter>Source Files\unsorted</Filter>
+    </ClInclude>
+    <ClInclude Include="physics_collisionevent.h">
+      <Filter>Source Files\unsorted</Filter>
+    </ClInclude>
+    <ClInclude Include="physics_npc_solver.h">
+      <Filter>Source Files\unsorted</Filter>
+    </ClInclude>
+    <ClInclude Include="physics_prop_ragdoll.h">
+      <Filter>Source Files\unsorted</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\game\shared\physics_saverestore.h">
+      <Filter>Source Files\unsorted</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\game\shared\physics_shared.h">
+      <Filter>Source Files\unsorted</Filter>
+    </ClInclude>
+    <ClInclude Include="physobj.h">
+      <Filter>Source Files\unsorted</Filter>
+    </ClInclude>
+    <ClInclude Include="player.h">
+      <Filter>Source Files\unsorted</Filter>
+    </ClInclude>
+    <ClInclude Include="player_command.h">
+      <Filter>Source Files\unsorted</Filter>
+    </ClInclude>
+    <ClInclude Include="player_pickup.h">
+      <Filter>Source Files\unsorted</Filter>
+    </ClInclude>
+    <ClInclude Include="player_resource.h">
+      <Filter>Source Files\unsorted</Filter>
+    </ClInclude>
+    <ClInclude Include="playerlocaldata.h">
+      <Filter>Source Files\unsorted</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\game\shared\point_bonusmaps_accessor.h">
+      <Filter>Source Files\unsorted</Filter>
+    </ClInclude>
+    <ClInclude Include="point_camera.h">
+      <Filter>Source Files\unsorted</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\game\shared\point_posecontroller.h">
+      <Filter>Source Files\unsorted</Filter>
+    </ClInclude>
+    <ClInclude Include="point_template.h">
+      <Filter>Source Files\unsorted</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\public\mathlib\polyhedron.h">
+      <Filter>Source Files\unsorted</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\game\shared\positionwatcher.h">
+      <Filter>Source Files\unsorted</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\game\shared\precache_register.h">
+      <Filter>Source Files\unsorted</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\game\shared\predictableid.h">
+      <Filter>Source Files\unsorted</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\game\shared\predicted_viewmodel.h">
+      <Filter>Source Files\unsorted</Filter>
+    </ClInclude>
+    <ClInclude Include="props.h">
+      <Filter>Source Files\unsorted</Filter>
+    </ClInclude>
+    <ClInclude Include="pushentity.h">
+      <Filter>Source Files\unsorted</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\game\shared\ragdoll_shared.h">
+      <Filter>Source Files\unsorted</Filter>
+    </ClInclude>
+    <ClInclude Include="RagdollBoogie.h">
+      <Filter>Source Files\unsorted</Filter>
+    </ClInclude>
+    <ClInclude Include="recipientfilter.h">
+      <Filter>Source Files\unsorted</Filter>
+    </ClInclude>
+    <ClInclude Include="rope.h">
+      <Filter>Source Files\unsorted</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\public\rope_physics.h">
+      <Filter>Source Files\unsorted</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\public\rope_shared.h">
+      <Filter>Source Files\unsorted</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\game\shared\saverestore.h">
+      <Filter>Source Files\unsorted</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\game\shared\saverestore_bitstring.h">
+      <Filter>Source Files\unsorted</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\game\shared\saverestore_utlsymbol.h">
+      <Filter>Source Files\unsorted</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\game\shared\saverestore_utlvector.h">
+      <Filter>Source Files\unsorted</Filter>
+    </ClInclude>
+    <ClInclude Include="sceneentity.h">
+      <Filter>Source Files\unsorted</Filter>
+    </ClInclude>
+    <ClInclude Include="scripted.h">
+      <Filter>Source Files\unsorted</Filter>
+    </ClInclude>
+    <ClInclude Include="scriptedtarget.h">
+      <Filter>Source Files\unsorted</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\game\shared\scriptevent.h">
+      <Filter>Source Files\unsorted</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\public\server_class.h">
+      <Filter>Source Files\unsorted</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\game\server\serverbenchmark_base.h">
+      <Filter>Source Files\unsorted</Filter>
+    </ClInclude>
+    <ClInclude Include="ServerNetworkProperty.h">
+      <Filter>Source Files\unsorted</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\game\shared\SharedFunctorUtils.h">
+      <Filter>Source Files\unsorted</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\public\shattersurfacetypes.h">
+      <Filter>Source Files\unsorted</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\game\shared\sheetsimulator.h">
+      <Filter>Source Files\unsorted</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\public\simple_physics.h">
+      <Filter>Source Files\unsorted</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\game\shared\simtimer.h">
+      <Filter>Source Files\unsorted</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\game\shared\singleplay_gamerules.h">
+      <Filter>Source Files\unsorted</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\game\shared\solidsetdefaults.h">
+      <Filter>Source Files\unsorted</Filter>
+    </ClInclude>
+    <ClInclude Include="soundent.h">
+      <Filter>Source Files\unsorted</Filter>
+    </ClInclude>
+    <ClInclude Include="soundscape.h">
+      <Filter>Source Files\unsorted</Filter>
+    </ClInclude>
+    <ClInclude Include="spark.h">
+      <Filter>Source Files\unsorted</Filter>
+    </ClInclude>
+    <ClInclude Include="spotlightend.h">
+      <Filter>Source Files\unsorted</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\game\shared\Sprite.h">
+      <Filter>Source Files\unsorted</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\game\shared\SpriteTrail.h">
+      <Filter>Source Files\unsorted</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\public\vphysics\stats.h">
+      <Filter>Source Files\unsorted</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\public\steam\steam_api.h">
+      <Filter>Source Files\unsorted</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\public\stringregistry.h">
+      <Filter>Source Files\unsorted</Filter>
+    </ClInclude>
+    <ClInclude Include="tactical_mission.h">
+      <Filter>Source Files\unsorted</Filter>
+    </ClInclude>
+    <ClInclude Include="team.h">
+      <Filter>Source Files\unsorted</Filter>
+    </ClInclude>
+    <ClInclude Include="team_control_point.h">
+      <Filter>Source Files\unsorted</Filter>
+    </ClInclude>
+    <ClInclude Include="team_control_point_master.h">
+      <Filter>Source Files\unsorted</Filter>
+    </ClInclude>
+    <ClInclude Include="team_control_point_round.h">
+      <Filter>Source Files\unsorted</Filter>
+    </ClInclude>
+    <ClInclude Include="team_objectiveresource.h">
+      <Filter>Source Files\unsorted</Filter>
+    </ClInclude>
+    <ClInclude Include="team_spawnpoint.h">
+      <Filter>Source Files\unsorted</Filter>
+    </ClInclude>
+    <ClInclude Include="team_train_watcher.h">
+      <Filter>Source Files\unsorted</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\game\shared\teamplay_gamerules.h">
+      <Filter>Source Files\unsorted</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\game\shared\teamplay_round_timer.h">
+      <Filter>Source Files\unsorted</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\game\shared\tempentity.h">
+      <Filter>Source Files\unsorted</Filter>
+    </ClInclude>
+    <ClInclude Include="TemplateEntities.h">
+      <Filter>Source Files\unsorted</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\game\shared\touchlink.h">
+      <Filter>Source Files\unsorted</Filter>
+    </ClInclude>
+    <ClInclude Include="trains.h">
+      <Filter>Source Files\unsorted</Filter>
+    </ClInclude>
+    <ClInclude Include="trigger_area_capture.h">
+      <Filter>Source Files\unsorted</Filter>
+    </ClInclude>
+    <ClInclude Include="triggers.h">
+      <Filter>Source Files\unsorted</Filter>
+    </ClInclude>
+    <ClInclude Include="util.h">
+      <Filter>Source Files\unsorted</Filter>
+    </ClInclude>
+    <ClInclude Include="vehicle_sounds.h">
+      <Filter>Source Files\unsorted</Filter>
+    </ClInclude>
+    <ClInclude Include="vguiscreen.h">
+      <Filter>Source Files\unsorted</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\public\mathlib\vmatrix.h">
+      <Filter>Source Files\unsorted</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\game\shared\voice_common.h">
+      <Filter>Source Files\unsorted</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\game\shared\voice_gamemgr.h">
+      <Filter>Source Files\unsorted</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\game\server\vote_controller.h">
+      <Filter>Source Files\unsorted</Filter>
+    </ClInclude>
+    <ClInclude Include="waterbullet.h">
+      <Filter>Source Files\unsorted</Filter>
+    </ClInclude>
+    <ClInclude Include="wcedit.h">
+      <Filter>Source Files\unsorted</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\game\shared\weapon_parse.h">
+      <Filter>Source Files\unsorted</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\game\shared\weapon_proficiency.h">
+      <Filter>Source Files\unsorted</Filter>
+    </ClInclude>
+    <ClInclude Include="world.h">
+      <Filter>Source Files\unsorted</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="gamedll_replay.cpp">
       <Filter>Replay</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\game\shared\achievement_saverestore.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\game\shared\achievementmgr.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\game\shared\achievements_hlx.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\game\shared\activitylist.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="ai_activity.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="ai_baseactor.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="ai_basehumanoid.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="ai_basenpc.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="ai_basenpc_flyer.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="ai_basenpc_flyer_new.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="ai_basenpc_movement.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="ai_basenpc_physicsflyer.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="ai_basenpc_schedule.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="ai_basenpc_squad.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="ai_behavior.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="ai_behavior_assault.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="ai_behavior_fear.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="ai_behavior_follow.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="ai_behavior_lead.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="ai_behavior_rappel.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="ai_behavior_standoff.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="ai_blended_movement.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="ai_concommands.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="ai_condition.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="AI_Criteria.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="ai_default.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="ai_dynamiclink.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="ai_event.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="ai_goalentity.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="ai_hint.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="ai_hull.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="ai_initutils.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="AI_Interest_Target.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="ai_link.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="ai_localnavigator.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="ai_looktarget.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="ai_memory.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="ai_motor.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="ai_moveprobe.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="ai_moveshoot.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="ai_movesolver.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="ai_namespaces.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="ai_navigator.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="ai_network.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="ai_networkmanager.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="ai_node.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="ai_pathfinder.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="ai_planesolver.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="ai_playerally.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="ai_relationship.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="AI_ResponseSystem.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="ai_route.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="ai_saverestore.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="ai_schedule.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="ai_scriptconditions.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="ai_senses.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="ai_sentence.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="ai_speech.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="ai_speechfilter.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="ai_squad.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="ai_squadslot.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="ai_tacticalservices.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="ai_task.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="ai_trackpather.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="ai_utils.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="ai_waypoint.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\game\shared\ammodef.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\game\shared\animation.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\game\shared\base_playeranimstate.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="base_transmit_proxy.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\game\shared\baseachievement.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="baseanimating.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="BaseAnimatingOverlay.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="basecombatcharacter.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\game\shared\basecombatcharacter_shared.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="basecombatweapon.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\game\shared\basecombatweapon_shared.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="baseentity.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\game\shared\baseentity_shared.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="baseflex.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="basegrenade_concussion.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="basegrenade_contact.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\game\shared\basegrenade_shared.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="basegrenade_timed.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="basemultiplayerplayer.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\game\shared\baseparticleentity.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\game\shared\baseplayer_shared.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\game\shared\baseprojectile.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="baseviewmodel.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\game\shared\baseviewmodel_shared.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\game\shared\beam_shared.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="bitstring.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="bmodels.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\public\bone_setup.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="buttons.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="cbase.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="client.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\game\shared\collisionproperty.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\public\collisionutils.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="colorcorrection.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="colorcorrectionvolume.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="CommentarySystem.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="controlentities.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="cplane.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="CRagdollMagnet.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="damagemodifier.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\game\shared\death_pose.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\game\shared\debugoverlay_shared.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\game\shared\decals.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="doors.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\public\dt_send.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\public\dt_utlvector_common.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\public\dt_utlvector_send.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="dynamiclight.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\public\editor_sendcommand.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\game\shared\effect_dispatch_data.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="effects.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="EffectsServer.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\game\shared\ehandle.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="entityblocker.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="EntityDissolve.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="EntityFlame.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="entitylist.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\game\shared\entitylist_base.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="EntityParticleTrail.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\game\shared\EntityParticleTrail_Shared.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="env_debughistory.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\game\shared\env_detail_controller.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="env_effectsscript.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="env_entity_maker.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="env_particlescript.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="env_player_surface_trigger.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="env_projectedtexture.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="env_screenoverlay.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="env_texturetoggle.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="env_tonemap_controller.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\game\shared\env_wind_shared.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="env_zoom.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="EnvBeam.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="EnvFade.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="EnvHudHint.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="EnvLaser.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="EnvMessage.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="envmicrophone.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="EnvShake.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="EnvSpark.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\game\shared\eventlist.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="EventLog.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="explode.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\public\filesystem_helpers.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="filters.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="fire.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="fire_smoke.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="fish.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="fogcontroller.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="fourwheelvehiclephysics.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="func_areaportal.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="func_areaportalbase.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="func_areaportalwindow.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="func_break.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="func_breakablesurf.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="func_dust.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\game\shared\func_ladder.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="func_ladder_endpoint.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="func_lod.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="hl2\Func_Monitor.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="func_movelinear.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="func_occluder.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="func_reflective_glass.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="func_smokevolume.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="game.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="game_ui.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="gamehandle.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="gameinterface.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\game\shared\gamemovement.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\game\shared\gamerules.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\game\shared\gamerules_register.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\game\shared\GameStats.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="GameStats_BasicStatsFunctions.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\game\shared\gamestringpool.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="gametrace_dll.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\game\shared\gamevars_shared.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="gameweaponmanager.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="genericactor.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="genericmonster.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="gib.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="globals.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="globalstate.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="grenadethrown.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="guntarget.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="h_ai.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="h_cycler.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="h_export.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\public\haptics\haptic_msgs.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\public\haptics\haptic_utils.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="hierarchy.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\game\shared\hintmessage.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\game\shared\hintsystem.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="hltvdirector.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\game\shared\igamesystem.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="info_camera_link.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="info_overlay_accessor.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="init_factory.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="intermission.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\public\interpolatortypes.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\game\shared\interval.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="item_world.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\public\keyframe\keyframe.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\common\language.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="lightglow.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="lights.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="logic_measure_movement.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="logic_navigation.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="logicauto.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="logicentities.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="logicrelay.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\public\map_utils.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="mapentities.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\game\shared\mapentities_shared.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="maprules.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="MaterialModifyControl.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\public\tier0\memoverride.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="message_entity.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="modelentities.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\game\shared\ModelSoundsCache.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="monstermaker.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="movehelper_server.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="movement.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\game\shared\movevars_shared.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\game\shared\mp_shareddefs.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\game\shared\multiplay_gamerules.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="ndebugoverlay.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\public\networkvar.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="npc_vehicledriver.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\game\shared\obstacle_pushaway.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="particle_light.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\game\shared\particle_parse.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="particle_system.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\game\shared\particlesystemquery.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="pathcorner.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="pathtrack.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="phys_controller.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="physconstraint.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="physics.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="physics_bone_follower.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="physics_cannister.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="physics_fx.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="physics_impact_damage.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="physics_main.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\game\shared\physics_main_shared.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="physics_npc_solver.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="physics_prop_ragdoll.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\game\shared\physics_saverestore.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\game\shared\physics_shared.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="physobj.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="player.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="player_command.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="player_lagcompensation.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="player_pickup.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="player_resource.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="playerinfomanager.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="playerlocaldata.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="plugin_check.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\game\shared\point_bonusmaps_accessor.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="point_camera.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="point_devshot_camera.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="point_playermoveconstraint.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\game\shared\point_posecontroller.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="point_spotlight.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="point_template.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="pointanglesensor.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="PointAngularVelocitySensor.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="pointhurt.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="pointteleport.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\game\shared\precache_register.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\game\shared\predictableid.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\game\shared\predicted_viewmodel.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="props.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\game\shared\props_shared.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\game\shared\querycache.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="ragdoll_manager.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\game\shared\ragdoll_shared.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="RagdollBoogie.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\common\randoverride.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="recipientfilter.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\public\registry.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="rope.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\game\shared\rope_helpers.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\public\rope_physics.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\game\shared\saverestore.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="saverestore_gamedll.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\game\shared\SceneCache.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="sceneentity.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\game\shared\sceneentity_shared.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\public\scratchpad3d.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="scratchpad_gamedll_helpers.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\public\ScratchPadUtils.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="scripted.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="scriptedtarget.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="sendproxy.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\game\shared\sequence_Transitioner.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\public\server_class.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\game\server\serverbenchmark_base.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="ServerNetworkProperty.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="shadowcontrol.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\game\shared\sheetsimulator.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\public\simple_physics.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\game\shared\simtimer.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\game\shared\singleplay_gamerules.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="SkyCamera.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="slideshow_display.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="sound.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\game\shared\SoundEmitterSystem.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="soundent.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\game\shared\soundenvelope.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\public\SoundParametersInternal.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="soundscape.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="soundscape_system.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="spotlightend.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\game\shared\Sprite.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="sprite_perfmonitor.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\public\stringregistry.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\public\studio.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\game\shared\studio_shared.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="subs.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="sun.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\game\shared\hl2\survival_gamerules.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="tactical_mission.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\game\shared\takedamageinfo.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="tanktrain.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="team.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="team_control_point.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="team_control_point_master.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="team_control_point_round.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="team_objectiveresource.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="team_spawnpoint.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="team_train_watcher.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\game\shared\teamplay_gamerules.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\game\shared\teamplay_round_timer.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\game\shared\teamplayroundbased_gamerules.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="TemplateEntities.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="tempmonster.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="tesla.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\game\shared\test_ehandle.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="test_proxytoggle.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="test_stressentities.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="testfunctions.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="testtraceline.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="textstatsmgr.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="timedeventmgr.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="trains.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="trigger_area_capture.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="triggers.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\game\shared\usercmd.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="util.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\game\shared\util_shared.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="variant_t.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="vehicle_base.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="vehicle_baseserver.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\game\shared\vehicle_viewblend_shared.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="vguiscreen.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\game\shared\voice_gamemgr.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\game\server\vote_controller.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="waterbullet.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="WaterLODControl.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="wcedit.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\game\shared\weapon_parse.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\game\shared\weapon_proficiency.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="weight_button.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="world.cpp">
-      <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="hl2\ai_allymanager.cpp">
       <Filter>Source Files\HL2 DLL</Filter>
@@ -3574,13 +2470,1123 @@
     <ClCompile Include="repose\npc_hound.cpp">
       <Filter>Source Files\Repose</Filter>
     </ClCompile>
-  </ItemGroup>
-  <ItemGroup>
+    <ClCompile Include="ai_activity.cpp">
+      <Filter>Source Files\unsorted\ai_entities</Filter>
+    </ClCompile>
+    <ClCompile Include="ai_baseactor.cpp">
+      <Filter>Source Files\unsorted\ai_entities</Filter>
+    </ClCompile>
+    <ClCompile Include="ai_basehumanoid.cpp">
+      <Filter>Source Files\unsorted\ai_entities</Filter>
+    </ClCompile>
+    <ClCompile Include="ai_basenpc.cpp">
+      <Filter>Source Files\unsorted\ai_entities</Filter>
+    </ClCompile>
+    <ClCompile Include="ai_basenpc_flyer.cpp">
+      <Filter>Source Files\unsorted\ai_entities</Filter>
+    </ClCompile>
+    <ClCompile Include="ai_basenpc_flyer_new.cpp">
+      <Filter>Source Files\unsorted\ai_entities</Filter>
+    </ClCompile>
+    <ClCompile Include="ai_basenpc_movement.cpp">
+      <Filter>Source Files\unsorted\ai_entities</Filter>
+    </ClCompile>
+    <ClCompile Include="ai_basenpc_physicsflyer.cpp">
+      <Filter>Source Files\unsorted\ai_entities</Filter>
+    </ClCompile>
+    <ClCompile Include="ai_basenpc_schedule.cpp">
+      <Filter>Source Files\unsorted\ai_entities</Filter>
+    </ClCompile>
+    <ClCompile Include="ai_basenpc_squad.cpp">
+      <Filter>Source Files\unsorted\ai_entities</Filter>
+    </ClCompile>
+    <ClCompile Include="ai_behavior.cpp">
+      <Filter>Source Files\unsorted\ai_entities</Filter>
+    </ClCompile>
+    <ClCompile Include="ai_behavior_assault.cpp">
+      <Filter>Source Files\unsorted\ai_entities</Filter>
+    </ClCompile>
+    <ClCompile Include="ai_behavior_fear.cpp">
+      <Filter>Source Files\unsorted\ai_entities</Filter>
+    </ClCompile>
+    <ClCompile Include="ai_behavior_follow.cpp">
+      <Filter>Source Files\unsorted\ai_entities</Filter>
+    </ClCompile>
+    <ClCompile Include="ai_behavior_lead.cpp">
+      <Filter>Source Files\unsorted\ai_entities</Filter>
+    </ClCompile>
+    <ClCompile Include="ai_behavior_rappel.cpp">
+      <Filter>Source Files\unsorted\ai_entities</Filter>
+    </ClCompile>
+    <ClCompile Include="ai_behavior_standoff.cpp">
+      <Filter>Source Files\unsorted\ai_entities</Filter>
+    </ClCompile>
+    <ClCompile Include="ai_blended_movement.cpp">
+      <Filter>Source Files\unsorted\ai_entities</Filter>
+    </ClCompile>
+    <ClCompile Include="ai_concommands.cpp">
+      <Filter>Source Files\unsorted\ai_entities</Filter>
+    </ClCompile>
+    <ClCompile Include="ai_condition.cpp">
+      <Filter>Source Files\unsorted\ai_entities</Filter>
+    </ClCompile>
+    <ClCompile Include="AI_Criteria.cpp">
+      <Filter>Source Files\unsorted\ai_entities</Filter>
+    </ClCompile>
+    <ClCompile Include="ai_default.cpp">
+      <Filter>Source Files\unsorted\ai_entities</Filter>
+    </ClCompile>
+    <ClCompile Include="ai_dynamiclink.cpp">
+      <Filter>Source Files\unsorted\ai_entities</Filter>
+    </ClCompile>
+    <ClCompile Include="ai_event.cpp">
+      <Filter>Source Files\unsorted\ai_entities</Filter>
+    </ClCompile>
+    <ClCompile Include="ai_goalentity.cpp">
+      <Filter>Source Files\unsorted\ai_entities</Filter>
+    </ClCompile>
+    <ClCompile Include="ai_hint.cpp">
+      <Filter>Source Files\unsorted\ai_entities</Filter>
+    </ClCompile>
+    <ClCompile Include="ai_hull.cpp">
+      <Filter>Source Files\unsorted\ai_entities</Filter>
+    </ClCompile>
+    <ClCompile Include="ai_initutils.cpp">
+      <Filter>Source Files\unsorted\ai_entities</Filter>
+    </ClCompile>
+    <ClCompile Include="AI_Interest_Target.cpp">
+      <Filter>Source Files\unsorted\ai_entities</Filter>
+    </ClCompile>
+    <ClCompile Include="ai_link.cpp">
+      <Filter>Source Files\unsorted\ai_entities</Filter>
+    </ClCompile>
+    <ClCompile Include="ai_localnavigator.cpp">
+      <Filter>Source Files\unsorted\ai_entities</Filter>
+    </ClCompile>
+    <ClCompile Include="ai_looktarget.cpp">
+      <Filter>Source Files\unsorted\ai_entities</Filter>
+    </ClCompile>
+    <ClCompile Include="ai_memory.cpp">
+      <Filter>Source Files\unsorted\ai_entities</Filter>
+    </ClCompile>
+    <ClCompile Include="ai_motor.cpp">
+      <Filter>Source Files\unsorted\ai_entities</Filter>
+    </ClCompile>
+    <ClCompile Include="ai_moveprobe.cpp">
+      <Filter>Source Files\unsorted\ai_entities</Filter>
+    </ClCompile>
+    <ClCompile Include="ai_moveshoot.cpp">
+      <Filter>Source Files\unsorted\ai_entities</Filter>
+    </ClCompile>
+    <ClCompile Include="ai_movesolver.cpp">
+      <Filter>Source Files\unsorted\ai_entities</Filter>
+    </ClCompile>
+    <ClCompile Include="ai_namespaces.cpp">
+      <Filter>Source Files\unsorted\ai_entities</Filter>
+    </ClCompile>
+    <ClCompile Include="ai_navigator.cpp">
+      <Filter>Source Files\unsorted\ai_entities</Filter>
+    </ClCompile>
+    <ClCompile Include="ai_network.cpp">
+      <Filter>Source Files\unsorted\ai_entities</Filter>
+    </ClCompile>
+    <ClCompile Include="ai_networkmanager.cpp">
+      <Filter>Source Files\unsorted\ai_entities</Filter>
+    </ClCompile>
+    <ClCompile Include="ai_node.cpp">
+      <Filter>Source Files\unsorted\ai_entities</Filter>
+    </ClCompile>
+    <ClCompile Include="ai_pathfinder.cpp">
+      <Filter>Source Files\unsorted\ai_entities</Filter>
+    </ClCompile>
+    <ClCompile Include="ai_planesolver.cpp">
+      <Filter>Source Files\unsorted\ai_entities</Filter>
+    </ClCompile>
+    <ClCompile Include="ai_playerally.cpp">
+      <Filter>Source Files\unsorted\ai_entities</Filter>
+    </ClCompile>
+    <ClCompile Include="ai_relationship.cpp">
+      <Filter>Source Files\unsorted\ai_entities</Filter>
+    </ClCompile>
+    <ClCompile Include="AI_ResponseSystem.cpp">
+      <Filter>Source Files\unsorted\ai_entities</Filter>
+    </ClCompile>
+    <ClCompile Include="ai_route.cpp">
+      <Filter>Source Files\unsorted\ai_entities</Filter>
+    </ClCompile>
+    <ClCompile Include="ai_saverestore.cpp">
+      <Filter>Source Files\unsorted\ai_entities</Filter>
+    </ClCompile>
+    <ClCompile Include="ai_schedule.cpp">
+      <Filter>Source Files\unsorted\ai_entities</Filter>
+    </ClCompile>
+    <ClCompile Include="ai_scriptconditions.cpp">
+      <Filter>Source Files\unsorted\ai_entities</Filter>
+    </ClCompile>
+    <ClCompile Include="ai_senses.cpp">
+      <Filter>Source Files\unsorted\ai_entities</Filter>
+    </ClCompile>
+    <ClCompile Include="ai_sentence.cpp">
+      <Filter>Source Files\unsorted\ai_entities</Filter>
+    </ClCompile>
+    <ClCompile Include="ai_speech.cpp">
+      <Filter>Source Files\unsorted\ai_entities</Filter>
+    </ClCompile>
+    <ClCompile Include="ai_speechfilter.cpp">
+      <Filter>Source Files\unsorted\ai_entities</Filter>
+    </ClCompile>
+    <ClCompile Include="ai_squad.cpp">
+      <Filter>Source Files\unsorted\ai_entities</Filter>
+    </ClCompile>
+    <ClCompile Include="ai_squadslot.cpp">
+      <Filter>Source Files\unsorted\ai_entities</Filter>
+    </ClCompile>
+    <ClCompile Include="ai_tacticalservices.cpp">
+      <Filter>Source Files\unsorted\ai_entities</Filter>
+    </ClCompile>
+    <ClCompile Include="ai_task.cpp">
+      <Filter>Source Files\unsorted\ai_entities</Filter>
+    </ClCompile>
+    <ClCompile Include="ai_trackpather.cpp">
+      <Filter>Source Files\unsorted\ai_entities</Filter>
+    </ClCompile>
+    <ClCompile Include="ai_utils.cpp">
+      <Filter>Source Files\unsorted\ai_entities</Filter>
+    </ClCompile>
+    <ClCompile Include="ai_waypoint.cpp">
+      <Filter>Source Files\unsorted\ai_entities</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\game\shared\achievement_saverestore.cpp">
+      <Filter>Source Files\unsorted</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\game\shared\achievementmgr.cpp">
+      <Filter>Source Files\unsorted</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\game\shared\achievements_hlx.cpp">
+      <Filter>Source Files\unsorted</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\game\shared\activitylist.cpp">
+      <Filter>Source Files\unsorted</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\game\shared\ammodef.cpp">
+      <Filter>Source Files\unsorted</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\game\shared\animation.cpp">
+      <Filter>Source Files\unsorted</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\game\shared\base_playeranimstate.cpp">
+      <Filter>Source Files\unsorted</Filter>
+    </ClCompile>
+    <ClCompile Include="base_transmit_proxy.cpp">
+      <Filter>Source Files\unsorted</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\game\shared\baseachievement.cpp">
+      <Filter>Source Files\unsorted</Filter>
+    </ClCompile>
+    <ClCompile Include="baseanimating.cpp">
+      <Filter>Source Files\unsorted</Filter>
+    </ClCompile>
+    <ClCompile Include="BaseAnimatingOverlay.cpp">
+      <Filter>Source Files\unsorted</Filter>
+    </ClCompile>
+    <ClCompile Include="basecombatcharacter.cpp">
+      <Filter>Source Files\unsorted</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\game\shared\basecombatcharacter_shared.cpp">
+      <Filter>Source Files\unsorted</Filter>
+    </ClCompile>
+    <ClCompile Include="basecombatweapon.cpp">
+      <Filter>Source Files\unsorted</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\game\shared\basecombatweapon_shared.cpp">
+      <Filter>Source Files\unsorted</Filter>
+    </ClCompile>
+    <ClCompile Include="baseentity.cpp">
+      <Filter>Source Files\unsorted</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\game\shared\baseentity_shared.cpp">
+      <Filter>Source Files\unsorted</Filter>
+    </ClCompile>
+    <ClCompile Include="baseflex.cpp">
+      <Filter>Source Files\unsorted</Filter>
+    </ClCompile>
+    <ClCompile Include="basegrenade_concussion.cpp">
+      <Filter>Source Files\unsorted</Filter>
+    </ClCompile>
+    <ClCompile Include="basegrenade_contact.cpp">
+      <Filter>Source Files\unsorted</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\game\shared\basegrenade_shared.cpp">
+      <Filter>Source Files\unsorted</Filter>
+    </ClCompile>
+    <ClCompile Include="basegrenade_timed.cpp">
+      <Filter>Source Files\unsorted</Filter>
+    </ClCompile>
+    <ClCompile Include="basemultiplayerplayer.cpp">
+      <Filter>Source Files\unsorted</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\game\shared\baseparticleentity.cpp">
+      <Filter>Source Files\unsorted</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\game\shared\baseplayer_shared.cpp">
+      <Filter>Source Files\unsorted</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\game\shared\baseprojectile.cpp">
+      <Filter>Source Files\unsorted</Filter>
+    </ClCompile>
+    <ClCompile Include="baseviewmodel.cpp">
+      <Filter>Source Files\unsorted</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\game\shared\baseviewmodel_shared.cpp">
+      <Filter>Source Files\unsorted</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\game\shared\beam_shared.cpp">
+      <Filter>Source Files\unsorted</Filter>
+    </ClCompile>
+    <ClCompile Include="bitstring.cpp">
+      <Filter>Source Files\unsorted</Filter>
+    </ClCompile>
+    <ClCompile Include="bmodels.cpp">
+      <Filter>Source Files\unsorted</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\public\bone_setup.cpp">
+      <Filter>Source Files\unsorted</Filter>
+    </ClCompile>
+    <ClCompile Include="buttons.cpp">
+      <Filter>Source Files\unsorted</Filter>
+    </ClCompile>
+    <ClCompile Include="cbase.cpp">
+      <Filter>Source Files\unsorted</Filter>
+    </ClCompile>
+    <ClCompile Include="client.cpp">
+      <Filter>Source Files\unsorted</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\game\shared\collisionproperty.cpp">
+      <Filter>Source Files\unsorted</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\public\collisionutils.cpp">
+      <Filter>Source Files\unsorted</Filter>
+    </ClCompile>
+    <ClCompile Include="colorcorrection.cpp">
+      <Filter>Source Files\unsorted</Filter>
+    </ClCompile>
+    <ClCompile Include="colorcorrectionvolume.cpp">
+      <Filter>Source Files\unsorted</Filter>
+    </ClCompile>
+    <ClCompile Include="CommentarySystem.cpp">
+      <Filter>Source Files\unsorted</Filter>
+    </ClCompile>
+    <ClCompile Include="controlentities.cpp">
+      <Filter>Source Files\unsorted</Filter>
+    </ClCompile>
+    <ClCompile Include="cplane.cpp">
+      <Filter>Source Files\unsorted</Filter>
+    </ClCompile>
+    <ClCompile Include="CRagdollMagnet.cpp">
+      <Filter>Source Files\unsorted</Filter>
+    </ClCompile>
+    <ClCompile Include="damagemodifier.cpp">
+      <Filter>Source Files\unsorted</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\game\shared\death_pose.cpp">
+      <Filter>Source Files\unsorted</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\game\shared\debugoverlay_shared.cpp">
+      <Filter>Source Files\unsorted</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\game\shared\decals.cpp">
+      <Filter>Source Files\unsorted</Filter>
+    </ClCompile>
+    <ClCompile Include="doors.cpp">
+      <Filter>Source Files\unsorted</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\public\dt_send.cpp">
+      <Filter>Source Files\unsorted</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\public\dt_utlvector_common.cpp">
+      <Filter>Source Files\unsorted</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\public\dt_utlvector_send.cpp">
+      <Filter>Source Files\unsorted</Filter>
+    </ClCompile>
+    <ClCompile Include="dynamiclight.cpp">
+      <Filter>Source Files\unsorted</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\public\editor_sendcommand.cpp">
+      <Filter>Source Files\unsorted</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\game\shared\effect_dispatch_data.cpp">
+      <Filter>Source Files\unsorted</Filter>
+    </ClCompile>
+    <ClCompile Include="effects.cpp">
+      <Filter>Source Files\unsorted</Filter>
+    </ClCompile>
+    <ClCompile Include="EffectsServer.cpp">
+      <Filter>Source Files\unsorted</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\game\shared\ehandle.cpp">
+      <Filter>Source Files\unsorted</Filter>
+    </ClCompile>
+    <ClCompile Include="entityblocker.cpp">
+      <Filter>Source Files\unsorted</Filter>
+    </ClCompile>
+    <ClCompile Include="EntityDissolve.cpp">
+      <Filter>Source Files\unsorted</Filter>
+    </ClCompile>
+    <ClCompile Include="EntityFlame.cpp">
+      <Filter>Source Files\unsorted</Filter>
+    </ClCompile>
+    <ClCompile Include="entitylist.cpp">
+      <Filter>Source Files\unsorted</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\game\shared\entitylist_base.cpp">
+      <Filter>Source Files\unsorted</Filter>
+    </ClCompile>
+    <ClCompile Include="EntityParticleTrail.cpp">
+      <Filter>Source Files\unsorted</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\game\shared\EntityParticleTrail_Shared.cpp">
+      <Filter>Source Files\unsorted</Filter>
+    </ClCompile>
+    <ClCompile Include="env_debughistory.cpp">
+      <Filter>Source Files\unsorted</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\game\shared\env_detail_controller.cpp">
+      <Filter>Source Files\unsorted</Filter>
+    </ClCompile>
+    <ClCompile Include="env_effectsscript.cpp">
+      <Filter>Source Files\unsorted</Filter>
+    </ClCompile>
+    <ClCompile Include="env_entity_maker.cpp">
+      <Filter>Source Files\unsorted</Filter>
+    </ClCompile>
+    <ClCompile Include="env_particlescript.cpp">
+      <Filter>Source Files\unsorted</Filter>
+    </ClCompile>
+    <ClCompile Include="env_player_surface_trigger.cpp">
+      <Filter>Source Files\unsorted</Filter>
+    </ClCompile>
+    <ClCompile Include="env_projectedtexture.cpp">
+      <Filter>Source Files\unsorted</Filter>
+    </ClCompile>
+    <ClCompile Include="env_screenoverlay.cpp">
+      <Filter>Source Files\unsorted</Filter>
+    </ClCompile>
+    <ClCompile Include="env_texturetoggle.cpp">
+      <Filter>Source Files\unsorted</Filter>
+    </ClCompile>
+    <ClCompile Include="env_tonemap_controller.cpp">
+      <Filter>Source Files\unsorted</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\game\shared\env_wind_shared.cpp">
+      <Filter>Source Files\unsorted</Filter>
+    </ClCompile>
+    <ClCompile Include="env_zoom.cpp">
+      <Filter>Source Files\unsorted</Filter>
+    </ClCompile>
+    <ClCompile Include="EnvBeam.cpp">
+      <Filter>Source Files\unsorted</Filter>
+    </ClCompile>
+    <ClCompile Include="EnvFade.cpp">
+      <Filter>Source Files\unsorted</Filter>
+    </ClCompile>
+    <ClCompile Include="EnvHudHint.cpp">
+      <Filter>Source Files\unsorted</Filter>
+    </ClCompile>
+    <ClCompile Include="EnvLaser.cpp">
+      <Filter>Source Files\unsorted</Filter>
+    </ClCompile>
+    <ClCompile Include="EnvMessage.cpp">
+      <Filter>Source Files\unsorted</Filter>
+    </ClCompile>
+    <ClCompile Include="envmicrophone.cpp">
+      <Filter>Source Files\unsorted</Filter>
+    </ClCompile>
+    <ClCompile Include="EnvShake.cpp">
+      <Filter>Source Files\unsorted</Filter>
+    </ClCompile>
+    <ClCompile Include="EnvSpark.cpp">
+      <Filter>Source Files\unsorted</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\game\shared\eventlist.cpp">
+      <Filter>Source Files\unsorted</Filter>
+    </ClCompile>
+    <ClCompile Include="EventLog.cpp">
+      <Filter>Source Files\unsorted</Filter>
+    </ClCompile>
+    <ClCompile Include="explode.cpp">
+      <Filter>Source Files\unsorted</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\public\filesystem_helpers.cpp">
+      <Filter>Source Files\unsorted</Filter>
+    </ClCompile>
+    <ClCompile Include="filters.cpp">
+      <Filter>Source Files\unsorted</Filter>
+    </ClCompile>
+    <ClCompile Include="fire.cpp">
+      <Filter>Source Files\unsorted</Filter>
+    </ClCompile>
+    <ClCompile Include="fire_smoke.cpp">
+      <Filter>Source Files\unsorted</Filter>
+    </ClCompile>
+    <ClCompile Include="fish.cpp">
+      <Filter>Source Files\unsorted</Filter>
+    </ClCompile>
+    <ClCompile Include="fogcontroller.cpp">
+      <Filter>Source Files\unsorted</Filter>
+    </ClCompile>
+    <ClCompile Include="fourwheelvehiclephysics.cpp">
+      <Filter>Source Files\unsorted</Filter>
+    </ClCompile>
+    <ClCompile Include="func_areaportal.cpp">
+      <Filter>Source Files\unsorted</Filter>
+    </ClCompile>
+    <ClCompile Include="func_areaportalbase.cpp">
+      <Filter>Source Files\unsorted</Filter>
+    </ClCompile>
+    <ClCompile Include="func_areaportalwindow.cpp">
+      <Filter>Source Files\unsorted</Filter>
+    </ClCompile>
+    <ClCompile Include="func_break.cpp">
+      <Filter>Source Files\unsorted</Filter>
+    </ClCompile>
+    <ClCompile Include="func_breakablesurf.cpp">
+      <Filter>Source Files\unsorted</Filter>
+    </ClCompile>
+    <ClCompile Include="func_dust.cpp">
+      <Filter>Source Files\unsorted</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\game\shared\func_ladder.cpp">
+      <Filter>Source Files\unsorted</Filter>
+    </ClCompile>
+    <ClCompile Include="func_ladder_endpoint.cpp">
+      <Filter>Source Files\unsorted</Filter>
+    </ClCompile>
+    <ClCompile Include="func_lod.cpp">
+      <Filter>Source Files\unsorted</Filter>
+    </ClCompile>
+    <ClCompile Include="hl2\Func_Monitor.cpp">
+      <Filter>Source Files\unsorted</Filter>
+    </ClCompile>
+    <ClCompile Include="func_movelinear.cpp">
+      <Filter>Source Files\unsorted</Filter>
+    </ClCompile>
+    <ClCompile Include="func_occluder.cpp">
+      <Filter>Source Files\unsorted</Filter>
+    </ClCompile>
+    <ClCompile Include="func_reflective_glass.cpp">
+      <Filter>Source Files\unsorted</Filter>
+    </ClCompile>
+    <ClCompile Include="func_smokevolume.cpp">
+      <Filter>Source Files\unsorted</Filter>
+    </ClCompile>
+    <ClCompile Include="game.cpp">
+      <Filter>Source Files\unsorted</Filter>
+    </ClCompile>
+    <ClCompile Include="game_ui.cpp">
+      <Filter>Source Files\unsorted</Filter>
+    </ClCompile>
+    <ClCompile Include="gamehandle.cpp">
+      <Filter>Source Files\unsorted</Filter>
+    </ClCompile>
+    <ClCompile Include="gameinterface.cpp">
+      <Filter>Source Files\unsorted</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\game\shared\gamemovement.cpp">
+      <Filter>Source Files\unsorted</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\game\shared\gamerules.cpp">
+      <Filter>Source Files\unsorted</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\game\shared\gamerules_register.cpp">
+      <Filter>Source Files\unsorted</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\game\shared\GameStats.cpp">
+      <Filter>Source Files\unsorted</Filter>
+    </ClCompile>
+    <ClCompile Include="GameStats_BasicStatsFunctions.cpp">
+      <Filter>Source Files\unsorted</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\game\shared\gamestringpool.cpp">
+      <Filter>Source Files\unsorted</Filter>
+    </ClCompile>
+    <ClCompile Include="gametrace_dll.cpp">
+      <Filter>Source Files\unsorted</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\game\shared\gamevars_shared.cpp">
+      <Filter>Source Files\unsorted</Filter>
+    </ClCompile>
+    <ClCompile Include="gameweaponmanager.cpp">
+      <Filter>Source Files\unsorted</Filter>
+    </ClCompile>
+    <ClCompile Include="genericactor.cpp">
+      <Filter>Source Files\unsorted</Filter>
+    </ClCompile>
+    <ClCompile Include="genericmonster.cpp">
+      <Filter>Source Files\unsorted</Filter>
+    </ClCompile>
+    <ClCompile Include="gib.cpp">
+      <Filter>Source Files\unsorted</Filter>
+    </ClCompile>
+    <ClCompile Include="globals.cpp">
+      <Filter>Source Files\unsorted</Filter>
+    </ClCompile>
+    <ClCompile Include="globalstate.cpp">
+      <Filter>Source Files\unsorted</Filter>
+    </ClCompile>
+    <ClCompile Include="grenadethrown.cpp">
+      <Filter>Source Files\unsorted</Filter>
+    </ClCompile>
+    <ClCompile Include="guntarget.cpp">
+      <Filter>Source Files\unsorted</Filter>
+    </ClCompile>
+    <ClCompile Include="h_ai.cpp">
+      <Filter>Source Files\unsorted</Filter>
+    </ClCompile>
+    <ClCompile Include="h_cycler.cpp">
+      <Filter>Source Files\unsorted</Filter>
+    </ClCompile>
+    <ClCompile Include="h_export.cpp">
+      <Filter>Source Files\unsorted</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\public\haptics\haptic_msgs.cpp">
+      <Filter>Source Files\unsorted</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\public\haptics\haptic_utils.cpp">
+      <Filter>Source Files\unsorted</Filter>
+    </ClCompile>
+    <ClCompile Include="hierarchy.cpp">
+      <Filter>Source Files\unsorted</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\game\shared\hintmessage.cpp">
+      <Filter>Source Files\unsorted</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\game\shared\hintsystem.cpp">
+      <Filter>Source Files\unsorted</Filter>
+    </ClCompile>
+    <ClCompile Include="hltvdirector.cpp">
+      <Filter>Source Files\unsorted</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\game\shared\igamesystem.cpp">
+      <Filter>Source Files\unsorted</Filter>
+    </ClCompile>
+    <ClCompile Include="info_camera_link.cpp">
+      <Filter>Source Files\unsorted</Filter>
+    </ClCompile>
+    <ClCompile Include="info_overlay_accessor.cpp">
+      <Filter>Source Files\unsorted</Filter>
+    </ClCompile>
+    <ClCompile Include="init_factory.cpp">
+      <Filter>Source Files\unsorted</Filter>
+    </ClCompile>
+    <ClCompile Include="intermission.cpp">
+      <Filter>Source Files\unsorted</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\public\interpolatortypes.cpp">
+      <Filter>Source Files\unsorted</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\game\shared\interval.cpp">
+      <Filter>Source Files\unsorted</Filter>
+    </ClCompile>
+    <ClCompile Include="item_world.cpp">
+      <Filter>Source Files\unsorted</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\public\keyframe\keyframe.cpp">
+      <Filter>Source Files\unsorted</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\common\language.cpp">
+      <Filter>Source Files\unsorted</Filter>
+    </ClCompile>
+    <ClCompile Include="lightglow.cpp">
+      <Filter>Source Files\unsorted</Filter>
+    </ClCompile>
+    <ClCompile Include="lights.cpp">
+      <Filter>Source Files\unsorted</Filter>
+    </ClCompile>
+    <ClCompile Include="logic_measure_movement.cpp">
+      <Filter>Source Files\unsorted</Filter>
+    </ClCompile>
+    <ClCompile Include="logic_navigation.cpp">
+      <Filter>Source Files\unsorted</Filter>
+    </ClCompile>
+    <ClCompile Include="logicauto.cpp">
+      <Filter>Source Files\unsorted</Filter>
+    </ClCompile>
+    <ClCompile Include="logicentities.cpp">
+      <Filter>Source Files\unsorted</Filter>
+    </ClCompile>
+    <ClCompile Include="logicrelay.cpp">
+      <Filter>Source Files\unsorted</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\public\map_utils.cpp">
+      <Filter>Source Files\unsorted</Filter>
+    </ClCompile>
+    <ClCompile Include="mapentities.cpp">
+      <Filter>Source Files\unsorted</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\game\shared\mapentities_shared.cpp">
+      <Filter>Source Files\unsorted</Filter>
+    </ClCompile>
+    <ClCompile Include="maprules.cpp">
+      <Filter>Source Files\unsorted</Filter>
+    </ClCompile>
+    <ClCompile Include="MaterialModifyControl.cpp">
+      <Filter>Source Files\unsorted</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\public\tier0\memoverride.cpp">
+      <Filter>Source Files\unsorted</Filter>
+    </ClCompile>
+    <ClCompile Include="message_entity.cpp">
+      <Filter>Source Files\unsorted</Filter>
+    </ClCompile>
+    <ClCompile Include="modelentities.cpp">
+      <Filter>Source Files\unsorted</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\game\shared\ModelSoundsCache.cpp">
+      <Filter>Source Files\unsorted</Filter>
+    </ClCompile>
+    <ClCompile Include="monstermaker.cpp">
+      <Filter>Source Files\unsorted</Filter>
+    </ClCompile>
+    <ClCompile Include="movehelper_server.cpp">
+      <Filter>Source Files\unsorted</Filter>
+    </ClCompile>
+    <ClCompile Include="movement.cpp">
+      <Filter>Source Files\unsorted</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\game\shared\movevars_shared.cpp">
+      <Filter>Source Files\unsorted</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\game\shared\mp_shareddefs.cpp">
+      <Filter>Source Files\unsorted</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\game\shared\multiplay_gamerules.cpp">
+      <Filter>Source Files\unsorted</Filter>
+    </ClCompile>
+    <ClCompile Include="ndebugoverlay.cpp">
+      <Filter>Source Files\unsorted</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\public\networkvar.cpp">
+      <Filter>Source Files\unsorted</Filter>
+    </ClCompile>
+    <ClCompile Include="npc_vehicledriver.cpp">
+      <Filter>Source Files\unsorted</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\game\shared\obstacle_pushaway.cpp">
+      <Filter>Source Files\unsorted</Filter>
+    </ClCompile>
+    <ClCompile Include="particle_light.cpp">
+      <Filter>Source Files\unsorted</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\game\shared\particle_parse.cpp">
+      <Filter>Source Files\unsorted</Filter>
+    </ClCompile>
+    <ClCompile Include="particle_system.cpp">
+      <Filter>Source Files\unsorted</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\game\shared\particlesystemquery.cpp">
+      <Filter>Source Files\unsorted</Filter>
+    </ClCompile>
+    <ClCompile Include="pathcorner.cpp">
+      <Filter>Source Files\unsorted</Filter>
+    </ClCompile>
+    <ClCompile Include="pathtrack.cpp">
+      <Filter>Source Files\unsorted</Filter>
+    </ClCompile>
+    <ClCompile Include="phys_controller.cpp">
+      <Filter>Source Files\unsorted</Filter>
+    </ClCompile>
+    <ClCompile Include="physconstraint.cpp">
+      <Filter>Source Files\unsorted</Filter>
+    </ClCompile>
+    <ClCompile Include="physics.cpp">
+      <Filter>Source Files\unsorted</Filter>
+    </ClCompile>
+    <ClCompile Include="physics_bone_follower.cpp">
+      <Filter>Source Files\unsorted</Filter>
+    </ClCompile>
+    <ClCompile Include="physics_cannister.cpp">
+      <Filter>Source Files\unsorted</Filter>
+    </ClCompile>
+    <ClCompile Include="physics_fx.cpp">
+      <Filter>Source Files\unsorted</Filter>
+    </ClCompile>
+    <ClCompile Include="physics_impact_damage.cpp">
+      <Filter>Source Files\unsorted</Filter>
+    </ClCompile>
+    <ClCompile Include="physics_main.cpp">
+      <Filter>Source Files\unsorted</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\game\shared\physics_main_shared.cpp">
+      <Filter>Source Files\unsorted</Filter>
+    </ClCompile>
+    <ClCompile Include="physics_npc_solver.cpp">
+      <Filter>Source Files\unsorted</Filter>
+    </ClCompile>
+    <ClCompile Include="physics_prop_ragdoll.cpp">
+      <Filter>Source Files\unsorted</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\game\shared\physics_saverestore.cpp">
+      <Filter>Source Files\unsorted</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\game\shared\physics_shared.cpp">
+      <Filter>Source Files\unsorted</Filter>
+    </ClCompile>
+    <ClCompile Include="physobj.cpp">
+      <Filter>Source Files\unsorted</Filter>
+    </ClCompile>
+    <ClCompile Include="player.cpp">
+      <Filter>Source Files\unsorted</Filter>
+    </ClCompile>
+    <ClCompile Include="player_command.cpp">
+      <Filter>Source Files\unsorted</Filter>
+    </ClCompile>
+    <ClCompile Include="player_lagcompensation.cpp">
+      <Filter>Source Files\unsorted</Filter>
+    </ClCompile>
+    <ClCompile Include="player_pickup.cpp">
+      <Filter>Source Files\unsorted</Filter>
+    </ClCompile>
+    <ClCompile Include="player_resource.cpp">
+      <Filter>Source Files\unsorted</Filter>
+    </ClCompile>
+    <ClCompile Include="playerinfomanager.cpp">
+      <Filter>Source Files\unsorted</Filter>
+    </ClCompile>
+    <ClCompile Include="playerlocaldata.cpp">
+      <Filter>Source Files\unsorted</Filter>
+    </ClCompile>
+    <ClCompile Include="plugin_check.cpp">
+      <Filter>Source Files\unsorted</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\game\shared\point_bonusmaps_accessor.cpp">
+      <Filter>Source Files\unsorted</Filter>
+    </ClCompile>
+    <ClCompile Include="point_camera.cpp">
+      <Filter>Source Files\unsorted</Filter>
+    </ClCompile>
+    <ClCompile Include="point_devshot_camera.cpp">
+      <Filter>Source Files\unsorted</Filter>
+    </ClCompile>
+    <ClCompile Include="point_playermoveconstraint.cpp">
+      <Filter>Source Files\unsorted</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\game\shared\point_posecontroller.cpp">
+      <Filter>Source Files\unsorted</Filter>
+    </ClCompile>
+    <ClCompile Include="point_spotlight.cpp">
+      <Filter>Source Files\unsorted</Filter>
+    </ClCompile>
+    <ClCompile Include="point_template.cpp">
+      <Filter>Source Files\unsorted</Filter>
+    </ClCompile>
+    <ClCompile Include="pointanglesensor.cpp">
+      <Filter>Source Files\unsorted</Filter>
+    </ClCompile>
+    <ClCompile Include="PointAngularVelocitySensor.cpp">
+      <Filter>Source Files\unsorted</Filter>
+    </ClCompile>
+    <ClCompile Include="pointhurt.cpp">
+      <Filter>Source Files\unsorted</Filter>
+    </ClCompile>
+    <ClCompile Include="pointteleport.cpp">
+      <Filter>Source Files\unsorted</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\game\shared\precache_register.cpp">
+      <Filter>Source Files\unsorted</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\game\shared\predictableid.cpp">
+      <Filter>Source Files\unsorted</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\game\shared\predicted_viewmodel.cpp">
+      <Filter>Source Files\unsorted</Filter>
+    </ClCompile>
+    <ClCompile Include="props.cpp">
+      <Filter>Source Files\unsorted</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\game\shared\props_shared.cpp">
+      <Filter>Source Files\unsorted</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\game\shared\querycache.cpp">
+      <Filter>Source Files\unsorted</Filter>
+    </ClCompile>
+    <ClCompile Include="ragdoll_manager.cpp">
+      <Filter>Source Files\unsorted</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\game\shared\ragdoll_shared.cpp">
+      <Filter>Source Files\unsorted</Filter>
+    </ClCompile>
+    <ClCompile Include="RagdollBoogie.cpp">
+      <Filter>Source Files\unsorted</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\common\randoverride.cpp">
+      <Filter>Source Files\unsorted</Filter>
+    </ClCompile>
+    <ClCompile Include="recipientfilter.cpp">
+      <Filter>Source Files\unsorted</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\public\registry.cpp">
+      <Filter>Source Files\unsorted</Filter>
+    </ClCompile>
+    <ClCompile Include="rope.cpp">
+      <Filter>Source Files\unsorted</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\game\shared\rope_helpers.cpp">
+      <Filter>Source Files\unsorted</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\public\rope_physics.cpp">
+      <Filter>Source Files\unsorted</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\game\shared\saverestore.cpp">
+      <Filter>Source Files\unsorted</Filter>
+    </ClCompile>
+    <ClCompile Include="saverestore_gamedll.cpp">
+      <Filter>Source Files\unsorted</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\game\shared\SceneCache.cpp">
+      <Filter>Source Files\unsorted</Filter>
+    </ClCompile>
+    <ClCompile Include="sceneentity.cpp">
+      <Filter>Source Files\unsorted</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\game\shared\sceneentity_shared.cpp">
+      <Filter>Source Files\unsorted</Filter>
+    </ClCompile>
+    <ClCompile Include="scratchpad_gamedll_helpers.cpp">
+      <Filter>Source Files\unsorted</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\public\scratchpad3d.cpp">
+      <Filter>Source Files\unsorted</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\public\ScratchPadUtils.cpp">
+      <Filter>Source Files\unsorted</Filter>
+    </ClCompile>
+    <ClCompile Include="scripted.cpp">
+      <Filter>Source Files\unsorted</Filter>
+    </ClCompile>
+    <ClCompile Include="scriptedtarget.cpp">
+      <Filter>Source Files\unsorted</Filter>
+    </ClCompile>
+    <ClCompile Include="sendproxy.cpp">
+      <Filter>Source Files\unsorted</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\game\shared\sequence_Transitioner.cpp">
+      <Filter>Source Files\unsorted</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\public\server_class.cpp">
+      <Filter>Source Files\unsorted</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\game\server\serverbenchmark_base.cpp">
+      <Filter>Source Files\unsorted</Filter>
+    </ClCompile>
+    <ClCompile Include="ServerNetworkProperty.cpp">
+      <Filter>Source Files\unsorted</Filter>
+    </ClCompile>
+    <ClCompile Include="shadowcontrol.cpp">
+      <Filter>Source Files\unsorted</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\game\shared\sheetsimulator.cpp">
+      <Filter>Source Files\unsorted</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\public\simple_physics.cpp">
+      <Filter>Source Files\unsorted</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\game\shared\simtimer.cpp">
+      <Filter>Source Files\unsorted</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\game\shared\singleplay_gamerules.cpp">
+      <Filter>Source Files\unsorted</Filter>
+    </ClCompile>
+    <ClCompile Include="SkyCamera.cpp">
+      <Filter>Source Files\unsorted</Filter>
+    </ClCompile>
+    <ClCompile Include="slideshow_display.cpp">
+      <Filter>Source Files\unsorted</Filter>
+    </ClCompile>
+    <ClCompile Include="sound.cpp">
+      <Filter>Source Files\unsorted</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\game\shared\SoundEmitterSystem.cpp">
+      <Filter>Source Files\unsorted</Filter>
+    </ClCompile>
+    <ClCompile Include="soundent.cpp">
+      <Filter>Source Files\unsorted</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\game\shared\soundenvelope.cpp">
+      <Filter>Source Files\unsorted</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\public\SoundParametersInternal.cpp">
+      <Filter>Source Files\unsorted</Filter>
+    </ClCompile>
+    <ClCompile Include="soundscape.cpp">
+      <Filter>Source Files\unsorted</Filter>
+    </ClCompile>
+    <ClCompile Include="soundscape_system.cpp">
+      <Filter>Source Files\unsorted</Filter>
+    </ClCompile>
+    <ClCompile Include="spotlightend.cpp">
+      <Filter>Source Files\unsorted</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\game\shared\Sprite.cpp">
+      <Filter>Source Files\unsorted</Filter>
+    </ClCompile>
+    <ClCompile Include="sprite_perfmonitor.cpp">
+      <Filter>Source Files\unsorted</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\public\stringregistry.cpp">
+      <Filter>Source Files\unsorted</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\public\studio.cpp">
+      <Filter>Source Files\unsorted</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\game\shared\studio_shared.cpp">
+      <Filter>Source Files\unsorted</Filter>
+    </ClCompile>
+    <ClCompile Include="subs.cpp">
+      <Filter>Source Files\unsorted</Filter>
+    </ClCompile>
+    <ClCompile Include="sun.cpp">
+      <Filter>Source Files\unsorted</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\game\shared\hl2\survival_gamerules.cpp">
+      <Filter>Source Files\unsorted</Filter>
+    </ClCompile>
+    <ClCompile Include="tactical_mission.cpp">
+      <Filter>Source Files\unsorted</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\game\shared\takedamageinfo.cpp">
+      <Filter>Source Files\unsorted</Filter>
+    </ClCompile>
+    <ClCompile Include="tanktrain.cpp">
+      <Filter>Source Files\unsorted</Filter>
+    </ClCompile>
+    <ClCompile Include="team.cpp">
+      <Filter>Source Files\unsorted</Filter>
+    </ClCompile>
+    <ClCompile Include="team_control_point.cpp">
+      <Filter>Source Files\unsorted</Filter>
+    </ClCompile>
+    <ClCompile Include="team_control_point_master.cpp">
+      <Filter>Source Files\unsorted</Filter>
+    </ClCompile>
+    <ClCompile Include="team_control_point_round.cpp">
+      <Filter>Source Files\unsorted</Filter>
+    </ClCompile>
+    <ClCompile Include="team_objectiveresource.cpp">
+      <Filter>Source Files\unsorted</Filter>
+    </ClCompile>
+    <ClCompile Include="team_spawnpoint.cpp">
+      <Filter>Source Files\unsorted</Filter>
+    </ClCompile>
+    <ClCompile Include="team_train_watcher.cpp">
+      <Filter>Source Files\unsorted</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\game\shared\teamplay_gamerules.cpp">
+      <Filter>Source Files\unsorted</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\game\shared\teamplay_round_timer.cpp">
+      <Filter>Source Files\unsorted</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\game\shared\teamplayroundbased_gamerules.cpp">
+      <Filter>Source Files\unsorted</Filter>
+    </ClCompile>
+    <ClCompile Include="TemplateEntities.cpp">
+      <Filter>Source Files\unsorted</Filter>
+    </ClCompile>
+    <ClCompile Include="tempmonster.cpp">
+      <Filter>Source Files\unsorted</Filter>
+    </ClCompile>
+    <ClCompile Include="tesla.cpp">
+      <Filter>Source Files\unsorted</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\game\shared\test_ehandle.cpp">
+      <Filter>Source Files\unsorted</Filter>
+    </ClCompile>
+    <ClCompile Include="test_proxytoggle.cpp">
+      <Filter>Source Files\unsorted</Filter>
+    </ClCompile>
+    <ClCompile Include="test_stressentities.cpp">
+      <Filter>Source Files\unsorted</Filter>
+    </ClCompile>
+    <ClCompile Include="testfunctions.cpp">
+      <Filter>Source Files\unsorted</Filter>
+    </ClCompile>
+    <ClCompile Include="testtraceline.cpp">
+      <Filter>Source Files\unsorted</Filter>
+    </ClCompile>
+    <ClCompile Include="textstatsmgr.cpp">
+      <Filter>Source Files\unsorted</Filter>
+    </ClCompile>
+    <ClCompile Include="timedeventmgr.cpp">
+      <Filter>Source Files\unsorted</Filter>
+    </ClCompile>
+    <ClCompile Include="trains.cpp">
+      <Filter>Source Files\unsorted</Filter>
+    </ClCompile>
+    <ClCompile Include="trigger_area_capture.cpp">
+      <Filter>Source Files\unsorted</Filter>
+    </ClCompile>
+    <ClCompile Include="triggers.cpp">
+      <Filter>Source Files\unsorted</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\game\shared\usercmd.cpp">
+      <Filter>Source Files\unsorted</Filter>
+    </ClCompile>
+    <ClCompile Include="util.cpp">
+      <Filter>Source Files\unsorted</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\game\shared\util_shared.cpp">
+      <Filter>Source Files\unsorted</Filter>
+    </ClCompile>
+    <ClCompile Include="variant_t.cpp">
+      <Filter>Source Files\unsorted</Filter>
+    </ClCompile>
+    <ClCompile Include="vehicle_base.cpp">
+      <Filter>Source Files\unsorted</Filter>
+    </ClCompile>
+    <ClCompile Include="vehicle_baseserver.cpp">
+      <Filter>Source Files\unsorted</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\game\shared\vehicle_viewblend_shared.cpp">
+      <Filter>Source Files\unsorted</Filter>
+    </ClCompile>
+    <ClCompile Include="vguiscreen.cpp">
+      <Filter>Source Files\unsorted</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\game\shared\voice_gamemgr.cpp">
+      <Filter>Source Files\unsorted</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\game\server\vote_controller.cpp">
+      <Filter>Source Files\unsorted</Filter>
+    </ClCompile>
+    <ClCompile Include="waterbullet.cpp">
+      <Filter>Source Files\unsorted</Filter>
+    </ClCompile>
+    <ClCompile Include="WaterLODControl.cpp">
+      <Filter>Source Files\unsorted</Filter>
+    </ClCompile>
+    <ClCompile Include="wcedit.cpp">
+      <Filter>Source Files\unsorted</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\game\shared\weapon_parse.cpp">
+      <Filter>Source Files\unsorted</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\game\shared\weapon_proficiency.cpp">
+      <Filter>Source Files\unsorted</Filter>
+    </ClCompile>
+    <ClCompile Include="weight_button.cpp">
+      <Filter>Source Files\unsorted</Filter>
+    </ClCompile>
+    <ClCompile Include="world.cpp">
+      <Filter>Source Files\unsorted</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <CustomBuild Include="..\..\public\tier0\pointeroverride.asm">
-      <Filter>Source Files</Filter>
+      <Filter>Source Files\unsorted</Filter>
     </CustomBuild>
+  </ItemGroup>
+  <ItemGroup>
     <CustomBuild Include="server_hl2mp.vpc">
       <Filter>VPC Scripts</Filter>
     </CustomBuild>

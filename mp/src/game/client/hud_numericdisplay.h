@@ -43,6 +43,7 @@ protected:
 
 	virtual void PaintNumbers(vgui::HFont font, int xpos, int ypos, int value);
 	virtual void PaintSlashNumbers(vgui::HFont font, int xpos, int ypos, int value);
+	virtual void PaintModNumbers(vgui::HFont font, int xpos, int ypos, int value);
 
 protected:
 

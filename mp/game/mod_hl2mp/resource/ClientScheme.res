@@ -525,7 +525,7 @@ Scheme
 		{
 			"1"
 			{
-				"name"		"HalfLife2"
+				"name"		"HalfLife2_edit"
 				"tall"		"32"
 				"weight"	"0"
 				"antialias" "1"
@@ -537,7 +537,7 @@ Scheme
 		{
 			"1"
 			{
-				"name"		"HalfLife2"
+				"name"		"HalfLife2_edit"
 				"tall"		"32"
 				"weight"	"0"
 				"blur"		"4"
@@ -551,7 +551,7 @@ Scheme
 		{
 			"1"
 			{
-				"name"		"HalfLife2" [!$OSX]
+				"name"		"HalfLife2_edit" [!$OSX]
 				"name"		"Helvetica Bold" [$OSX]
 				"tall"		"16"
 				"weight"	"1000"
@@ -1575,6 +1575,7 @@ Scheme
 	// specifies all the custom (non-system) font files that need to be loaded to service the above described fonts
 	CustomFontFiles
 	{
+		"1"		"resource/HALFLIFE2_edit.ttf"
 		"1"		"resource/HALFLIFE2.ttf"
 		"1"		"resource/HL2MP.ttf"
 		"2"		"resource/HL2crosshairs.ttf"

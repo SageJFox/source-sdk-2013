@@ -190,6 +190,53 @@ void CHudNumericDisplay::PaintSlashNumbers(HFont font, int xpos, int ypos, int v
 }
 
 //-----------------------------------------------------------------------------
+// Purpose: paints a number at the specified position, with a + for positive numbers
+//-----------------------------------------------------------------------------
+void CHudNumericDisplay::PaintModNumbers(HFont font, int xpos, int ypos, int value)
+{
+	surface()->DrawSetTextFont(font);
+	wchar_t unicode[6];
+	if (!m_bIsTime)
+	{
+		if (value <= 0)
+			V_snwprintf(unicode, ARRAYSIZE(unicode), L"%d", value);
+		else
+			V_snwprintf(unicode, ARRAYSIZE(unicode), L"+%d", value);
+	}
+	else
+	{
+		int iMinutes = value / 60;
+		int iSeconds = value - iMinutes * 60;
+#ifdef PORTAL
+		// portal uses a normal font for numbers so we need the seperate to be a renderable ':' char
+		if (iSeconds < 10)
+			V_snwprintf(unicode, ARRAYSIZE(unicode), L"%d:0%d", iMinutes, iSeconds);
+		else
+			V_snwprintf(unicode, ARRAYSIZE(unicode), L"%d:%d", iMinutes, iSeconds);
+#else
+		if (iSeconds < 10)
+			V_snwprintf(unicode, ARRAYSIZE(unicode), L"%d`0%d", iMinutes, iSeconds);
+		else
+			V_snwprintf(unicode, ARRAYSIZE(unicode), L"%d`%d", iMinutes, iSeconds);
+#endif
+	}
+
+	// adjust the position to take into account 3 characters
+	int charWidth = surface()->GetCharacterWidth(font, '0');
+	if (value < 100 && m_bIndent)
+	{
+		xpos += charWidth;
+	}
+	if (value < 10 && m_bIndent)
+	{
+		xpos += charWidth;
+	}
+
+	surface()->DrawSetTextPos(xpos, ypos);
+	surface()->DrawUnicodeString(unicode);
+}
+
+//-----------------------------------------------------------------------------
 // Purpose: draws the text
 //-----------------------------------------------------------------------------
 void CHudNumericDisplay::PaintLabel( void )
