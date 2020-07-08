@@ -55,14 +55,21 @@ static const char *s_pWaitForUpgradeContext = "WaitForUpgrade";
 ConVar	g_debug_physcannon( "g_debug_physcannon", "0", FCVAR_REPLICATED | FCVAR_CHEAT );
 
 ConVar physcannon_minforce( "physcannon_minforce", "700", FCVAR_REPLICATED | FCVAR_CHEAT );
+ConVar hands_minforce("hands_minforce", "50", FCVAR_REPLICATED | FCVAR_CHEAT);
 ConVar physcannon_maxforce( "physcannon_maxforce", "1500", FCVAR_REPLICATED | FCVAR_CHEAT );
+ConVar hands_maxforce("hands_maxforce", "500", FCVAR_REPLICATED | FCVAR_CHEAT);
 ConVar physcannon_maxmass( "physcannon_maxmass", "250", FCVAR_REPLICATED | FCVAR_CHEAT );
+ConVar hands_maxmass("hands_maxmass", "50", FCVAR_REPLICATED | FCVAR_CHEAT);
 ConVar physcannon_tracelength( "physcannon_tracelength", "250", FCVAR_REPLICATED | FCVAR_CHEAT );
+ConVar hands_tracelength("hands_tracelength", "128", FCVAR_REPLICATED | FCVAR_CHEAT);
 ConVar physcannon_chargetime("physcannon_chargetime", "2", FCVAR_REPLICATED | FCVAR_CHEAT );
 ConVar physcannon_pullforce( "physcannon_pullforce", "4000", FCVAR_REPLICATED | FCVAR_CHEAT );
+ConVar hands_pullforce("hands_pullforce", "0", FCVAR_REPLICATED | FCVAR_CHEAT);
 ConVar physcannon_cone( "physcannon_cone", "0.97", FCVAR_REPLICATED | FCVAR_CHEAT );
+ConVar hands_cone("hands_cone", "0.997", FCVAR_REPLICATED | FCVAR_CHEAT);
 ConVar physcannon_ball_cone( "physcannon_ball_cone", "0.997", FCVAR_REPLICATED | FCVAR_CHEAT );
 ConVar player_throwforce( "player_throwforce", "1000", FCVAR_REPLICATED | FCVAR_CHEAT );
+ConVar physcannon_hl2mode("physcannon_hl2mode", "0", FCVAR_REPLICATED | FCVAR_CHEAT);
 
 #ifndef CLIENT_DLL
 extern ConVar hl2_normspeed;
@@ -75,6 +82,13 @@ extern ConVar hl2_walkspeed;
 #define PHYSCANNON_ENDCAP_SPRITE "sprites/orangeflare1"
 #define PHYSCANNON_CENTER_GLOW "sprites/orangecore1"
 #define PHYSCANNON_BLAST_SPRITE "sprites/orangecore2"
+
+#define	PHYSCANNON_MODEL "models/weapons/v_physcannon.mdl"
+#define	PHYSCANNON_WMODEL "models/weapons/w_physcannon.mdl" //REPOSE TODO: Need to use!
+
+#define MAXFORCE_SCALE 100.0f
+#define MAXMASS_SCALE_POSITIVE 15.0f
+#define MAXMASS_SCALE_NEGATIVE 10.0f
 
 #ifdef CLIENT_DLL
 
@@ -450,7 +464,8 @@ void CGrabController::ComputeMaxSpeed( CBaseEntity *pEntity, IPhysicsObject *pPh
 
 	// Compute total mass...
 	float flMass = PhysGetEntityMass( pEntity );
-	float flMaxMass = physcannon_maxmass.GetFloat();
+	float flMaxMass;
+	physcannon_hl2mode.GetBool() ? flMaxMass = physcannon_maxmass.GetFloat() : flMaxMass = hands_maxmass.GetFloat();
 	if ( flMass <= flMaxMass )
 		return;
 
@@ -1349,6 +1364,9 @@ void CWeaponPhysCannon::Precache( void )
 	PrecacheModel( PHYSCANNON_BEAM_SPRITE_NOZ );
 
 	PrecacheScriptSound( "Weapon_PhysCannon.HoldSound" );
+	// Precache the HL2 models
+	PrecacheModel(PHYSCANNON_MODEL);
+	PrecacheModel(PHYSCANNON_WMODEL);
 
 	BaseClass::Precache();
 }
@@ -1466,7 +1484,21 @@ bool CWeaponPhysCannon::Deploy( void )
 //-----------------------------------------------------------------------------
 void CWeaponPhysCannon::SetViewModel( void )
 {
-	BaseClass::SetViewModel();
+	if (!physcannon_hl2mode.GetBool())
+	{
+		BaseClass::SetViewModel();
+		return;
+	}
+
+	CBasePlayer *pOwner = ToBasePlayer(GetOwner());
+	if (pOwner == NULL)
+		return;
+
+	CBaseViewModel *vm = pOwner->GetViewModel(m_nViewModelIndex);
+	if (vm == NULL)
+		return;
+
+	vm->SetWeaponModel(PHYSCANNON_MODEL, this);
 }
 
 //-----------------------------------------------------------------------------
@@ -1551,7 +1583,8 @@ void CWeaponPhysCannon::DryFire( void )
 {
 	SendWeaponAnim( ACT_VM_PRIMARYATTACK );
 
-	WeaponSound( EMPTY );
+	if (physcannon_hl2mode.GetBool())
+		WeaponSound(EMPTY);
 }
 
 //-----------------------------------------------------------------------------
@@ -1566,12 +1599,15 @@ void CWeaponPhysCannon::PrimaryFireEffect( void )
 
 	pOwner->ViewPunch( QAngle(-6, SharedRandomInt( "physcannonfire", -2,2) ,0) );
 	
+	if (physcannon_hl2mode.GetBool())
+	{
 #ifndef CLIENT_DLL
-	color32 white = { 245, 245, 255, 32 };
-	UTIL_ScreenFade( pOwner, white, 0.1f, 0.0f, FFADE_IN );
+		color32 white = { 245, 245, 255, 32 };
+		UTIL_ScreenFade(pOwner, white, 0.1f, 0.0f, FFADE_IN);
 #endif
 
-	WeaponSound( SINGLE );
+		WeaponSound(SINGLE);
+	}
 }
 
 #define	MAX_KNOCKBACK_FORCE	128
@@ -1763,15 +1799,27 @@ void CWeaponPhysCannon::ApplyVelocityBasedForce( CBaseEntity *pEntity, const Vec
 	Assert(pPhysicsObject); // Shouldn't ever get here with a non-vphysics object.
 	if (!pPhysicsObject)
 		return;
-
-	float flForceMax = physcannon_maxforce.GetFloat();
+	CBasePlayer *pOwner = ToBasePlayer(GetOwner());
+	float added = 0.0f;
+	if (pOwner)
+	{
+		CReposeStats* reposeStat = dynamic_cast<CReposeStats*>(pOwner);
+		
+		if (reposeStat)
+		{
+			added = MAXFORCE_SCALE * float(reposeStat->checkMod(reposeStat->STR));
+		}
+	}
+	float flForceMax;
+	physcannon_hl2mode.GetBool() ? flForceMax = physcannon_maxforce.GetFloat() : flForceMax = hands_maxforce.GetFloat() + added;
 	float flForce = flForceMax;
 
 	float mass = pPhysicsObject->GetMass();
 	if (mass > 100)
 	{
 		mass = MIN(mass, 1000);
-		float flForceMin = physcannon_minforce.GetFloat();
+		float flForceMin;
+		physcannon_hl2mode.GetBool() ? flForceMin = physcannon_minforce.GetFloat() : flForceMin = hands_minforce.GetFloat();
 		flForce = SimpleSplineRemapVal(mass, 100, 600, flForceMax, flForceMin);
 	}
 
@@ -1791,7 +1839,9 @@ void CWeaponPhysCannon::ApplyVelocityBasedForce( CBaseEntity *pEntity, const Vec
 //-----------------------------------------------------------------------------
 float CWeaponPhysCannon::TraceLength()
 {
-	return physcannon_tracelength.GetFloat();
+	float traceLength;
+	physcannon_hl2mode.GetBool() ? traceLength = physcannon_tracelength.GetFloat() : traceLength = hands_tracelength.GetFloat();
+	return traceLength;
 }
 
 
@@ -1825,91 +1875,100 @@ void CWeaponPhysCannon::PrimaryAttack( void )
 		{
 			float heldDist = ( pHeld->WorldSpaceCenter() - pOwner->WorldSpaceCenter() ).Length();
 
-			if ( heldDist > physcannon_tracelength.GetFloat() )
+			if ( heldDist > TraceLength() )
 			{
 				// We can't punt this yet
 				DryFire();
 				return;
 			}
 		}
-
-		LaunchObject( forward, physcannon_maxforce.GetFloat() );
+		CReposeStats* reposeStat = dynamic_cast<CReposeStats*>(pOwner);
+		float added = 0.0f;
+		if (reposeStat)
+		{
+			added = MAXFORCE_SCALE * float(reposeStat->checkMod(reposeStat->STR));
+		}
+		float flForceMax;
+		physcannon_hl2mode.GetBool() ? flForceMax = physcannon_maxforce.GetFloat() : flForceMax = hands_maxforce.GetFloat() + added;
+		LaunchObject( forward, flForceMax );
 
 		PrimaryFireEffect();
 		SendWeaponAnim( ACT_VM_SECONDARYATTACK );
 		return;
 	}
-
-	// If not active, just issue a physics punch in the world.
-	m_flNextPrimaryAttack = gpGlobals->curtime + 0.5f;
-
-	Vector forward;
-	pOwner->EyeVectors( &forward );
-
-	// NOTE: Notice we're *not* using the mega tracelength here
-	// when you have the mega cannon. Punting has shorter range.
-	Vector start, end;
-	start = pOwner->Weapon_ShootPosition();
-	float flPuntDistance = physcannon_tracelength.GetFloat();
-	VectorMA( start, flPuntDistance, forward, end );
-
-	CTraceFilterNoOwnerTest filter( pOwner, COLLISION_GROUP_NONE );
-	trace_t tr;
-	UTIL_TraceHull( start, end, -Vector(8,8,8), Vector(8,8,8), MASK_SHOT|CONTENTS_GRATE, &filter, &tr );
-	bool bValid = true;
-	CBaseEntity *pEntity = tr.m_pEnt;
-	if ( tr.fraction == 1 || !tr.m_pEnt || tr.m_pEnt->IsEFlagSet( EFL_NO_PHYSCANNON_INTERACTION ) )
+	else if (physcannon_hl2mode.GetBool()) //REPOSE TODO: eventually enable object pushing here
 	{
-		bValid = false;
-	}
-	else if ( (pEntity->GetMoveType() != MOVETYPE_VPHYSICS) && ( pEntity->m_takedamage == DAMAGE_NO ) )
-	{
-		bValid = false;
-	}
+		// If not active, just issue a physics punch in the world.
+		m_flNextPrimaryAttack = gpGlobals->curtime + 0.5f;
 
-	// If the entity we've hit is invalid, try a traceline instead
-	if ( !bValid )
-	{
-		UTIL_TraceLine( start, end, MASK_SHOT|CONTENTS_GRATE, &filter, &tr );
-		if ( tr.fraction == 1 || !tr.m_pEnt || tr.m_pEnt->IsEFlagSet( EFL_NO_PHYSCANNON_INTERACTION ) )
+		Vector forward;
+		pOwner->EyeVectors(&forward);
+
+		// NOTE: Notice we're *not* using the mega tracelength here
+		// when you have the mega cannon. Punting has shorter range.
+		Vector start, end;
+		start = pOwner->Weapon_ShootPosition();
+		float flPuntDistance = TraceLength();
+		VectorMA(start, flPuntDistance, forward, end);
+
+		CTraceFilterNoOwnerTest filter(pOwner, COLLISION_GROUP_NONE);
+		trace_t tr;
+		UTIL_TraceHull(start, end, -Vector(8, 8, 8), Vector(8, 8, 8), MASK_SHOT | CONTENTS_GRATE, &filter, &tr);
+		bool bValid = true;
+		CBaseEntity *pEntity = tr.m_pEnt;
+		if (tr.fraction == 1 || !tr.m_pEnt || tr.m_pEnt->IsEFlagSet(EFL_NO_PHYSCANNON_INTERACTION))
 		{
-			// Play dry-fire sequence
-			DryFire();
-			return;
+			bValid = false;
+		}
+		else if ((pEntity->GetMoveType() != MOVETYPE_VPHYSICS) && (pEntity->m_takedamage == DAMAGE_NO))
+		{
+			bValid = false;
 		}
 
-		pEntity = tr.m_pEnt;
-	}
-
-	// See if we hit something
-	if ( pEntity->GetMoveType() != MOVETYPE_VPHYSICS )
-	{
-		if ( pEntity->m_takedamage == DAMAGE_NO )
+		// If the entity we've hit is invalid, try a traceline instead
+		if (!bValid)
 		{
-			DryFire();
-			return;
+			UTIL_TraceLine(start, end, MASK_SHOT | CONTENTS_GRATE, &filter, &tr);
+			if (tr.fraction == 1 || !tr.m_pEnt || tr.m_pEnt->IsEFlagSet(EFL_NO_PHYSCANNON_INTERACTION))
+			{
+				// Play dry-fire sequence
+				DryFire();
+				return;
+			}
+
+			pEntity = tr.m_pEnt;
 		}
 
-		if( GetOwner()->IsPlayer() )
+		// See if we hit something
+		if (pEntity->GetMoveType() != MOVETYPE_VPHYSICS)
 		{
-			// Don't let the player zap any NPC's except regular antlions and headcrabs.
-			if( pEntity->IsPlayer() )
+			if (pEntity->m_takedamage == DAMAGE_NO)
 			{
 				DryFire();
 				return;
 			}
-		}
 
-		PuntNonVPhysics( pEntity, forward, tr );
-	}
-	else
-	{
-		if ( pEntity->VPhysicsIsFlesh( ) )
-		{
-			DryFire();
-			return;
+			if (GetOwner()->IsPlayer())
+			{
+				// Don't let the player zap any NPC's except regular antlions and headcrabs.
+				if (pEntity->IsPlayer())
+				{
+					DryFire();
+					return;
+				}
+			}
+
+			PuntNonVPhysics(pEntity, forward, tr);
 		}
-		PuntVPhysics( pEntity, forward, tr );
+		else
+		{
+			if (pEntity->VPhysicsIsFlesh())
+			{
+				DryFire();
+				return;
+			}
+			PuntVPhysics(pEntity, forward, tr);
+		}
 	}
 }
 
@@ -1948,17 +2007,30 @@ void CWeaponPhysCannon::SecondaryAttack( void )
 		switch ( result )
 		{
 		case OBJECT_FOUND:
-			WeaponSound( SPECIAL1 );
-			SendWeaponAnim( ACT_VM_PRIMARYATTACK );
-			m_flNextSecondaryAttack = gpGlobals->curtime + 0.5f;
+			if (physcannon_hl2mode.GetBool())
+				WeaponSound(SPECIAL1);
+			if (physcannon_hl2mode.GetBool() || (!physcannon_hl2mode.GetBool() && (pOwner->m_afButtonPressed & IN_ATTACK2)))
+			{
+				SendWeaponAnim(ACT_VM_PRIMARYATTACK);
+				m_flNextSecondaryAttack = gpGlobals->curtime + 0.5f;
+			}
 
 			// We found an object. Debounce the button
 			m_nAttack2Debounce |= pOwner->m_nButtons;
 			break;
 
 		case OBJECT_NOT_FOUND:
-			m_flNextSecondaryAttack = gpGlobals->curtime + 0.1f;
-			CloseElements();
+			if (physcannon_hl2mode.GetBool() || (!physcannon_hl2mode.GetBool() && (pOwner->m_afButtonPressed & IN_ATTACK2)))
+			{
+				m_flNextSecondaryAttack = gpGlobals->curtime + 0.1f;
+				CloseElements();
+				if (!physcannon_hl2mode.GetBool())
+				{
+					DryFire();
+					// Debounce the button
+					m_nAttack2Debounce |= pOwner->m_nButtons;
+				}
+			}
 			break;
 
 		case OBJECT_BEING_DETACHED:
@@ -2117,7 +2189,9 @@ CWeaponPhysCannon::FindObjectResult_t CWeaponPhysCannon::FindObject( void )
 
 	if (!bAttach && !bPull)
 	{
-		pConeEntity = FindObjectInCone( start, forward, physcannon_cone.GetFloat() );
+		float cone;
+		physcannon_hl2mode.GetBool() ? cone = physcannon_cone.GetFloat() : cone = hands_cone.GetFloat();
+		pConeEntity = FindObjectInCone( start, forward, cone );
 	}
 
 	if ( pConeEntity )
@@ -2168,7 +2242,7 @@ CWeaponPhysCannon::FindObjectResult_t CWeaponPhysCannon::FindObject( void )
 	// If we're too far, simply start to pull the object towards us
 	Vector	pullDir = start - pEntity->WorldSpaceCenter();
 	VectorNormalize( pullDir );
-	pullDir *= physcannon_pullforce.GetFloat();
+	physcannon_hl2mode.GetBool() ? pullDir *= physcannon_pullforce.GetFloat() : pullDir *= hands_pullforce.GetFloat();
 	
 	float mass = PhysGetEntityMass( pEntity );
 	if ( mass < 50.0f )
@@ -2649,8 +2723,7 @@ void CWeaponPhysCannon::DoEffectIdle( void )
 			m_Beams[1].SetVisible( false );
 			m_Beams[2].SetVisible( false );
 		}
-	}
-	*/
+	}*/
 #endif
 }
 
@@ -2790,7 +2863,7 @@ bool CWeaponPhysCannon::CanPickupObject( CBaseEntity *pTarget )
 	if ( pOwner && pOwner->GetGroundEntity() == pTarget )
 		return false;
 
-	if ( pTarget->VPhysicsIsFlesh( ) )
+	if ( pTarget->VPhysicsIsFlesh( ) && physcannon_hl2mode.GetBool())
 		return false;
 
 	IPhysicsObject *pObj = pTarget->VPhysicsGetObject();	
@@ -2800,10 +2873,22 @@ bool CWeaponPhysCannon::CanPickupObject( CBaseEntity *pTarget )
 
 	if ( UTIL_IsCombineBall( pTarget ) )
 	{
-		return CBasePlayer::CanPickupObject( pTarget, 0, 0 );
+		return CBasePlayer::CanPickupObject( pTarget, 0, 0 ) & physcannon_hl2mode.GetBool();
 	}
-
-	return CBasePlayer::CanPickupObject( pTarget, physcannon_maxmass.GetFloat(), 0 );
+	float added = 0.0f;
+	if (pOwner)
+	{
+		CReposeStats* reposeStat = dynamic_cast<CReposeStats*>(pOwner);
+		
+		if (reposeStat)
+		{
+			int strMod = reposeStat->checkMod(reposeStat->STR);
+			strMod > 0 ? added = MAXMASS_SCALE_POSITIVE * float(strMod) : added = max(-hands_maxmass.GetFloat(), MAXMASS_SCALE_NEGATIVE * float(strMod));
+		}
+	}
+	float maxMass;
+	physcannon_hl2mode.GetBool() ? maxMass = physcannon_maxmass.GetFloat() : maxMass = hands_maxmass.GetFloat() + added;
+	return CBasePlayer::CanPickupObject( pTarget, maxMass, 0 );
 #else
 	return false;
 #endif
@@ -2882,7 +2967,21 @@ void CWeaponPhysCannon::CloseElements( void )
 float CWeaponPhysCannon::GetLoadPercentage( void )
 {
 	float loadWeight = m_grabController.GetLoadWeight();
-	loadWeight /= physcannon_maxmass.GetFloat();	
+	float added = 0.0f;
+	CBasePlayer *pOwner = ToBasePlayer(GetOwner());
+	if (pOwner)
+	{
+		CReposeStats* reposeStat = dynamic_cast<CReposeStats*>(pOwner);
+
+		if (reposeStat)
+		{
+			int strMod = reposeStat->checkMod(reposeStat->STR);
+			strMod > 0 ? added = MAXMASS_SCALE_POSITIVE * float(strMod) : added = max(-hands_maxmass.GetFloat(), MAXMASS_SCALE_NEGATIVE * float(strMod));
+		}
+	}
+	float maxMass;
+	physcannon_hl2mode.GetBool() ? maxMass = max(0.01f,physcannon_maxmass.GetFloat()) : maxMass = max(0.01f,hands_maxmass.GetFloat()) + added;
+	loadWeight /= maxMass;	
 	loadWeight = clamp( loadWeight, 0.0f, 1.0f );
 	return loadWeight;
 }
@@ -3346,29 +3445,31 @@ void CWeaponPhysCannon::DoEffect( int effectType, Vector *pos )
 	// Save predicted state
 	m_nOldEffectState = m_EffectState;
 #endif
-
-	switch( effectType )
+	if (physcannon_hl2mode.GetBool())
 	{
-	case EFFECT_CLOSED:
-		DoEffectClosed( );
-		break;
+		switch (effectType)
+		{
+		case EFFECT_CLOSED:
+			DoEffectClosed();
+			break;
 
-	case EFFECT_READY:
-		DoEffectReady( );
-		break;
+		case EFFECT_READY:
+			DoEffectReady();
+			break;
 
-	case EFFECT_HOLDING:
-		DoEffectHolding();
-		break;
+		case EFFECT_HOLDING:
+			DoEffectHolding();
+			break;
 
-	case EFFECT_LAUNCH:
-		DoEffectLaunch( pos );
-		break;
+		case EFFECT_LAUNCH:
+			DoEffectLaunch(pos);
+			break;
 
-	default:
-	case EFFECT_NONE:
-		DoEffectNone();
-		break;
+		default:
+		case EFFECT_NONE:
+			DoEffectNone();
+			break;
+		}
 	}
 }
 
@@ -3435,36 +3536,41 @@ void CWeaponPhysCannon::GetEffectParameters( EffectType_t effectID, color32 &col
 //-----------------------------------------------------------------------------
 bool CWeaponPhysCannon::IsEffectVisible( EffectType_t effectID )
 {
-	return m_Parameters[effectID].IsVisible();
+	if (!physcannon_hl2mode.GetBool())
+		return false;
+	return (m_Parameters[effectID].IsVisible());
 }
 
 //-----------------------------------------------------------------------------
 // Purpose: Draws the effect sprite, given an effect parameter ID
 //-----------------------------------------------------------------------------
-void CWeaponPhysCannon::DrawEffectSprite( EffectType_t effectID )
+void CWeaponPhysCannon::DrawEffectSprite(EffectType_t effectID)
 {
-	color32 color;
-	float scale;
-	IMaterial *pMaterial;
-	Vector	vecAttachment;
+	if (physcannon_hl2mode.GetBool())
+	{
+		color32 color;
+		float scale;
+		IMaterial *pMaterial;
+		Vector	vecAttachment;
 
-	// Don't draw invisible effects
-	if ( IsEffectVisible( effectID ) == false )
-		return;
+		// Don't draw invisible effects
+		if (IsEffectVisible(effectID) == false)
+			return;
 
-	// Get all of our parameters
-	GetEffectParameters( effectID, color, scale, &pMaterial, vecAttachment );
+		// Get all of our parameters
+		GetEffectParameters(effectID, color, scale, &pMaterial, vecAttachment);
 
-	// Msg( "Scale: %.2f\tAlpha: %.2f\n", scale, alpha );
+		// Msg( "Scale: %.2f\tAlpha: %.2f\n", scale, alpha );
 
-	// Don't render fully translucent objects
-	if ( color.a <= 0.0f )
-		return;
+		// Don't render fully translucent objects
+		if (color.a <= 0.0f)
+			return;
 
-	// Draw the sprite
-	CMatRenderContextPtr pRenderContext( materials );
-	pRenderContext->Bind( pMaterial, this );
-	DrawSprite( vecAttachment, scale, scale, color );
+		// Draw the sprite
+		CMatRenderContextPtr pRenderContext(materials);
+		pRenderContext->Bind(pMaterial, this);
+		DrawSprite(vecAttachment, scale, scale, color);
+	}
 }
 
 //-----------------------------------------------------------------------------
@@ -3472,20 +3578,23 @@ void CWeaponPhysCannon::DrawEffectSprite( EffectType_t effectID )
 //-----------------------------------------------------------------------------
 void CWeaponPhysCannon::DrawEffects( void )
 {
-	// Draw the core effects
-	DrawEffectSprite( PHYSCANNON_CORE );
-	DrawEffectSprite( PHYSCANNON_BLAST );
-	
-	// Draw the glows
-	for ( int i = PHYSCANNON_GLOW1; i < (PHYSCANNON_GLOW1+NUM_GLOW_SPRITES); i++ )
+	if (physcannon_hl2mode.GetBool())
 	{
-		DrawEffectSprite( (EffectType_t) i );
-	}
+		// Draw the core effects
+		DrawEffectSprite(PHYSCANNON_CORE);
+		DrawEffectSprite(PHYSCANNON_BLAST);
 
-	// Draw the endcaps
-	for ( int i = PHYSCANNON_ENDCAP1; i < (PHYSCANNON_ENDCAP1+NUM_ENDCAP_SPRITES); i++ )
-	{
-		DrawEffectSprite( (EffectType_t) i );
+		// Draw the glows
+		for (int i = PHYSCANNON_GLOW1; i < (PHYSCANNON_GLOW1 + NUM_GLOW_SPRITES); i++)
+		{
+			DrawEffectSprite((EffectType_t)i);
+		}
+
+		// Draw the endcaps
+		for (int i = PHYSCANNON_ENDCAP1; i < (PHYSCANNON_ENDCAP1 + NUM_ENDCAP_SPRITES); i++)
+		{
+			DrawEffectSprite((EffectType_t)i);
+		}
 	}
 }
 
@@ -3495,7 +3604,7 @@ void CWeaponPhysCannon::DrawEffects( void )
 int CWeaponPhysCannon::DrawModel( int flags )
 {
 	// Only render these on the transparent pass
-	if ( flags & STUDIO_TRANSPARENCY )
+	if (flags & STUDIO_TRANSPARENCY && physcannon_hl2mode.GetBool())
 	{
 		DrawEffects();
 		return 1;
@@ -3610,73 +3719,76 @@ extern void FX_GaussExplosion( const Vector &pos, const Vector &dir, int type );
 
 void CallbackPhyscannonImpact( const CEffectData &data )
 {
-	C_BaseEntity *pEnt = data.GetEntity();
-	if ( pEnt == NULL )
-		return;
-
-	Vector	vecAttachment;
-	QAngle	vecAngles;
-
-	C_BaseCombatWeapon *pWeapon = dynamic_cast<C_BaseCombatWeapon *>(pEnt);
-
-	if ( pWeapon == NULL )
-		return;
-
-	pWeapon->GetAttachment( 1, vecAttachment, vecAngles );
-
-	Vector	dir = ( data.m_vOrigin - vecAttachment );
-	VectorNormalize( dir );
-
-	// Do special first-person fix-up
-	if ( pWeapon->GetOwner() == CBasePlayer::GetLocalPlayer() )
+	if (physcannon_hl2mode.GetBool())
 	{
-		// Translate the attachment entity to the viewmodel
-		C_BasePlayer *pPlayer = dynamic_cast<C_BasePlayer *>(pWeapon->GetOwner());
+		C_BaseEntity *pEnt = data.GetEntity();
+		if (pEnt == NULL)
+			return;
 
-		if ( pPlayer )
+		Vector	vecAttachment;
+		QAngle	vecAngles;
+
+		C_BaseCombatWeapon *pWeapon = dynamic_cast<C_BaseCombatWeapon *>(pEnt);
+
+		if (pWeapon == NULL)
+			return;
+
+		pWeapon->GetAttachment(1, vecAttachment, vecAngles);
+
+		Vector	dir = (data.m_vOrigin - vecAttachment);
+		VectorNormalize(dir);
+
+		// Do special first-person fix-up
+		if (pWeapon->GetOwner() == CBasePlayer::GetLocalPlayer())
 		{
-			pEnt = pPlayer->GetViewModel();
+			// Translate the attachment entity to the viewmodel
+			C_BasePlayer *pPlayer = dynamic_cast<C_BasePlayer *>(pWeapon->GetOwner());
+
+			if (pPlayer)
+			{
+				pEnt = pPlayer->GetViewModel();
+			}
+
+			// Format attachment for first-person view!
+			::FormatViewModelAttachment(vecAttachment, true);
+
+			// Explosions at the impact point
+			FX_GaussExplosion(data.m_vOrigin, -dir, 0);
+
+			// Draw a beam
+			BeamInfo_t beamInfo;
+
+			beamInfo.m_pStartEnt = pEnt;
+			beamInfo.m_nStartAttachment = 1;
+			beamInfo.m_pEndEnt = NULL;
+			beamInfo.m_nEndAttachment = -1;
+			beamInfo.m_vecStart = vec3_origin;
+			beamInfo.m_vecEnd = data.m_vOrigin;
+			beamInfo.m_pszModelName = PHYSCANNON_BEAM_SPRITE;
+			beamInfo.m_flHaloScale = 0.0f;
+			beamInfo.m_flLife = 0.1f;
+			beamInfo.m_flWidth = 12.0f;
+			beamInfo.m_flEndWidth = 4.0f;
+			beamInfo.m_flFadeLength = 0.0f;
+			beamInfo.m_flAmplitude = 0;
+			beamInfo.m_flBrightness = 255.0;
+			beamInfo.m_flSpeed = 0.0f;
+			beamInfo.m_nStartFrame = 0.0;
+			beamInfo.m_flFrameRate = 30.0;
+			beamInfo.m_flRed = 255.0;
+			beamInfo.m_flGreen = 255.0;
+			beamInfo.m_flBlue = 255.0;
+			beamInfo.m_nSegments = 16;
+			beamInfo.m_bRenderable = true;
+			beamInfo.m_nFlags = FBEAM_ONLYNOISEONCE;
+
+			beams->CreateBeamEntPoint(beamInfo);
 		}
-
-		// Format attachment for first-person view!
-		::FormatViewModelAttachment( vecAttachment, true );
-
-		// Explosions at the impact point
-		FX_GaussExplosion( data.m_vOrigin, -dir, 0 );
-
-		// Draw a beam
-		BeamInfo_t beamInfo;
-
-		beamInfo.m_pStartEnt = pEnt;
-		beamInfo.m_nStartAttachment = 1;
-		beamInfo.m_pEndEnt = NULL;
-		beamInfo.m_nEndAttachment = -1;
-		beamInfo.m_vecStart = vec3_origin;
-		beamInfo.m_vecEnd = data.m_vOrigin;
-		beamInfo.m_pszModelName = PHYSCANNON_BEAM_SPRITE;
-		beamInfo.m_flHaloScale = 0.0f;
-		beamInfo.m_flLife = 0.1f;
-		beamInfo.m_flWidth = 12.0f;
-		beamInfo.m_flEndWidth = 4.0f;
-		beamInfo.m_flFadeLength = 0.0f;
-		beamInfo.m_flAmplitude = 0;
-		beamInfo.m_flBrightness = 255.0;
-		beamInfo.m_flSpeed = 0.0f;
-		beamInfo.m_nStartFrame = 0.0;
-		beamInfo.m_flFrameRate = 30.0;
-		beamInfo.m_flRed = 255.0;
-		beamInfo.m_flGreen = 255.0;
-		beamInfo.m_flBlue = 255.0;
-		beamInfo.m_nSegments = 16;
-		beamInfo.m_bRenderable = true;
-		beamInfo.m_nFlags = FBEAM_ONLYNOISEONCE;
-
-		beams->CreateBeamEntPoint( beamInfo );
-	}
-	else
-	{
-		// Explosion at the starting point
-		FX_GaussExplosion( vecAttachment, dir, 0 );
+		else
+		{
+			// Explosion at the starting point
+			FX_GaussExplosion(vecAttachment, dir, 0);
+		}
 	}
 }
 

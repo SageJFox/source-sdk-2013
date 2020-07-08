@@ -1,20 +1,23 @@
 "GameInfo"
 {
-	game	"Repose"
-	title	""
-	title2	""
-	type multiplayer_only
+	game		"Repose"
+	type		"multiplayer_only"
+	icon		"resource/logo_repose"
+	developer	"Sierra Foxtrot"
+	developer_url	"http://google.com/" //just need something in the field?
 	gamelogo	1
 	nomodels		0
 	nohimodel	1
 	nocrosshair	1
-	icon		"resource/icon_repose"
+	GameData	"repose.fgd"
+
 	hidden_maps
 	{
 		"test_speakers"		1
 		"test_hardware"		1
 	}
 	supportsvr	0
+	Nodegraph	1
 
 
 	FileSystem
