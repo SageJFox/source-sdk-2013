@@ -1596,8 +1596,19 @@ void CWeaponPhysCannon::PrimaryFireEffect( void )
 	
 	if ( pOwner == NULL )
 		return;
+	int added = 0;
+	if (!physcannon_hl2mode.GetBool())
+	{
+		CReposeStats* reposeStat = dynamic_cast<CReposeStats*>(pOwner);
 
-	pOwner->ViewPunch( QAngle(-6, SharedRandomInt( "physcannonfire", -2,2) ,0) );
+		if (reposeStat)
+		{
+			added = reposeStat->checkMod(reposeStat->STR);
+			added = int(Sign(added)) * (abs(added) - 3);
+		}
+	}
+
+	pOwner->ViewPunch( QAngle(min(-1,-6 - added), SharedRandomInt( "physcannonfire", -2,2) ,0) );
 	
 	if (physcannon_hl2mode.GetBool())
 	{
@@ -2110,7 +2121,7 @@ bool CWeaponPhysCannon::AttachObject( CBaseEntity *pObject, const Vector &vPosit
 		m_bResetOwnerEntity = true;
 	}
 
-/*	if( pOwner )
+	if( pOwner )
 	{
 		pOwner->EnableSprint( false );
 
@@ -2119,7 +2130,7 @@ bool CWeaponPhysCannon::AttachObject( CBaseEntity *pObject, const Vector &vPosit
 
 		//Msg( "Load perc: %f -- Movement speed: %f/%f\n", loadWeight, maxSpeed, hl2_normspeed.GetFloat() );
 		pOwner->SetMaxSpeed( maxSpeed );
-	}*/
+	}
 
 	// Don't drop again for a slight delay, in case they were pulling objects near them
 	m_flNextSecondaryAttack = gpGlobals->curtime + 0.4f;
@@ -2215,7 +2226,8 @@ CWeaponPhysCannon::FindObjectResult_t CWeaponPhysCannon::FindObject( void )
 		if ( !m_flLastDenySoundPlayed )
 		{
 			m_flLastDenySoundPlayed = true;
-			WeaponSound( SPECIAL3 );
+			if (physcannon_hl2mode.GetBool())
+				WeaponSound(SPECIAL3);
 		}
 
 		return OBJECT_NOT_FOUND;
@@ -2247,11 +2259,11 @@ CWeaponPhysCannon::FindObjectResult_t CWeaponPhysCannon::FindObject( void )
 	float mass = PhysGetEntityMass( pEntity );
 	if ( mass < 50.0f )
 	{
-		pullDir *= (mass + 0.5) * (1/50.0f);
+		pullDir *= (mass + 0.5) / 50.0f;
 	}
 
 	// Nudge it towards us
-	pObj->ApplyForceCenter( pullDir );
+	if(!pullDir.IsZero())pObj->ApplyForceCenter( pullDir ); //check for zero force (hands default) so we don't long-range unsleep props
 	return OBJECT_NOT_FOUND;
 }
 
@@ -2873,7 +2885,7 @@ bool CWeaponPhysCannon::CanPickupObject( CBaseEntity *pTarget )
 
 	if ( UTIL_IsCombineBall( pTarget ) )
 	{
-		return CBasePlayer::CanPickupObject( pTarget, 0, 0 ) & physcannon_hl2mode.GetBool();
+		return (CBasePlayer::CanPickupObject( pTarget, 0, 0 ) & physcannon_hl2mode.GetBool());
 	}
 	float added = 0.0f;
 	if (pOwner)
@@ -2903,7 +2915,8 @@ void CWeaponPhysCannon::OpenElements( void )
 	if ( m_bOpen )
 		return;
 
-	WeaponSound( SPECIAL2 );
+	if(physcannon_hl2mode.GetBool())
+		WeaponSound(SPECIAL2);
 
 	CBasePlayer *pOwner = ToBasePlayer( GetOwner() );
 
@@ -2931,7 +2944,8 @@ void CWeaponPhysCannon::CloseElements( void )
 	if ( m_bOpen == false )
 		return;
 
-	WeaponSound( MELEE_HIT );
+	if (physcannon_hl2mode.GetBool())
+		WeaponSound(MELEE_HIT);
 
 	CBasePlayer *pOwner = ToBasePlayer( GetOwner() );
 
@@ -2993,13 +3007,17 @@ float CWeaponPhysCannon::GetLoadPercentage( void )
 //-----------------------------------------------------------------------------
 CSoundPatch *CWeaponPhysCannon::GetMotorSound( void )
 {
-	if ( m_sndMotor == NULL )
+	if (physcannon_hl2mode.GetBool())
 	{
-		CPASAttenuationFilter filter( this );
-		
-		m_sndMotor = (CSoundEnvelopeController::GetController()).SoundCreate( filter, entindex(), CHAN_STATIC, "Weapon_PhysCannon.HoldSound", ATTN_NORM );
-	}
+		if (m_sndMotor == NULL)
+		{
+			CPASAttenuationFilter filter(this);
 
+			m_sndMotor = (CSoundEnvelopeController::GetController()).SoundCreate(filter, entindex(), CHAN_STATIC, "Weapon_PhysCannon.HoldSound", ATTN_NORM);
+		}
+	}
+	else
+		m_sndMotor = NULL;
 	return m_sndMotor;
 }
 

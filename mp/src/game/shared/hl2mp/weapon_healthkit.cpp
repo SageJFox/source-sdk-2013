@@ -31,6 +31,7 @@
 #define HEALTHKIT_RATE_POSITIVE 0.01f
 #define HEALTHKIT_RATE_NEGATIVE 0.02f
 #define HEALTHKIT_DENY_SOUNDTIMER 1.0f
+#define HEALTHKIT_MAXAMMO_MOD 5
 
 #define	CROWBAR_RANGE	75.0f //range copied from crowbar, hence the name
 
@@ -181,8 +182,8 @@ IMPLEMENT_ACTTABLE(CWeaponHealthkit);
 //=========================================================
 CWeaponHealthkit::CWeaponHealthkit( )
 {
-	m_fMinRange1		= 0;// No minimum range. 
-	m_fMaxRange1 = CROWBAR_RANGE;//1400
+	m_fMinRange1		= 0; //No minimum range. 
+	m_fMaxRange1 = CROWBAR_RANGE; //1400;
 }
 
 //-----------------------------------------------------------------------------
@@ -280,15 +281,31 @@ Activity CWeaponHealthkit::GetPrimaryAttackActivity( void )
 bool CWeaponHealthkit::Reload( void )
 {
 	bool fRet;
-	float fCacheTime = m_flNextSecondaryAttack;
+	//float fCacheTime = m_flNextSecondaryAttack;
 
-	fRet = DefaultReload( GetMaxClip1(), GetMaxClip2(), ACT_VM_RELOAD );
+	//TODO: Doesn't seem to be the place to do this. This just makes us play a silent, unnecessary reload animation on non-zero INT mods.
+	/*
+	int addition = 0;
+#ifndef CLIENT_DLL
+	CBasePlayer *pPlayer = ToBasePlayer(GetOwner());
+	CHL2_Player *pPlayerRepose = dynamic_cast<CHL2_Player*>(pPlayer); //cast to CHL2_Player since CBasePlayer doesn't access Repose stats
+
+	if (pPlayerRepose != NULL)
+		addition = pPlayerRepose->checkMod(CReposeStats::INT);
+#else
+	C_BasePlayer *pPlayer = ToBasePlayer(GetOwner());
+	C_HL2MP_Player *pPlayerRepose = dynamic_cast<C_HL2MP_Player*>(pPlayer); //cast to CHL2_Player since CBasePlayer doesn't access Repose stats
+
+	if (pPlayerRepose != NULL)
+		addition = pPlayerRepose->checkMod(CReposeStats::INT);
+#endif // !CLIENT_DLL */
+	fRet = DefaultReload( GetMaxClip1() /*+ HEALTHKIT_MAXAMMO_MOD * addition*/, GetMaxClip2(), ACT_VM_RELOAD );
 	if ( fRet )
 	{
 		// Undo whatever the reload process has done to our secondary
 		// attack timer. We allow you to interrupt reloading to fire
 		// a grenade.
-		m_flNextSecondaryAttack = GetOwner()->m_flNextAttack = fCacheTime;
+		//m_flNextSecondaryAttack = GetOwner()->m_flNextAttack = fCacheTime;
 
 		WeaponSound( RELOAD );
 	}
@@ -333,7 +350,7 @@ void CWeaponHealthkit::PrimaryAttack( void )
 		return PlayDenySound(HEALTHKIT_DENY_SOUNDTIMER);
 	else m_flNextDenySound = gpGlobals->curtime + 0.01f + GetFireRate();
 #ifndef CLIENT_DLL
-	m_nShotsFired++;
+	//m_nShotsFired++;
 
 	//pPlayer->DoMuzzleFlash();
 
@@ -398,7 +415,7 @@ void CWeaponHealthkit::SecondaryAttack(void)
 	// Make sure we have a valid target in range
 	CHL2MP_Player *pHL2MPPlayer = ToHL2MPPlayer(pPlayer);
 	Vector m_vecSrc = pHL2MPPlayer->Weapon_ShootPosition();
-	Vector m_vecDirShooting = pPlayer->GetAutoaimVector(AUTOAIM_5DEGREES);
+	Vector m_vecDirShooting = pPlayer->GetAutoaimVector(0.0f); //AUTOAIM_5DEGREES
 	float m_flDistance = CROWBAR_RANGE;
 	trace_t check;
 	UTIL_TraceLine(m_vecSrc, m_vecSrc + m_vecDirShooting * m_flDistance, MASK_ALL, pPlayer, COLLISION_GROUP_PLAYER, &check);
@@ -418,9 +435,10 @@ void CWeaponHealthkit::SecondaryAttack(void)
 	//We can't heal our target if their health is full
 	if (pTarget->HealthFraction() >= 1.0f)
 		return PlayDenySound(HEALTHKIT_DENY_SOUNDTIMER);
-	else m_flNextDenySound = gpGlobals->curtime + 0.01f + GetFireRate();
+	else 
+		m_flNextDenySound = gpGlobals->curtime + 0.01f + GetFireRate();
 #ifndef CLIENT_DLL
-	m_nShotsFired++;
+	//m_nShotsFired++;
 
 	//pPlayer->DoMuzzleFlash();
 
@@ -429,6 +447,11 @@ void CWeaponHealthkit::SecondaryAttack(void)
 	int iBulletsToFire = 0;
 	float fireRate = GetFireRate();
 
+	/*TODO: This fixes our problem of our secondary attack sometimes
+	counting up hundreds of bullets to fire (before capping itself at the max
+	healing needing to be done) but it potentially ties firerate to framerate*/
+	if ((m_flNextPrimaryAttack < gpGlobals->curtime))
+		m_flNextPrimaryAttack = gpGlobals->curtime;
 
 	while (m_flNextPrimaryAttack <= gpGlobals->curtime)
 	{
@@ -436,6 +459,7 @@ void CWeaponHealthkit::SecondaryAttack(void)
 		WeaponSound(SINGLE, m_flNextPrimaryAttack);
 		m_flNextPrimaryAttack = m_flNextPrimaryAttack + fireRate;
 		iBulletsToFire++;
+		//DevMsg("Bulets to fire is %i\n", iBulletsToFire);
 	}
 
 	//Make sure we don't try to use more healing than we need
@@ -460,6 +484,7 @@ void CWeaponHealthkit::SecondaryAttack(void)
 
 	//Factor in the view kick
 	//AddViewKick();
+	Clip1();
 
 	if (!m_iClip1 && pPlayer->GetAmmoCount(m_iPrimaryAmmoType) <= 0)
 	{
@@ -467,7 +492,7 @@ void CWeaponHealthkit::SecondaryAttack(void)
 		pPlayer->SetSuitUpdate("!HEV_AMO0", FALSE, 0);
 	}
 #endif // !CLIENT_DLL
-	SendWeaponAnim(ACT_VM_SECONDARYATTACK);
+	SendWeaponAnim(GetPrimaryAttackActivity());
 	pPlayer->SetAnimation(PLAYER_ATTACK1);
 }
 
