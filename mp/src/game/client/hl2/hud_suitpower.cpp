@@ -185,7 +185,7 @@ void CHudSuitPower::Paint()
 	surface()->DrawSetTextColor(m_AuxPowerColor);
 	surface()->DrawSetTextPos(text_xpos, text_ypos);
 
-	wchar_t *tempString = g_pVGuiLocalize->Find("#Valve_Hud_AUX_POWER");
+	wchar_t *tempString = g_pVGuiLocalize->Find("#Repose_Hud_AUX_POWER");
 
 	if (tempString)
 	{
@@ -193,7 +193,7 @@ void CHudSuitPower::Paint()
 	}
 	else
 	{
-		surface()->DrawPrintText(L"AUX POWER", wcslen(L"AUX POWER"));
+		surface()->DrawPrintText(L"STAMINA", wcslen(L"STAMINA"));
 	}
 
 	if ( m_iActiveSuitDevices )

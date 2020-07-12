@@ -1935,7 +1935,7 @@ void CWeaponPhysCannon::PrimaryAttack( void )
 					pOwnerSuit->SuitPower_Drain(MAX_LIFT_DRAIN * flDrainRatePercentage * -3.0f); //3seconds of power usage for this object
 					LaunchObject(forward, /*flForceMax * */flSuitPowerRemaining);
 				}
-				else LaunchObject(forward, flForceMax);
+				else LaunchObject(forward, 1.0f /*flForceMax*/);
 			}
 		}
 		else
@@ -2955,7 +2955,7 @@ void CWeaponPhysCannon::LaunchObject( const Vector &vecDir, float flForce )
 		// FIRE!!!
 		if( pObject != NULL )
 		{
-//#ifndef CLIENT_DLL
+#ifndef CLIENT_DLL
 			//float flObjectMass = min(1.0f,PhysGetEntityMass(pObject));
 			DetachObject( false, true );
 
@@ -2963,12 +2963,12 @@ void CWeaponPhysCannon::LaunchObject( const Vector &vecDir, float flForce )
 			m_flRepuntObjectTime = gpGlobals->curtime + 0.5f;
 
 			// Launch
-			//if (physcannon_hl2mode.GetBool())
+			if (physcannon_hl2mode.GetBool())
 				ApplyVelocityBasedForce(pObject, vecDir);
-			//else
+			else
 				//ApplyVelocityBasedForce(pObject, vecDir.Normalized() * flForce / 100.0f * max(0.25f, 1.0f - pow(0.95f, flObjectMass))); //a minimum of 0.25 is ~4 mass
-				//ApplyVelocityBasedForce(pObject, vecDir * flForce);
-//#endif // !CLIENT_DLL
+				ApplyVelocityBasedForce(pObject, vecDir * flForce);
+#endif // !CLIENT_DLL
 			// Don't allow the gun to regrab a thrown object!!
 			m_flNextSecondaryAttack = m_flNextPrimaryAttack = gpGlobals->curtime + 0.5;
 			

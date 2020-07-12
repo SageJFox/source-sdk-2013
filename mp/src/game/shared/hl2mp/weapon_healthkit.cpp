@@ -55,22 +55,31 @@ public:
 	int		GetMaxBurst() { return 5; }
 
 	virtual void Equip( CBaseCombatCharacter *pOwner );
-	bool	Reload( void );
-#ifndef CLIENT_DLL
+	bool StartReload(void);
+	bool Reload( void );
+	void FillClip( void );
+	void FinishReload( void );
+	void CheckHolsterReload( void );
+	void ItemPostFrame( void );
+
 	float	GetFireRate( void )
 	{
 		CBasePlayer *pPlayer = ToBasePlayer(GetOwner());
-		CHL2_Player *pPlayerRepose = dynamic_cast<CHL2_Player*>(pPlayer); //cast to CHL2_Player since CBasePlayer doesn't access Repose stats
+#ifdef CLIENT_DLL
+		C_HL2MP_Player* pPlayerStats = dynamic_cast<C_HL2MP_Player*>(pPlayer);
+#else
+		CHL2_Player* pPlayerStats = dynamic_cast<CHL2_Player*>(pPlayer);
+#endif // CLIENT_DLL
 
-		if (pPlayer == NULL || pPlayerRepose == NULL)
+		if (pPlayer == NULL || pPlayerStats == NULL)
 			return HEALTHKIT_RATE_BASE * 10.0f; //return a really slow firerate so we can tell that something's not right
 		//define our rate of fire
 		float rate = HEALTHKIT_RATE_BASE;
-		int mod = pPlayerRepose->checkMod(CReposeStats::DEX);
+		int mod = pPlayerStats->checkMod(CReposeStats::INT);
 		mod > 0 ? rate -= (HEALTHKIT_RATE_POSITIVE * mod) : rate -= (HEALTHKIT_RATE_NEGATIVE * mod);
 		return rate;
 	}	
-
+#ifndef CLIENT_DLL
 	int		CapabilitiesGet( void ) { return bits_CAP_WEAPON_RANGE_ATTACK1; }
 #endif // !CLIENT_DLL
 
@@ -100,15 +109,32 @@ private:
 	CWeaponHealthkit( const CWeaponHealthkit & );
 	void PlayDenySound(float);
 	float m_flNextDenySound = 0.0f;
+	CNetworkVar(bool, m_bDelayedFire1);	// Fire primary when finished reloading
+	CNetworkVar(bool, m_bDelayedFire2);	// Fire secondary when finished reloading
+	CNetworkVar(bool, m_bDelayedReload);	// Reload when finished pump
 };
 
 IMPLEMENT_NETWORKCLASS_ALIASED( WeaponHealthkit, DT_WeaponHealthkit )
 
 BEGIN_NETWORK_TABLE( CWeaponHealthkit, DT_WeaponHealthkit )
+#ifdef CLIENT_DLL
+RecvPropBool(RECVINFO(m_bDelayedFire1)),
+RecvPropBool(RECVINFO(m_bDelayedFire2)),
+RecvPropBool(RECVINFO(m_bDelayedReload)),
+#else
+SendPropBool(SENDINFO(m_bDelayedFire1)),
+SendPropBool(SENDINFO(m_bDelayedFire2)),
+SendPropBool(SENDINFO(m_bDelayedReload)),
+#endif
 END_NETWORK_TABLE()
 
-BEGIN_PREDICTION_DATA( CWeaponHealthkit )
+#ifdef CLIENT_DLL
+BEGIN_PREDICTION_DATA(CWeaponHealthkit)
+DEFINE_PRED_FIELD(m_bDelayedFire1, FIELD_BOOLEAN, FTYPEDESC_INSENDTABLE),
+DEFINE_PRED_FIELD(m_bDelayedFire2, FIELD_BOOLEAN, FTYPEDESC_INSENDTABLE),
+DEFINE_PRED_FIELD(m_bDelayedReload, FIELD_BOOLEAN, FTYPEDESC_INSENDTABLE),
 END_PREDICTION_DATA()
+#endif
 
 LINK_ENTITY_TO_CLASS( weapon_healthkit, CWeaponHealthkit );
 PRECACHE_WEAPON_REGISTER(weapon_healthkit);
@@ -278,9 +304,9 @@ Activity CWeaponHealthkit::GetPrimaryAttackActivity( void )
 
 //-----------------------------------------------------------------------------
 //-----------------------------------------------------------------------------
-bool CWeaponHealthkit::Reload( void )
-{
-	bool fRet;
+//bool CWeaponHealthkit::Reload( void )
+//{
+//	bool fRet;
 	//float fCacheTime = m_flNextSecondaryAttack;
 
 	//TODO: Doesn't seem to be the place to do this. This just makes us play a silent, unnecessary reload animation on non-zero INT mods.
@@ -299,19 +325,19 @@ bool CWeaponHealthkit::Reload( void )
 	if (pPlayerRepose != NULL)
 		addition = pPlayerRepose->checkMod(CReposeStats::INT);
 #endif // !CLIENT_DLL */
-	fRet = DefaultReload( GetMaxClip1() /*+ HEALTHKIT_MAXAMMO_MOD * addition*/, GetMaxClip2(), ACT_VM_RELOAD );
-	if ( fRet )
-	{
+//	fRet = DefaultReload( GetMaxClip1() /*+ HEALTHKIT_MAXAMMO_MOD * addition*/, GetMaxClip2(), ACT_VM_RELOAD );
+//	if ( fRet )
+//	{
 		// Undo whatever the reload process has done to our secondary
 		// attack timer. We allow you to interrupt reloading to fire
 		// a grenade.
 		//m_flNextSecondaryAttack = GetOwner()->m_flNextAttack = fCacheTime;
 
-		WeaponSound( RELOAD );
-	}
+//		WeaponSound( RELOAD );
+//	}
 
-	return fRet;
-}
+//	return fRet;
+//}
 
 //-----------------------------------------------------------------------------
 // Purpose: 
@@ -542,4 +568,272 @@ void CWeaponHealthkit::PlayDenySound(float flDelay)
 	}
 #endif
 	return;
+}
+
+//-----------------------------------------------------------------------------
+// Purpose: Override so only reload one shell at a time
+// Input  :
+// Output :
+//-----------------------------------------------------------------------------
+bool CWeaponHealthkit::StartReload(void)
+{
+	CBaseCombatCharacter *pOwner = GetOwner();
+
+	if (pOwner == NULL)
+		return false;
+
+	if (pOwner->GetAmmoCount(m_iPrimaryAmmoType) <= 0)
+		return false;
+
+	if (m_iClip1 >= GetMaxClip1())
+		return false;
+
+
+	int j = MIN(1, pOwner->GetAmmoCount(m_iPrimaryAmmoType));
+
+	if (j <= 0)
+		return false;
+
+	SendWeaponAnim(ACT_SHOTGUN_RELOAD_START);
+
+	// Make shotgun shell visible
+	SetBodygroup(1, 0);
+
+	pOwner->m_flNextAttack = gpGlobals->curtime;
+	m_flNextPrimaryAttack = gpGlobals->curtime + SequenceDuration();
+
+	m_bInReload = true;
+	return true;
+}
+
+//-----------------------------------------------------------------------------
+// Purpose: Override so only reload one shell at a time
+// Input  :
+// Output :
+//-----------------------------------------------------------------------------
+bool CWeaponHealthkit::Reload(void)
+{
+	// Check that StartReload was called first
+	if (!m_bInReload)
+	{
+		Warning("ERROR: Shotgun Reload called incorrectly!\n");
+	}
+
+	CBaseCombatCharacter *pOwner = GetOwner();
+
+	if (pOwner == NULL)
+		return false;
+
+	if (pOwner->GetAmmoCount(m_iPrimaryAmmoType) <= 0)
+		return false;
+
+	if (m_iClip1 >= GetMaxClip1())
+		return false;
+
+	int j = MIN(1, pOwner->GetAmmoCount(m_iPrimaryAmmoType));
+
+	if (j <= 0)
+		return false;
+
+	FillClip();
+	// Play reload on different channel as otherwise steals channel away from fire sound
+	WeaponSound(RELOAD);
+	//get our fast reload in based on curtime (tenths of second) and DEX
+	float flCurTime = (gpGlobals->curtime - floor(gpGlobals->curtime)) * 10;
+#ifdef CLIENT_DLL
+	C_HL2MP_Player* pOwnerStats = dynamic_cast<C_HL2MP_Player*>(pOwner);
+#else
+	CHL2_Player* pOwnerStats = dynamic_cast<CHL2_Player*>(pOwner);
+#endif // CLIENT_DLL
+	if (pOwnerStats && 3 + pOwnerStats->checkMod(CReposeStats::DEX) >= (int)floor(flCurTime))
+		SendWeaponAnim(ACT_SHOTGUN_PUMP); //used as a faster reload
+	else
+		SendWeaponAnim(ACT_VM_RELOAD);
+
+	pOwner->m_flNextAttack = gpGlobals->curtime;
+	m_flNextPrimaryAttack = gpGlobals->curtime + SequenceDuration();
+
+	return true;
+}
+
+//-----------------------------------------------------------------------------
+// Purpose: Play finish reload anim and fill clip
+// Input  :
+// Output :
+//-----------------------------------------------------------------------------
+void CWeaponHealthkit::FinishReload(void)
+{
+	// Make shotgun shell invisible
+	SetBodygroup(1, 1);
+
+	CBaseCombatCharacter *pOwner = GetOwner();
+
+	if (pOwner == NULL)
+		return;
+
+	m_bInReload = false;
+
+	// Finish reload animation
+	SendWeaponAnim(ACT_SHOTGUN_RELOAD_FINISH);
+
+	pOwner->m_flNextAttack = gpGlobals->curtime;
+	m_flNextPrimaryAttack = gpGlobals->curtime + SequenceDuration();
+}
+
+//-----------------------------------------------------------------------------
+// Purpose: Play finish reload anim and fill clip
+// Input  :
+// Output :
+//-----------------------------------------------------------------------------
+void CWeaponHealthkit::FillClip(void)
+{
+	CBaseCombatCharacter *pOwner = GetOwner();
+
+	if (pOwner == NULL)
+		return;
+
+	// Add them to the clip
+	if (pOwner->GetAmmoCount(m_iPrimaryAmmoType) > 0)
+	{
+		if (Clip1() < GetMaxClip1())
+		{
+			m_iClip1++;
+			pOwner->RemoveAmmo(1, m_iPrimaryAmmoType);
+		}
+	}
+}
+
+//-----------------------------------------------------------------------------
+// Purpose: Override so shotgun can do mulitple reloads in a row
+//-----------------------------------------------------------------------------
+void CWeaponHealthkit::ItemPostFrame(void)
+{
+	CBasePlayer *pOwner = ToBasePlayer(GetOwner());
+	if (!pOwner)
+	{
+		return;
+	}
+
+	if (m_bInReload)
+	{
+		// If I'm primary firing and have 5 rounds stop reloading and fire
+		if ((pOwner->m_nButtons & IN_ATTACK) && (m_iClip1 >= 5))
+		{
+			m_bInReload = false;
+			m_bDelayedFire1 = true;
+		}
+		// If I'm secondary firing and have 5 rounds stop reloading and fire
+		else if ((pOwner->m_nButtons & IN_ATTACK2) && (m_iClip1 >= 5))
+		{
+			m_bInReload = false;
+			m_bDelayedFire2 = true;
+		}
+		else if (m_flNextPrimaryAttack <= gpGlobals->curtime)
+		{
+			// If out of ammo end reload
+			if (pOwner->GetAmmoCount(m_iPrimaryAmmoType) <= 0)
+			{
+				FinishReload();
+				return;
+			}
+			// If clip not full reload again
+			if (m_iClip1 < GetMaxClip1())
+			{
+				Reload();
+				return;
+			}
+			// Clip full, stop reloading
+			else
+			{
+				FinishReload();
+				return;
+			}
+		}
+	}
+	else
+	{
+		// Make shotgun shell invisible
+		SetBodygroup(1, 1);
+	}
+
+	// Shotgun uses same timing and ammo for secondary attack
+	if ((m_bDelayedFire2 || pOwner->m_nButtons & IN_ATTACK2) && (m_flNextPrimaryAttack <= gpGlobals->curtime))
+	{
+		m_bDelayedFire2 = false;
+
+		if ((m_iClip1 <= 0 && UsesClipsForAmmo1()))
+		{
+			if (!pOwner->GetAmmoCount(m_iPrimaryAmmoType))
+				PlayDenySound(HEALTHKIT_DENY_SOUNDTIMER);
+			else
+				StartReload();
+		}
+		else
+		{
+			// If the firing button was just pressed, reset the firing time
+			if (pOwner->m_afButtonPressed & IN_ATTACK)
+			{
+				m_flNextPrimaryAttack = gpGlobals->curtime;
+			}
+			SecondaryAttack();
+		}
+	}
+	else if ((m_bDelayedFire1 || pOwner->m_nButtons & IN_ATTACK) && m_flNextPrimaryAttack <= gpGlobals->curtime)
+	{
+		m_bDelayedFire1 = false;
+		if ((m_iClip1 <= 0 && UsesClipsForAmmo1()) || (!UsesClipsForAmmo1() && !pOwner->GetAmmoCount(m_iPrimaryAmmoType)))
+		{
+			if (!pOwner->GetAmmoCount(m_iPrimaryAmmoType))
+				PlayDenySound(HEALTHKIT_DENY_SOUNDTIMER);
+			else
+				StartReload();
+		}
+		else
+		{
+			// If the firing button was just pressed, reset the firing time
+			CBasePlayer *pPlayer = ToBasePlayer(GetOwner());
+			if (pPlayer && pPlayer->m_afButtonPressed & IN_ATTACK)
+			{
+				m_flNextPrimaryAttack = gpGlobals->curtime;
+			}
+			PrimaryAttack();
+		}
+	}
+
+	if (pOwner->m_nButtons & IN_RELOAD && UsesClipsForAmmo1() && !m_bInReload)
+	{
+		// reload when reload is pressed, or if no buttons are down and weapon is empty.
+		StartReload();
+	}
+	else
+	{
+		// no fire buttons down
+		m_bFireOnEmpty = false;
+
+		if (!HasAnyAmmo() && m_flNextPrimaryAttack < gpGlobals->curtime)
+		{
+			// weapon isn't useable, switch.
+			if (!(GetWeaponFlags() & ITEM_FLAG_NOAUTOSWITCHEMPTY) && pOwner->SwitchToNextBestWeapon(this))
+			{
+				m_flNextPrimaryAttack = gpGlobals->curtime + 0.3;
+				return;
+			}
+		}
+		else
+		{
+			// weapon is useable. Reload if empty and weapon has waited as long as it has to after firing
+			if (m_iClip1 <= 0 && !(GetWeaponFlags() & ITEM_FLAG_NOAUTORELOAD) && m_flNextPrimaryAttack < gpGlobals->curtime)
+			{
+				if (StartReload())
+				{
+					// if we've successfully started to reload, we're done
+					return;
+				}
+			}
+		}
+
+		WeaponIdle();
+		return;
+	}
+
 }
