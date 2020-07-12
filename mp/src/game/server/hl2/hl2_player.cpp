@@ -1961,10 +1961,12 @@ bool CHL2_Player::SuitPower_RemoveDevice( const CSuitPowerDevice &device )
 	// because the battery is drained, no harm done, the battery charge cannot go below 0. 
 	// This code in combination with the delay before the suit can start recharging are a defense
 	// against exploits where the player could rapidly tap sprint and never run out of power.
-	SuitPower_Drain( device.GetDeviceDrainRate() * 0.1f );
+	SuitPower_Drain( max(0.1f,device.GetDeviceDrainRate() * 0.1f) ); //always wanna drain something
 
 	m_HL2Local.m_bitsActiveDevices &= ~device.GetDeviceID();
 	m_flSuitPowerLoad -= device.GetDeviceDrainRate();
+
+	if (m_flSuitPowerLoad < 0.0f) m_flSuitPowerLoad = 0.0f; //just in case something funny happens
 
 	//REPOSE: Matches adjustments made above to remove the adjusted drain
 	if (device.GetDeviceID()&bits_SUIT_DEVICE_SPRINT)
@@ -2001,8 +2003,13 @@ bool CHL2_Player::SuitPower_ShouldRecharge( void )
 		return false;
 
 	// Is the system fully charged?
-	if( m_HL2Local.m_flSuitPower >= 100.0f )
-		return false; 
+	if (m_HL2Local.m_flSuitPower > 100.0f)
+	{
+		m_HL2Local.m_flSuitPower = 100.0f; //make sure we're not over
+		return false;
+	}
+	else if ((m_HL2Local.m_flSuitPower == 100.0f))
+		return false;
 
 	// Has the system been in a no-load state for long enough
 	// to begin recharging?

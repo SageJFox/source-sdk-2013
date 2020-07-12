@@ -218,9 +218,10 @@ void CHudSuitPower::Paint()
 			ypos += text2_gap;
 		}
 
+		//REPOSE: co-opted flashlight for lift strength, since HL2DM doesn't drain for flashlight anyway.
 		if (pPlayer->IsFlashlightActive())
 		{
-			tempString = g_pVGuiLocalize->Find("#Valve_Hud_FLASHLIGHT");
+			tempString = g_pVGuiLocalize->Find("#Repose_Hud_LIFT");
 
 			surface()->DrawSetTextPos(text2_xpos, ypos);
 
@@ -230,7 +231,7 @@ void CHudSuitPower::Paint()
 			}
 			else
 			{
-				surface()->DrawPrintText(L"FLASHLIGHT", wcslen(L"FLASHLIGHT"));
+				surface()->DrawPrintText(L"LIFT", wcslen(L"LIFT"));
 			}
 			ypos += text2_gap;
 		}

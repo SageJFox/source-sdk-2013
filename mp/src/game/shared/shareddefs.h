@@ -209,7 +209,8 @@ enum CastVote
 //===================================================================================================================
 // suit usage bits
 #define bits_SUIT_DEVICE_SPRINT		0x00000001
-#define bits_SUIT_DEVICE_FLASHLIGHT	0x00000002
+#define bits_SUIT_DEVICE_FLASHLIGHT	0x00000002 //unused?
+#define bits_SUIT_DEVICE_LIFT		0x00000002
 #define bits_SUIT_DEVICE_BREATHER	0x00000004
 
 #define MAX_SUIT_DEVICES			3
@@ -234,7 +235,7 @@ enum CastVote
 
 #define MAX_PLACE_NAME_LENGTH		18
 
-#define MAX_FOV						90
+#define MAX_FOV						120 //90
 
 //===================================================================================================================
 // Team Defines
