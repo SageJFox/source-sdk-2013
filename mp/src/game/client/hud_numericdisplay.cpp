@@ -33,6 +33,8 @@ CHudNumericDisplay::CHudNumericDisplay(vgui::Panel *parent, const char *name) : 
 	m_bDisplayValue = true;
 	m_bDisplaySecondaryValue = false;
 	m_bIndent = false;
+	m_bCentered = false;
+	m_bIsMod = false;
 	m_bIsTime = false;
 }
 
@@ -129,18 +131,14 @@ void CHudNumericDisplay::PaintNumbers(HFont font, int xpos, int ypos, int value)
 			V_snwprintf( unicode, ARRAYSIZE(unicode), L"%d`%d", iMinutes, iSeconds );
 #endif*/
 	}
-
 	// adjust the position to take into account 3 characters
 	int charWidth = surface()->GetCharacterWidth(font, '0');
 	if (value < 100 && m_bIndent)
-	{
-		xpos += charWidth;
-	}
+		xpos += m_bCentered ? charWidth : charWidth / 2;
 	if (value < 10 && m_bIndent)
-	{
-		xpos += charWidth;
-	}
-
+		xpos += m_bCentered ? charWidth : charWidth / 2;
+	if (m_bCentered)
+		xpos -= UTIL_ComputeStringWidth(font, unicode) / 2;
 	surface()->DrawSetTextPos(xpos, ypos);
 	surface()->DrawUnicodeString( unicode );
 }
@@ -177,14 +175,11 @@ void CHudNumericDisplay::PaintSlashNumbers(HFont font, int xpos, int ypos, int v
 	// adjust the position to take into account 3 characters
 	int charWidth = surface()->GetCharacterWidth(font, '0');
 	if (value < 100 && m_bIndent)
-	{
-		xpos += charWidth;
-	}
+		xpos += m_bCentered ? charWidth : charWidth / 2;
 	if (value < 10 && m_bIndent)
-	{
-		xpos += charWidth;
-	}
-
+		xpos += m_bCentered ? charWidth : charWidth / 2;
+	if (m_bCentered)
+		xpos -= UTIL_ComputeStringWidth(m_hNumberFont, unicode) / 2;
 	surface()->DrawSetTextPos(xpos, ypos);
 	surface()->DrawUnicodeString(unicode);
 }
@@ -226,14 +221,11 @@ void CHudNumericDisplay::PaintModNumbers(HFont font, int xpos, int ypos, int val
 	// adjust the position to take into account 3 characters
 	int charWidth = surface()->GetCharacterWidth(font, '0');
 	if (value < 100 && m_bIndent)
-	{
-		xpos += charWidth;
-	}
+		xpos += m_bCentered ? charWidth : charWidth / 2;
 	if (value < 10 && m_bIndent)
-	{
-		xpos += charWidth;
-	}
-
+		xpos += m_bCentered ? charWidth : charWidth / 2;
+	if (m_bCentered)
+		xpos -= UTIL_ComputeStringWidth(m_hNumberFont, unicode) / 2;
 	surface()->DrawSetTextPos(xpos, ypos);
 	surface()->DrawUnicodeString(unicode);
 }
@@ -259,14 +251,20 @@ void CHudNumericDisplay::Paint()
 	{
 		// draw our numbers
 		surface()->DrawSetTextColor(GetFgColor());
-		PaintNumbers(m_hNumberFont, digit_xpos, digit_ypos, m_iValue);
+		if(m_bIsMod)
+			PaintModNumbers(m_hNumberFont, digit_xpos, digit_ypos, m_iValue);
+		else
+			PaintNumbers(m_hNumberFont, digit_xpos, digit_ypos, m_iValue);
 
 		// draw the overbright blur
 		for (float fl = m_flBlur; fl > 0.0f; fl -= 1.0f)
 		{
 			if (fl >= 1.0f)
 			{
-				PaintNumbers(m_hNumberGlowFont, digit_xpos, digit_ypos, m_iValue);
+				if (m_bIsMod)
+					PaintModNumbers(m_hNumberGlowFont, digit_xpos, digit_ypos, m_iValue);
+				else
+					PaintNumbers(m_hNumberGlowFont, digit_xpos, digit_ypos, m_iValue);
 			}
 			else
 			{
@@ -274,7 +272,10 @@ void CHudNumericDisplay::Paint()
 				Color col = GetFgColor();
 				col[3] *= fl;
 				surface()->DrawSetTextColor(col);
-				PaintNumbers(m_hNumberGlowFont, digit_xpos, digit_ypos, m_iValue);
+				if (m_bIsMod)
+					PaintModNumbers(m_hNumberGlowFont, digit_xpos, digit_ypos, m_iValue);
+				else
+					PaintNumbers(m_hNumberGlowFont, digit_xpos, digit_ypos, m_iValue);
 			}
 		}
 	}
@@ -286,7 +287,7 @@ void CHudNumericDisplay::Paint()
 		PaintNumbers(m_hSmallNumberFont, digit2_xpos, digit2_ypos, m_iSecondaryValue);
 	}
 
-	PaintLabel();
+	PaintLabel(m_bCentered);
 }
 
 

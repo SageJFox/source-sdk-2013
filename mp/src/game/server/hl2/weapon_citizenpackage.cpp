@@ -40,7 +40,7 @@ void CWeaponCitizenPackage::ItemPostFrame( void )
 void CWeaponCitizenPackage::Drop( const Vector &vecVelocity )
 {
 	BaseClass::Drop( vecVelocity );
-	UTIL_Remove( this );
+	//UTIL_Remove( this );
 }
 
 
@@ -68,6 +68,15 @@ PRECACHE_WEAPON_REGISTER(weapon_citizensuitcase);
 
 acttable_t	CWeaponCitizenSuitcase::m_acttable[] = 
 {
+	{ ACT_HL2MP_IDLE, ACT_HL2MP_IDLE_SMG1, false },
+	{ ACT_HL2MP_RUN, ACT_HL2MP_RUN_SMG1, false },
+	{ ACT_HL2MP_IDLE_CROUCH, ACT_HL2MP_IDLE_CROUCH_SMG1, false },
+	{ ACT_HL2MP_WALK_CROUCH, ACT_HL2MP_WALK_CROUCH_SMG1, false },
+	{ ACT_HL2MP_GESTURE_RANGE_ATTACK, ACT_HL2MP_GESTURE_RANGE_ATTACK_SMG1, false },
+	{ ACT_HL2MP_GESTURE_RELOAD, ACT_HL2MP_GESTURE_RELOAD_SMG1, false },
+	{ ACT_HL2MP_JUMP, ACT_HL2MP_JUMP_SMG1, false },
+	{ ACT_RANGE_ATTACK1, ACT_RANGE_ATTACK_SMG1, false },
+	//NPC
 	{ ACT_IDLE,						ACT_IDLE_SUITCASE,					false },
 	{ ACT_WALK,						ACT_WALK_SUITCASE,					false },
 };

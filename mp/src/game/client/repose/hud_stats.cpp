@@ -26,7 +26,7 @@
 #include "tier0/memdbgon.h"
 
 #define INIT_STAT	-1
-//very annoying that I could get these to just all inherit from a CHudStats base class, but it wouldn't stop throwing errors
+//very annoying that I couldn't get these to just all inherit from a CHudStats base class, but it wouldn't stop throwing errors
 //TODO: try again another day
 
 
@@ -80,6 +80,8 @@ void CHudStatSTR::Init()
 	m_iMod		= INIT_STAT;
 	m_iNewMod   = 0;
 	m_bDisplaySecondaryValue = true;
+	m_bIsMod = true;
+	m_bCentered = true;
 }
 
 //-----------------------------------------------------------------------------
@@ -169,24 +171,27 @@ void CHudStatSTR::OnThink( void )
 
 	if ( m_iStat == m_iNewStat /*&& m_iMod == m_iNewMod*/ )
 		return;
-	/*
+	
 	if ( m_iNewStat < m_iStat )
 	{
 		// battery power has decreased, so play the damaged animation
-		g_pClientMode->GetViewportAnimationController()->StartAnimationSequence("StatDecreased");
+		g_pClientMode->GetViewportAnimationController()->StartAnimationSequence("StatDecreasedSTR");
 
 		// play an extra animation if we're super low
 		if ( m_iNewStat < 3 )
-			g_pClientMode->GetViewportAnimationController()->StartAnimationSequence("StatLow");
+			g_pClientMode->GetViewportAnimationController()->StartAnimationSequence("StatLowSTR");
 	}
 	else if ( m_iNewStat > m_iStat )
 	{
 		// stat has increased (if we just loaded the game, don't use alert state)
-		if ( m_iStat == INIT_STAT || m_iNewStat >= 3)
-			g_pClientMode->GetViewportAnimationController()->StartAnimationSequence("StatIncreasedAbove2");
-		else
-			g_pClientMode->GetViewportAnimationController()->StartAnimationSequence("StatIncreasedBelow3");
-	}*/
+		if (m_iStat != INIT_STAT)
+		{
+			if (m_iNewStat >= 3)
+				g_pClientMode->GetViewportAnimationController()->StartAnimationSequence("StatIncreasedAbove2STR");
+			else
+				g_pClientMode->GetViewportAnimationController()->StartAnimationSequence("StatIncreasedBelow3STR");
+		}
+	}
 
 	m_iStat = m_iNewStat;
 	m_iNewMod = m_iStat - 10;
@@ -319,6 +324,8 @@ void CHudStatDEX::Init()
 	m_iMod = INIT_STAT;
 	m_iNewMod = 0;
 	m_bDisplaySecondaryValue = true;
+	m_bIsMod = true;
+	m_bCentered = true;
 }
 
 //-----------------------------------------------------------------------------
@@ -361,6 +368,27 @@ void CHudStatDEX::OnThink(void)
 
 	if (m_iStat == m_iNewStat)
 		return;
+
+	if (m_iNewStat < m_iStat)
+	{
+		// battery power has decreased, so play the damaged animation
+		g_pClientMode->GetViewportAnimationController()->StartAnimationSequence("StatDecreasedDEX");
+
+		// play an extra animation if we're super low
+		if (m_iNewStat < 3)
+			g_pClientMode->GetViewportAnimationController()->StartAnimationSequence("StatLowDEX");
+	}
+	else if (m_iNewStat > m_iStat)
+	{
+		// stat has increased (if we just loaded the game, don't use alert state)
+		if (m_iStat != INIT_STAT)
+		{
+			if (m_iNewStat >= 3)
+				g_pClientMode->GetViewportAnimationController()->StartAnimationSequence("StatIncreasedAbove2DEX");
+			else
+				g_pClientMode->GetViewportAnimationController()->StartAnimationSequence("StatIncreasedBelow3DEX");
+		}
+	}
 
 	m_iStat = m_iNewStat;
 	m_iNewMod = m_iStat - 10;
@@ -419,6 +447,8 @@ void CHudStatINT::Init()
 	m_iMod = INIT_STAT;
 	m_iNewMod = 0;
 	m_bDisplaySecondaryValue = true;
+	m_bIsMod = true;
+	m_bCentered = true;
 }
 
 //-----------------------------------------------------------------------------
@@ -462,6 +492,27 @@ void CHudStatINT::OnThink(void)
 	if (m_iStat == m_iNewStat)
 		return;
 	
+	if (m_iNewStat < m_iStat)
+	{
+		// battery power has decreased, so play the damaged animation
+		g_pClientMode->GetViewportAnimationController()->StartAnimationSequence("StatDecreasedINT");
+
+		// play an extra animation if we're super low
+		if (m_iNewStat < 3)
+			g_pClientMode->GetViewportAnimationController()->StartAnimationSequence("StatLowINT");
+	}
+	else if (m_iNewStat > m_iStat)
+	{
+		// stat has increased (if we just loaded the game, don't use alert state)
+		if (m_iStat != INIT_STAT)
+		{
+			if (m_iNewStat >= 3)
+				g_pClientMode->GetViewportAnimationController()->StartAnimationSequence("StatIncreasedAbove2INT");
+			else
+				g_pClientMode->GetViewportAnimationController()->StartAnimationSequence("StatIncreasedBelow3INT");
+		}
+	}
+
 	m_iStat = m_iNewStat;
 	m_iNewMod = m_iStat - 10;
 	m_iNewMod % 2 ? m_iNewMod-- : +m_iNewMod; //"round down" before division 
@@ -519,6 +570,8 @@ void CHudStatCHA::Init()
 	m_iMod = INIT_STAT;
 	m_iNewMod = 0;
 	m_bDisplaySecondaryValue = true;
+	m_bIsMod = true;
+	m_bCentered = true;
 }
 
 //-----------------------------------------------------------------------------
@@ -561,6 +614,27 @@ void CHudStatCHA::OnThink(void)
 	if (m_iStat == m_iNewStat)
 		return;
 	
+	if (m_iNewStat < m_iStat)
+	{
+		// battery power has decreased, so play the damaged animation
+		g_pClientMode->GetViewportAnimationController()->StartAnimationSequence("StatDecreasedCHA");
+
+		// play an extra animation if we're super low
+		if (m_iNewStat < 3)
+			g_pClientMode->GetViewportAnimationController()->StartAnimationSequence("StatLowCHA");
+	}
+	else if (m_iNewStat > m_iStat)
+	{
+		// stat has increased (if we just loaded the game, don't use alert state)
+		if (m_iStat != INIT_STAT)
+		{
+			if (m_iNewStat >= 3)
+				g_pClientMode->GetViewportAnimationController()->StartAnimationSequence("StatIncreasedAbove2CHA");
+			else
+				g_pClientMode->GetViewportAnimationController()->StartAnimationSequence("StatIncreasedBelow3CHA");
+		}
+	}
+
 	m_iStat = m_iNewStat;
 	m_iNewMod = m_iStat - 10;
 	m_iNewMod % 2 ? m_iNewMod-- : +m_iNewMod; //"round down" before division 

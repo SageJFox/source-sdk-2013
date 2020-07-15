@@ -537,11 +537,11 @@
 
 		"PaintBackgroundType"	"2"
 
-		"text_xpos" "9"
+		"text_xpos" "18"
 		"text_ypos" "2"
-		"digit_xpos" "4"
+		"digit_xpos" "18"
 		"digit_ypos" "6"
-		"digit2_xpos" "16"
+		"digit2_xpos" "18"
 		"digit2_ypos" "32"
 	}
 		HudStatDEX
@@ -556,11 +556,11 @@
 
 		"PaintBackgroundType"	"2"
 
-		"text_xpos" "9"
+		"text_xpos" "18"
 		"text_ypos" "2"
-		"digit_xpos" "4"
+		"digit_xpos" "18"
 		"digit_ypos" "6"
-		"digit2_xpos" "16"
+		"digit2_xpos" "18"
 		"digit2_ypos" "32"
 	}
 		HudStatINT
@@ -575,11 +575,11 @@
 
 		"PaintBackgroundType"	"2"
 
-		"text_xpos" "10"
+		"text_xpos" "18"
 		"text_ypos" "2"
-		"digit_xpos" "4"
+		"digit_xpos" "18"
 		"digit_ypos" "6"
-		"digit2_xpos" "16"
+		"digit2_xpos" "18"
 		"digit2_ypos" "32"
 	}
 		HudStatCHA
@@ -594,11 +594,11 @@
 
 		"PaintBackgroundType"	"2"
 
-		"text_xpos" "9"
+		"text_xpos" "18"
 		"text_ypos" "2"
-		"digit_xpos" "4"
+		"digit_xpos" "18"
 		"digit_ypos" "6"
-		"digit2_xpos" "16"
+		"digit2_xpos" "18"
 		"digit2_ypos" "32"
 	}
 }

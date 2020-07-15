@@ -1838,6 +1838,9 @@
     <ClInclude Include="..\shared\hl2mp\repose_stats.h">
       <Filter>Source Files\Repose</Filter>
     </ClInclude>
+    <ClInclude Include="hl2\weapon_citizenpackage.h">
+      <Filter>Source Files\Repose</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="gamedll_replay.cpp">
@@ -3576,6 +3579,9 @@
     </ClCompile>
     <ClCompile Include="world.cpp">
       <Filter>Source Files\unsorted</Filter>
+    </ClCompile>
+    <ClCompile Include="hl2\weapon_citizenpackage.cpp">
+      <Filter>Source Files\Repose</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

@@ -52,6 +52,8 @@ protected:
 	wchar_t m_LabelText[32];
 	bool m_bDisplayValue, m_bDisplaySecondaryValue;
 	bool m_bIndent;
+	bool m_bCentered;
+	bool m_bIsMod;
 	bool m_bIsTime;
 
 	CPanelAnimationVar( float, m_flBlur, "Blur", "0" );

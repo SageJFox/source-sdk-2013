@@ -494,6 +494,32 @@ Scheme
 				"custom"	"1"
 			}
 		}
+		WeaponIconsRepose
+		{
+			"1"
+			{
+				"name"		"HalfLife2_edit"
+				"tall"		"64"
+				"weight"	"0"
+				"antialias" "1"
+				"additive"	"1"
+				"custom"	"1"
+			}
+		}
+		WeaponIconsReposeSelected
+		{
+			"1"
+			{
+				"name"		"HalfLife2_edit"
+				"tall"		"64"
+				"weight"	"0"
+				"antialias" "1"
+				"blur"		"5"
+				"scanlines"	"2"
+				"additive"	"1"
+				"custom"	"1"
+			}
+		}
 		Crosshairs
 		{
 			"1"

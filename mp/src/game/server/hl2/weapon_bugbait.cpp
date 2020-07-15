@@ -6,7 +6,8 @@
 //=============================================================================//
 
 #include "cbase.h"
-#include "basehlcombatweapon.h"
+//#include "basehlcombatweapon.h"
+#include "weapon_hl2mpbasehlmpcombatweapon.h"
 #include "engine/IEngineSound.h"
 #include "npcevent.h"
 #include "in_buttons.h"
@@ -21,9 +22,9 @@
 // Bug Bait Weapon
 //
 
-class CWeaponBugBait : public CBaseHLCombatWeapon
+class CWeaponBugBait : public CBaseHL2MPCombatWeapon //CBaseHLCombatWeapon
 {
-	DECLARE_CLASS( CWeaponBugBait, CBaseHLCombatWeapon );
+	DECLARE_CLASS(CWeaponBugBait, CBaseHL2MPCombatWeapon /*CBaseHLCombatWeapon*/);
 public:
 
 	DECLARE_SERVERCLASS();
@@ -65,15 +66,39 @@ protected:
 	bool		m_bRedraw;
 	bool		m_bEmitSpores;
 	EHANDLE		m_hSporeTrail;
+
+#ifndef CLIENT_DLL
+	DECLARE_ACTTABLE();
+#endif
 };
 
 IMPLEMENT_SERVERCLASS_ST(CWeaponBugBait, DT_WeaponBugBait)
 END_SEND_TABLE()
 
 LINK_ENTITY_TO_CLASS( weapon_bugbait, CWeaponBugBait );
-#ifndef HL2MP
+//#ifndef HL2MP
 PRECACHE_WEAPON_REGISTER( weapon_bugbait );
+//#endif
+#ifndef CLIENT_DLL
+
+acttable_t	CWeaponBugBait::m_acttable[] =
+{
+	{ ACT_HL2MP_IDLE, ACT_HL2MP_IDLE_GRENADE, false },
+	{ ACT_HL2MP_RUN, ACT_HL2MP_RUN_GRENADE, false },
+	{ ACT_HL2MP_IDLE_CROUCH, ACT_HL2MP_IDLE_CROUCH_GRENADE, false },
+	{ ACT_HL2MP_WALK_CROUCH, ACT_HL2MP_WALK_CROUCH_GRENADE, false },
+	{ ACT_HL2MP_GESTURE_RANGE_ATTACK, ACT_HL2MP_GESTURE_RANGE_ATTACK_GRENADE, false },
+	{ ACT_HL2MP_GESTURE_RELOAD, ACT_HL2MP_GESTURE_RELOAD_GRENADE, false },
+	{ ACT_HL2MP_JUMP, ACT_HL2MP_JUMP_GRENADE, false },
+	//NPC
+	{ ACT_RANGE_ATTACK1, ACT_RANGE_ATTACK_SLAM, true },
+};
+
+IMPLEMENT_ACTTABLE(CWeaponBugBait);
+
 #endif
+
+
 
 BEGIN_DATADESC( CWeaponBugBait )
 
@@ -229,7 +254,7 @@ void CWeaponBugBait::PrimaryAttack( void )
 	m_flTimeWeaponIdle		= FLT_MAX;
 	m_flNextPrimaryAttack	= FLT_MAX;
 
-	m_iPrimaryAttacks++;
+	//m_iPrimaryAttacks++;
 	gamestats->Event_WeaponFired( pPlayer, true, GetClassname() );
 }
 
@@ -254,7 +279,7 @@ void CWeaponBugBait::SecondaryAttack( void )
 	CBasePlayer *pOwner = ToBasePlayer( GetOwner() );
 	if ( pOwner )
 	{
-		m_iSecondaryAttacks++;
+		//m_iSecondaryAttacks++;
 		gamestats->Event_WeaponFired( pOwner, false, GetClassname() );
 	}
 }
