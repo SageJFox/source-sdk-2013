@@ -652,3 +652,58 @@ event PoisonLoop
 {
 	RunEvent PoisonPulse 0.0
 }
+
+//REPOSE
+////////////////////////////////////////////////////////////////////////////////////
+
+event StatDecreased
+{
+	Animate HudStat		FgColor	"BrightFg"	Linear	0.0		0.25
+	Animate HudStat		FgColor	"FgColor"		Linear	0.3		0.75
+	
+	Animate HudStat		Blur		"3"			Linear	0.0		0.1
+	Animate HudStat		Blur		"0"			Deaccel	0.1		2.0
+	
+	Animate HudStat		TextColor	"BrightFg"	Linear	0.0		0.1
+	Animate HudStat		TextColor	"FgColor"		Deaccel	0.1		1.2
+}
+
+// stat has been damaged to below 3
+event StatLow
+{
+	StopEvent StatDecreased	0.0
+	Animate HudStat		FgColor	"BrightFg"	Linear	0.0		0.25
+	Animate HudStat		FgColor	"FgColor"		Linear	0.3		0.75
+	
+	Animate HudStat		Blur		"3"			Linear	0.0		0.1
+	Animate HudStat		Blur		"0"			Deaccel	0.1		2.0
+	
+	Animate HudStat		TextColor	"BrightFg"	Linear	0.0		0.1
+	Animate HudStat		TextColor	"FgColor"		Deaccel	0.1		1.2
+}
+
+
+event StatIncreasedAbove2
+{
+	Animate	HudStat 	Alpha		"255"			Linear 0.0 0.0
+
+	Animate	HudStat		BgColor		"BgColor"	Linear	0.0	0.0
+	
+	Animate	HudStat 	TextColor	"FgColor"	Linear 0.0 0.05
+	Animate	HudStat		FgColor		"FgColor"	Linear 0.0 0.05
+	
+	Animate	HudStat		Blur		"3"			Linear	0.0		0.1
+	Animate	HudStat		Blur		"0"			Deaccel	0.1		2.0
+}
+
+
+event StatIncreasedBelow3
+{
+	Animate	HudStat 	Alpha		"255"			Linear 0.0 0.0
+
+	Animate HudStat		FgColor		"BrightFg"	Linear	0.0		0.25
+	Animate HudStat		FgColor		"FgColor"	Linear	0.3		0.75
+	
+	Animate HudStat		Blur		"3"			Linear	0.0		0.1
+	Animate HudStat		Blur		"0"			Deaccel	0.1		2.0
+}

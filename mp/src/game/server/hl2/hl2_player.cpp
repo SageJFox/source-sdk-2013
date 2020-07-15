@@ -1787,10 +1787,7 @@ void CHL2_Player::SuitPower_Update( void )
 {
 	if( SuitPower_ShouldRecharge() )
 	{
-		//REPOSE: Speed up/slow down recharge rate based on DEX
-		float rate = float(checkMod(DEX));
-		rate > 0 ? rate *= 2.0f : rate *= 1.7f; //nerf effects of rate for negative stats so they aren't quite such a terrible drain
-		SuitPower_Charge( (SUITPOWER_CHARGE_RATE + rate) * gpGlobals->frametime );
+		SuitPower_Charge( (SUITPOWER_CHARGE_RATE) * gpGlobals->frametime );
 	}
 	else if( m_HL2Local.m_bitsActiveDevices )
 	{
@@ -1803,16 +1800,7 @@ void CHL2_Player::SuitPower_Update( void )
 			{
 				if( !fabs(GetAbsVelocity().x) && !fabs(GetAbsVelocity().y) )
 				{
-					// If player's not moving, don't drain sprint juice.
-					int loops = -checkMod(DEX);
-					float rate;
-					if (loops <= 0) rate = float(loops) * 1.5f;
-					else
-					{
-						rate = 2.0f;
-						while (--loops > 0) rate *= 2.0f;
-					}
-					flPowerLoad -= SuitDeviceSprint.GetDeviceDrainRate() + rate;
+					flPowerLoad -= SuitDeviceSprint.GetDeviceDrainRate();
 				}
 			}
 		}
@@ -1929,19 +1917,7 @@ bool CHL2_Player::SuitPower_AddDevice( const CSuitPowerDevice &device )
 
 	m_HL2Local.m_bitsActiveDevices |= device.GetDeviceID();
 	m_flSuitPowerLoad += device.GetDeviceDrainRate();
-	//REPOSE: Drain more/less quickly based on DEX
-	if (device.GetDeviceID()&bits_SUIT_DEVICE_SPRINT)
-	{
-		int loops = -checkMod(DEX);
-		float rate;
-		if (loops <= 0) rate = float(loops) * 1.5f;
-		else
-		{
-			rate = 2.0f;
-			while (--loops > 0) rate *= 2.0f;
-		}
-		m_flSuitPowerLoad += rate;
-	}
+
 	return true;
 }
 
@@ -1967,20 +1943,6 @@ bool CHL2_Player::SuitPower_RemoveDevice( const CSuitPowerDevice &device )
 	m_flSuitPowerLoad -= device.GetDeviceDrainRate();
 
 	if (m_flSuitPowerLoad < 0.0f) m_flSuitPowerLoad = 0.0f; //just in case something funny happens
-
-	//REPOSE: Matches adjustments made above to remove the adjusted drain
-	if (device.GetDeviceID()&bits_SUIT_DEVICE_SPRINT)
-	{
-		int loops = -checkMod(DEX);
-		float rate;
-		if (loops <= 0) rate = float(loops) * 1.5f;
-		else
-		{
-			rate = 2.0f;
-			while (--loops > 0) rate *= 2.0f;
-		}
-		m_flSuitPowerLoad -= rate;
-	}
 
 	if( m_HL2Local.m_bitsActiveDevices == 0x00000000 )
 	{
@@ -2013,10 +1975,7 @@ bool CHL2_Player::SuitPower_ShouldRecharge( void )
 
 	// Has the system been in a no-load state for long enough
 	// to begin recharging?
-	//REPOSE: add to/subtract from recharge delay based on DEX
-	float rate = float(checkMod(DEX));
-	rate > 0 ? rate *= -0.05f : rate *= -0.15f; //reduce wait time to recharge for high dex, delay it for low.
-	if( gpGlobals->curtime < m_flTimeAllSuitDevicesOff + SUITPOWER_BEGIN_RECHARGE_DELAY + rate)
+	if( gpGlobals->curtime < m_flTimeAllSuitDevicesOff + SUITPOWER_BEGIN_RECHARGE_DELAY)
 		return false;
 
 	return true;

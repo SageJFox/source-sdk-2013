@@ -116,18 +116,18 @@ void CHudNumericDisplay::PaintNumbers(HFont font, int xpos, int ypos, int value)
 	{
 		int iMinutes = value / 60;
 		int iSeconds = value - iMinutes * 60;
-#ifdef PORTAL
+//#ifdef PORTAL
 		// portal uses a normal font for numbers so we need the seperate to be a renderable ':' char
 		if ( iSeconds < 10 )
 			V_snwprintf( unicode, ARRAYSIZE(unicode), L"%d:0%d", iMinutes, iSeconds );
 		else
 			V_snwprintf( unicode, ARRAYSIZE(unicode), L"%d:%d", iMinutes, iSeconds );		
-#else
+/*#else
 		if ( iSeconds < 10 )
 			V_snwprintf( unicode, ARRAYSIZE(unicode), L"%d`0%d", iMinutes, iSeconds );
 		else
 			V_snwprintf( unicode, ARRAYSIZE(unicode), L"%d`%d", iMinutes, iSeconds );
-#endif
+#endif*/
 	}
 
 	// adjust the position to take into account 3 characters
@@ -160,18 +160,18 @@ void CHudNumericDisplay::PaintSlashNumbers(HFont font, int xpos, int ypos, int v
 	{
 		int iMinutes = value / 60;
 		int iSeconds = value - iMinutes * 60;
-#ifdef PORTAL
+//#ifdef PORTAL
 		// portal uses a normal font for numbers so we need the seperate to be a renderable ':' char
 		if (iSeconds < 10)
 			V_snwprintf(unicode, ARRAYSIZE(unicode), L"%d:0%d", iMinutes, iSeconds);
 		else
 			V_snwprintf(unicode, ARRAYSIZE(unicode), L"%d:%d", iMinutes, iSeconds);
-#else
+/*#else
 		if (iSeconds < 10)
 			V_snwprintf(unicode, ARRAYSIZE(unicode), L"%d`0%d", iMinutes, iSeconds);
 		else
 			V_snwprintf(unicode, ARRAYSIZE(unicode), L"%d`%d", iMinutes, iSeconds);
-#endif
+#endif*/
 	}
 
 	// adjust the position to take into account 3 characters
@@ -198,27 +198,29 @@ void CHudNumericDisplay::PaintModNumbers(HFont font, int xpos, int ypos, int val
 	wchar_t unicode[6];
 	if (!m_bIsTime)
 	{
-		if (value <= 0)
+		if (value < 0)
 			V_snwprintf(unicode, ARRAYSIZE(unicode), L"%d", value);
-		else
+		else if (value > 0)
 			V_snwprintf(unicode, ARRAYSIZE(unicode), L"+%d", value);
+		else
+			V_snwprintf(unicode, ARRAYSIZE(unicode), L"±%d", value);
 	}
 	else
 	{
 		int iMinutes = value / 60;
 		int iSeconds = value - iMinutes * 60;
-#ifdef PORTAL
+//#ifdef PORTAL
 		// portal uses a normal font for numbers so we need the seperate to be a renderable ':' char
 		if (iSeconds < 10)
 			V_snwprintf(unicode, ARRAYSIZE(unicode), L"%d:0%d", iMinutes, iSeconds);
 		else
 			V_snwprintf(unicode, ARRAYSIZE(unicode), L"%d:%d", iMinutes, iSeconds);
-#else
+/*#else
 		if (iSeconds < 10)
 			V_snwprintf(unicode, ARRAYSIZE(unicode), L"%d`0%d", iMinutes, iSeconds);
 		else
 			V_snwprintf(unicode, ARRAYSIZE(unicode), L"%d`%d", iMinutes, iSeconds);
-#endif
+#endif*/
 	}
 
 	// adjust the position to take into account 3 characters
@@ -239,11 +241,12 @@ void CHudNumericDisplay::PaintModNumbers(HFont font, int xpos, int ypos, int val
 //-----------------------------------------------------------------------------
 // Purpose: draws the text
 //-----------------------------------------------------------------------------
-void CHudNumericDisplay::PaintLabel( void )
+void CHudNumericDisplay::PaintLabel(bool centered)
 {
 	surface()->DrawSetTextFont(m_hTextFont);
 	surface()->DrawSetTextColor(GetFgColor());
-	surface()->DrawSetTextPos(text_xpos, text_ypos);
+	int iCentered = centered ? UTIL_ComputeStringWidth(m_hTextFont, m_LabelText) / 2 : 0;
+	surface()->DrawSetTextPos(text_xpos - iCentered, text_ypos);
 	surface()->DrawUnicodeString( m_LabelText );
 }
 

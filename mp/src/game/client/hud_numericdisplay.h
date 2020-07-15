@@ -39,7 +39,7 @@ public:
 protected:
 	// vgui overrides
 	virtual void Paint();
-	virtual void PaintLabel();
+	virtual void PaintLabel( bool centered = false);
 
 	virtual void PaintNumbers(vgui::HFont font, int xpos, int ypos, int value);
 	virtual void PaintSlashNumbers(vgui::HFont font, int xpos, int ypos, int value);

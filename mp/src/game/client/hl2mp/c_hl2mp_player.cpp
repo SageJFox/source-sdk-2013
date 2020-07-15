@@ -23,6 +23,9 @@
 LINK_ENTITY_TO_CLASS( player, C_HL2MP_Player );
 
 IMPLEMENT_CLIENTCLASS_DT(C_HL2MP_Player, DT_HL2MP_Player, CHL2MP_Player)
+	RecvPropArray3(RECVINFO_ARRAY(stats), RecvPropInt(RECVINFO(stats[0]))),
+	RecvPropArray3(RECVINFO_ARRAY(statsBase), RecvPropInt(RECVINFO(statsBase[0]))),
+	RecvPropArray3(RECVINFO_ARRAY(modifiers), RecvPropInt(RECVINFO(modifiers[0]))),
 	RecvPropFloat( RECVINFO( m_angEyeAngles[0] ) ),
 	RecvPropFloat( RECVINFO( m_angEyeAngles[1] ) ),
 	RecvPropEHandle( RECVINFO( m_hRagdoll ) ),

@@ -54,7 +54,7 @@ struct commandgoal_t
 
 //=============================================================================
 //=============================================================================
-class CSuitPowerDevice : public CReposeStats
+class CSuitPowerDevice //: public CReposeStats
 {
 public:
 	CSuitPowerDevice( int bitsID, float flDrainRate ) { m_bitsDeviceID = bitsID; m_flDrainRate = flDrainRate; }
@@ -75,7 +75,7 @@ public:
 //=============================================================================
 // >> HL2_PLAYER
 //=============================================================================
-class CHL2_Player : public CBasePlayer, public CReposeStats
+class CHL2_Player : public CBasePlayer //, public CReposeStats
 {
 public:
 	DECLARE_CLASS( CHL2_Player, CBasePlayer );
@@ -362,6 +362,7 @@ private:
 	float				m_flTimeNextLadderHint;	// Next time we're eligible to display a HUD hint about a ladder.
 	
 	friend class CHL2GameMovement;
+	friend class CHL2MP_Player;
 };
 
 

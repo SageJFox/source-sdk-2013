@@ -64,6 +64,12 @@
     <Filter Include="Source Files\unsorted\HUD-VGUI">
       <UniqueIdentifier>{ee282ae6-67bd-4b63-b1b5-a95161884d9c}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\Repose">
+      <UniqueIdentifier>{deae9bcc-75e9-4063-b73e-4cb38633e853}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Repose\HUD">
+      <UniqueIdentifier>{1d3e97bb-1f04-4ed0-b117-e8ddb50dcaae}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <Library Include="..\..\lib\public\bitmap.lib">
@@ -2485,9 +2491,6 @@
     <ClCompile Include="toolframework_client.cpp">
       <Filter>Tool Framework</Filter>
     </ClCompile>
-    <ClCompile Include="..\shared\hl2mp\repose_stats.cpp">
-      <Filter>Source Files\HL2MP</Filter>
-    </ClCompile>
     <ClCompile Include="..\shared\hl2mp\weapon_healthkit.cpp">
       <Filter>Source Files\HL2MP\Weapons</Filter>
     </ClCompile>
@@ -3522,6 +3525,9 @@
     </ClCompile>
     <ClCompile Include="WorldDimsProxy.cpp">
       <Filter>Source Files\unsorted</Filter>
+    </ClCompile>
+    <ClCompile Include="repose\hud_stats.cpp">
+      <Filter>Source Files\Repose\HUD</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

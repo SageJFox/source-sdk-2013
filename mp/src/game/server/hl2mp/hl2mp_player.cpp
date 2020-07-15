@@ -37,12 +37,17 @@ extern CBaseEntity				*g_pLastSpawn;
 
 void DropPrimedFragGrenade( CHL2MP_Player *pPlayer, CBaseCombatWeapon *pGrenade );
 
+extern ConVar sv_stickysprint;
+
 LINK_ENTITY_TO_CLASS( player, CHL2MP_Player );
 
 LINK_ENTITY_TO_CLASS( info_player_combine, CPointEntity );
 LINK_ENTITY_TO_CLASS( info_player_rebel, CPointEntity );
 
 IMPLEMENT_SERVERCLASS_ST(CHL2MP_Player, DT_HL2MP_Player)
+	SendPropArray3(SENDINFO_ARRAY3(stats), SendPropInt(SENDINFO_ARRAY(stats), 10)),
+	SendPropArray3(SENDINFO_ARRAY3(statsBase), SendPropInt(SENDINFO_ARRAY(statsBase), 10)),
+	SendPropArray3(SENDINFO_ARRAY3(modifiers), SendPropInt(SENDINFO_ARRAY(modifiers), 10)),
 	SendPropAngle( SENDINFO_VECTORELEM(m_angEyeAngles, 0), 11, SPROP_CHANGES_OFTEN ),
 	SendPropAngle( SENDINFO_VECTORELEM(m_angEyeAngles, 1), 11, SPROP_CHANGES_OFTEN ),
 	SendPropEHandle( SENDINFO( m_hRagdoll ) ),
@@ -113,6 +118,14 @@ CHL2MP_Player::CHL2MP_Player() : m_PlayerAnimState( this )
 	BaseClass::ChangeTeam( 0 );
 	
 //	UseClientSideAnimation();
+
+	//Repose
+	for (int i = 0; i < STAT_COUNT; i++)
+	{
+		stats.Set(i, 0);
+		statsBase.Set(i, 0);
+		modifiers.Set(i, 0);
+	}
 }
 
 CHL2MP_Player::~CHL2MP_Player( void )
@@ -302,8 +315,7 @@ void CHL2MP_Player::Spawn(void)
 		RemoveEffects( EF_NODRAW );
 		
 		GiveDefaultItems();
-		statBasesInit();
-		statBaseInit(BASETYPE_PLAYER);
+		statBaseInit();
 		//set max health by CON
 		SetHealthMax(100 + (checkMod(STR/*CON*/) * 10));
 		m_iHealth = m_iMaxHealth = m_iHealthMax;
@@ -1602,6 +1614,374 @@ bool CHL2MP_Player::CanHearAndReadChatFrom( CBasePlayer *pPlayer )
 {
 	// can always hear the console unless we're ignoring all chat
 	if ( !pPlayer )
+		return false;
+
+	return true;
+}
+
+
+//Repose
+
+void CHL2MP_Player::statBaseInit()
+{
+	for (int i = 0; i < STAT_COUNT; i++)
+	{
+		statsBase.Set(i,random->RandomInt(1, 6) + random->RandomInt(1, 6) + random->RandomInt(1, 6));
+		//stat = statMin + rand() % (statMax - statMin + 1);
+		calcStat(i);
+		//calcMod(i);
+	}
+
+	dumpStats(1);
+}
+
+//(Re)calculate our modifiers based on our current stats.
+void CHL2MP_Player::calcMods(void)
+{
+	for (int i = 0; i < STAT_COUNT; i++)
+	{
+		calcMod(i);
+	}
+}
+
+//(Re)calculate our modifier based on our current stat.
+void CHL2MP_Player::calcMod(int stat)
+{
+	int statClean = checkStat(stat);
+	statClean -= 10;
+	statClean % 2 ? statClean-- : +statClean;
+	modifiers.Set(stat, statClean / 2);
+}
+
+//Make sure one particular stat is in its usual bounds.
+int CHL2MP_Player::checkStat(int stat)
+{
+	checkStatBase(stat);
+	int statRef = stats.Get(stat);
+	//statRef = statsBase[stat];
+	//TODO: stat additions here
+	if (statRef <= 0) //knockout/death depending on what score's been reduced to 0
+	{
+		stats.Set(stat, 0);
+		switch (stat)
+		{
+		case STR:
+			//TODO: STR 0: death
+			break;
+		case DEX:
+			//TODO: DEX 0: unconsious (ragdoll [spasm]). Should it lead to death, or recovery?
+			break;
+			//case CON:
+			//TODO: CON 0: death
+			break;
+			//case WIS:
+			//TODO: INT 0: unconsious (ragdoll)
+			break;
+		case INT:
+			//TODO: WIS 0: unconsious (ragdoll)
+			break;
+		case CHA:
+			//TODO: CHA 0: unconsious?
+			break;
+		}
+	}
+	else if (statRef > STAT_NORMAL_MAX)
+	{
+		//TODO: allow exceptions
+		stats.Set(stat, STAT_NORMAL_MAX);
+	}
+	return stats.Get(stat);
+}
+
+//Make sure this base stat is in its usual bounds.
+void CHL2MP_Player::checkStatBase(int stat)
+{
+	if (statsBase.Get(stat) < 0)
+	{
+		statsBase.Set(stat, 0);
+		calcStat(stat); //we had to adjust our base stat, so our functional stat's probably different
+	}
+	else if (statsBase.Get(stat) > BASESTAT_NORMAL_MAX)
+	{
+		statsBase.Set(stat, BASESTAT_NORMAL_MAX);
+		//TODO: allow exceptions
+		calcStat(stat); //we had to adjust our base stat, so our functional stat's probably different
+	}
+}
+
+//Make sure all stats are in their usual bounds.
+void CHL2MP_Player::checkStats(void)
+{
+	for (int i = 0; i < STAT_COUNT; i++)
+	{
+		checkStat(i);
+	}
+}
+
+//(Re)calculate our current stat based on our base stat, our equipment/items, and any buffs/debuffs applied.
+int CHL2MP_Player::calcStat(int stat)
+{
+	//dumpStats(2);
+	checkStatBase(stat);
+	stats.Set(stat, statsBase.Get(stat));
+	//TODO: equipment, items, and statues added here
+	//dumpStat(stat,2);
+	calcMod(stat);
+	//dumpStats(1);
+	return stats.Get(stat);
+}
+
+//Function to handle changes to the base stat
+void CHL2MP_Player::addToStatBase(int stat, int amount)
+{
+	int statRef = statsBase.Get(stat);
+	statsBase.Set(stat, statRef + amount);
+	checkStatBase(stat);
+	calcStat(stat);
+	calcMod(stat);
+}
+
+//Dump all of our stat info to console at developer #.
+void CHL2MP_Player::dumpStats(int devLevel)
+{
+	for (int i = 0; i < STAT_COUNT; i++)
+	{
+		dumpStat(i, devLevel);
+	}
+}
+
+//Dump our stat info to console at developer #.
+void CHL2MP_Player::dumpStat(int stat, int devLevel)
+{
+	switch (stat)
+	{
+	case STR:
+		DevMsg("STR:", devLevel);
+		break;
+	case DEX:
+		DevMsg("DEX:", devLevel);
+		break;
+		//case CON:
+		//DevMsg("CON:", devLevel);
+		break;
+	case INT:
+		DevMsg("INT:", devLevel);
+		break;
+		//case WIS:
+		//DevMsg("WIS:", devLevel);
+		break;
+	case CHA:
+		DevMsg("CHA:", devLevel);
+		break;
+	default:
+		DevMsg("???: OUT OF BOUNDS?", devLevel); //if we're not one of our enums, we're probably out of bounds
+		break;
+	}
+	//splits are just for formatting options, lines things up nicely when printed to console
+	statsBase[stat] < 10 ? DevMsg("  %i ", statsBase.Get(stat), devLevel) : DevMsg(" %i ", statsBase.Get(stat), devLevel);
+	stats[stat] < 10 ? DevMsg("|  %i ", stats.Get(stat), devLevel) : DevMsg("| %i ", stats.Get(stat), devLevel);
+	modifiers[stat] >= 0 ? DevMsg("(+%i)\n", modifiers.Get(stat), devLevel) : DevMsg("(%i)\n", modifiers.Get(stat), devLevel);
+}
+
+
+//
+// SUIT POWER DEVICES
+//
+#define SUITPOWER_CHARGE_RATE	12.5											// 100 units in 8 seconds
+#ifdef HL2MP
+CSuitPowerDevice SuitDeviceSprintMP(bits_SUIT_DEVICE_SPRINT, 20.0f); //100 units in 5 seconds			// 25.0f );				// 100 units in 4 seconds
+#else
+CSuitPowerDevice SuitDeviceSprintMP(bits_SUIT_DEVICE_SPRINT, 12.5f);				// 100 units in 8 seconds
+#endif
+
+#ifdef HL2_EPISODIC
+CSuitPowerDevice SuitDeviceFlashlightMP(bits_SUIT_DEVICE_FLASHLIGHT, 1.111);	// 100 units in 90 second
+#else
+CSuitPowerDevice SuitDeviceFlashlightMP(bits_SUIT_DEVICE_FLASHLIGHT, 2.222);	// 100 units in 45 second
+#endif
+CSuitPowerDevice SuitDeviceBreatherMP(bits_SUIT_DEVICE_BREATHER, 6.7f);		// 100 units in 15 seconds (plus three padded seconds)
+
+//-----------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
+void CHL2MP_Player::SuitPower_Update(void)
+{
+	if (SuitPower_ShouldRecharge())
+	{
+		//REPOSE: Speed up/slow down recharge rate based on DEX
+
+
+		float rate = float(checkMod(DEX));
+		rate > 0 ? rate *= 2.0f : rate *= 1.7f; //nerf effects of rate for negative stats so they aren't quite such a terrible drain
+		SuitPower_Charge((SUITPOWER_CHARGE_RATE + rate) * gpGlobals->frametime);
+	}
+	else if (m_HL2Local.m_bitsActiveDevices)
+	{
+		float flPowerLoad = m_flSuitPowerLoad;
+
+		//Since stickysprint quickly shuts off sprint if it isn't being used, this isn't an issue.
+		if (!sv_stickysprint.GetBool())
+		{
+			if (SuitPower_IsDeviceActive(SuitDeviceSprintMP))
+			{
+				if (!fabs(GetAbsVelocity().x) && !fabs(GetAbsVelocity().y))
+				{
+					// If player's not moving, don't drain sprint juice.
+					int loops = -checkMod(DEX);
+					float rate;
+					if (loops <= 0) rate = float(loops) * 1.5f;
+					else
+					{
+						rate = 2.0f;
+						while (--loops > 0) rate *= 2.0f;
+					}
+					flPowerLoad -= SuitDeviceSprintMP.GetDeviceDrainRate() + rate;
+				}
+			}
+		}
+
+		if (SuitPower_IsDeviceActive(SuitDeviceFlashlightMP))
+		{
+			float factor;
+
+			factor = 1.0f / m_flFlashlightPowerDrainScale;
+
+			flPowerLoad -= (SuitDeviceFlashlightMP.GetDeviceDrainRate() * (1.0f - factor));
+		}
+
+		if (!SuitPower_Drain(flPowerLoad * gpGlobals->frametime))
+		{
+			// TURN OFF ALL DEVICES!!
+			if (IsSprinting())
+			{
+				StopSprinting();
+			}
+
+			if (true)//(Flashlight_UseLegacyVersion())
+			{
+				if (FlashlightIsOn())
+				{
+#ifndef HL2MP
+					FlashlightTurnOff();
+#endif
+				}
+			}
+		}
+
+		if (true)//(Flashlight_UseLegacyVersion())
+		{
+			// turn off flashlight a little bit after it hits below one aux power notch (5%)
+			if (m_HL2Local.m_flSuitPower < 4.8f && FlashlightIsOn())
+			{
+#ifndef HL2MP
+				FlashlightTurnOff();
+#endif
+			}
+		}
+	}
+}
+
+
+//-----------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
+bool CHL2MP_Player::SuitPower_AddDevice(const CSuitPowerDevice &device)
+{
+	// Make sure this device is NOT active!!
+	if (m_HL2Local.m_bitsActiveDevices & device.GetDeviceID())
+		return false;
+
+	if (!IsSuitEquipped())
+		return false;
+
+	m_HL2Local.m_bitsActiveDevices |= device.GetDeviceID();
+	m_flSuitPowerLoad += device.GetDeviceDrainRate();
+	//REPOSE: Drain more/less quickly based on DEX
+	if (device.GetDeviceID()&bits_SUIT_DEVICE_SPRINT)
+	{
+		int loops = -checkMod(DEX);
+		float rate;
+		if (loops <= 0) rate = float(loops) * 1.5f;
+		else
+		{
+			rate = 2.0f;
+			while (--loops > 0) rate *= 2.0f;
+		}
+		m_flSuitPowerLoad += rate;
+	}
+	return true;
+}
+
+
+//-----------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
+bool CHL2MP_Player::SuitPower_RemoveDevice(const CSuitPowerDevice &device)
+{
+	// Make sure this device is active!!
+	if (!(m_HL2Local.m_bitsActiveDevices & device.GetDeviceID()))
+		return false;
+
+	if (!IsSuitEquipped())
+		return false;
+
+	// Take a little bit of suit power when you disable a device. If the device is shutting off
+	// because the battery is drained, no harm done, the battery charge cannot go below 0. 
+	// This code in combination with the delay before the suit can start recharging are a defense
+	// against exploits where the player could rapidly tap sprint and never run out of power.
+	SuitPower_Drain(max(0.1f, device.GetDeviceDrainRate() * 0.1f)); //always wanna drain something
+
+	m_HL2Local.m_bitsActiveDevices &= ~device.GetDeviceID();
+	m_flSuitPowerLoad -= device.GetDeviceDrainRate();
+
+	if (m_flSuitPowerLoad < 0.0f) m_flSuitPowerLoad = 0.0f; //just in case something funny happens
+
+	//REPOSE: Matches adjustments made above to remove the adjusted drain
+	if (device.GetDeviceID()&bits_SUIT_DEVICE_SPRINT)
+	{
+		int loops = -checkMod(DEX);
+		float rate;
+		if (loops <= 0) rate = float(loops) * 1.5f;
+		else
+		{
+			rate = 2.0f;
+			while (--loops > 0) rate *= 2.0f;
+		}
+		m_flSuitPowerLoad -= rate;
+	}
+
+	if (m_HL2Local.m_bitsActiveDevices == 0x00000000)
+	{
+		m_flSuitPowerLoad = 0.0f; //REPOSE: safety added to make sure our drain is properly reset when no devices are in use
+		// With this device turned off, we can set this timer which tells us when the
+		// suit power system entered a no-load state.
+		m_flTimeAllSuitDevicesOff = gpGlobals->curtime;
+	}
+
+	return true;
+}
+
+//-----------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
+#define SUITPOWER_BEGIN_RECHARGE_DELAY	0.5f
+bool CHL2MP_Player::SuitPower_ShouldRecharge(void)
+{
+	// Make sure all devices are off.
+	if (m_HL2Local.m_bitsActiveDevices != 0x00000000)
+		return false;
+
+	// Is the system fully charged?
+	if (m_HL2Local.m_flSuitPower > 100.0f)
+	{
+		m_HL2Local.m_flSuitPower = 100.0f; //make sure we're not over
+		return false;
+	}
+	else if ((m_HL2Local.m_flSuitPower == 100.0f))
+		return false;
+
+	// Has the system been in a no-load state for long enough
+	// to begin recharging?
+	//REPOSE: add to/subtract from recharge delay based on DEX
+	float rate = float(checkMod(DEX));
+	rate > 0 ? rate *= -0.05f : rate *= -0.15f; //reduce wait time to recharge for high dex, delay it for low.
+	if (gpGlobals->curtime < m_flTimeAllSuitDevicesOff + SUITPOWER_BEGIN_RECHARGE_DELAY + rate)
 		return false;
 
 	return true;

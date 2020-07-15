@@ -140,6 +140,26 @@ public:
 
 	void SetHealthMax(int h) { m_iHealthMax = h; }
 
+	//Repose
+	void calcMods(void);
+	void calcMod(int);
+	int calcStat(int);
+	void addToStatBase(int, int);
+	int checkStat(int);
+	int checkMod(int stat) { return modifiers.Get(stat); }
+	void checkStats(void);
+	void checkStatBase(int);
+
+	void statBaseInit(void);
+	void dumpStats();
+	void dumpStats(int);
+	void dumpStat(int);
+	void dumpStat(int, int);
+
+	virtual void SuitPower_Update(void);
+	virtual bool SuitPower_AddDevice(const CSuitPowerDevice &device);
+	virtual bool SuitPower_RemoveDevice(const CSuitPowerDevice &device);
+	virtual bool SuitPower_ShouldRecharge(void);
 		
 private:
 
@@ -150,6 +170,10 @@ private:
 	int m_iModelType;
 	CNetworkVar( int, m_iSpawnInterpCounter );
 	CNetworkVar( int, m_iPlayerSoundType );
+	//Repose
+	CNetworkArray(int, stats, STAT_COUNT);
+	CNetworkArray(int, statsBase, STAT_COUNT);
+	CNetworkArray(int, modifiers, STAT_COUNT);
 
 	float m_flNextModelChangeTime;
 	float m_flNextTeamChangeTime;

@@ -504,4 +504,101 @@
 		"visible"		"0"
 		"enabled"		"0"
 	}
+
+	// HudStat
+	// {
+		// "fieldName" "HudStat"
+		// "xpos"	"16"
+		// "ypos"	"16"
+		// "wide"	"36"
+		// "tall"  "36"
+		// "visible" "1"
+		// "enabled" "1"
+
+		// "PaintBackgroundType"	"2"
+
+		// "text_xpos" "18"
+		// "text_ypos" "2"
+		// "digit_xpos" "18"
+		// "digit_ypos" "8"
+		// "digit2_xpos" "18"
+		// "digit2_ypos" "28"
+	// }
+	
+		HudStatSTR
+	{
+		"fieldName" "HudStatSTR"
+		"xpos"	"8"
+		"ypos"	"8"
+		"wide"	"36"
+		"tall"  "48"
+		"visible" "1"
+		"enabled" "1"
+
+		"PaintBackgroundType"	"2"
+
+		"text_xpos" "9"
+		"text_ypos" "2"
+		"digit_xpos" "4"
+		"digit_ypos" "6"
+		"digit2_xpos" "16"
+		"digit2_ypos" "32"
+	}
+		HudStatDEX
+	{
+		"fieldName" "HudStatDEX"
+		"xpos"	"52"
+		"ypos"	"8"
+		"wide"	"36"
+		"tall"  "48"
+		"visible" "1"
+		"enabled" "1"
+
+		"PaintBackgroundType"	"2"
+
+		"text_xpos" "9"
+		"text_ypos" "2"
+		"digit_xpos" "4"
+		"digit_ypos" "6"
+		"digit2_xpos" "16"
+		"digit2_ypos" "32"
+	}
+		HudStatINT
+	{
+		"fieldName" "HudStatINT"
+		"xpos"	"96"
+		"ypos"	"8"
+		"wide"	"36"
+		"tall"  "48"
+		"visible" "1"
+		"enabled" "1"
+
+		"PaintBackgroundType"	"2"
+
+		"text_xpos" "10"
+		"text_ypos" "2"
+		"digit_xpos" "4"
+		"digit_ypos" "6"
+		"digit2_xpos" "16"
+		"digit2_ypos" "32"
+	}
+		HudStatCHA
+	{
+		"fieldName" "HudStatCHA"
+		"xpos"	"140"
+		"ypos"	"8"
+		"wide"	"36"
+		"tall"  "48"
+		"visible" "1"
+		"enabled" "1"
+
+		"PaintBackgroundType"	"2"
+
+		"text_xpos" "9"
+		"text_ypos" "2"
+		"digit_xpos" "4"
+		"digit_ypos" "6"
+		"digit2_xpos" "16"
+		"digit2_ypos" "32"
+	}
 }

@@ -18,7 +18,7 @@ class C_HL2MP_Player;
 //=============================================================================
 // >> HL2MP_Player
 //=============================================================================
-class C_HL2MP_Player : public C_BaseHLPlayer, public CReposeStats
+class C_HL2MP_Player : public C_BaseHLPlayer //, public CReposeStats
 {
 public:
 	DECLARE_CLASS( C_HL2MP_Player, C_BaseHLPlayer );
@@ -87,6 +87,11 @@ public:
 
 	virtual void PostThink( void );
 
+	//Repose
+	int checkStat(int stat) { return stats[stat]; }
+	int checkMod(int stat) { return modifiers[stat]; }
+	void checkStats(void);
+
 private:
 	
 	C_HL2MP_Player( const C_HL2MP_Player & );
@@ -128,6 +133,11 @@ private:
 	CNetworkVar( HL2MPPlayerState, m_iPlayerState );	
 
 	bool m_fIsWalking;
+
+	//Repose
+	int stats[STAT_COUNT];
+	int statsBase[STAT_COUNT];
+	int modifiers[STAT_COUNT];
 };
 
 inline C_HL2MP_Player *ToHL2MPPlayer( CBaseEntity *pEntity )

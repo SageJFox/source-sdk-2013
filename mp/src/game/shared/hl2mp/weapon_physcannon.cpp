@@ -44,6 +44,7 @@
 #include "weapon_hl2mpbasehlmpcombatweapon.h"
 #include "vphysics/friction.h"
 #include "debugoverlay_shared.h"
+#include "repose_stats.h"
 
 // memdbgon must be the last include file in a .cpp file!!!
 #include "tier0/memdbgon.h"
@@ -1601,11 +1602,14 @@ void CWeaponPhysCannon::PrimaryFireEffect( void )
 	int added = 0;
 	if (!physcannon_hl2mode.GetBool())
 	{
-		CReposeStats* reposeStat = dynamic_cast<CReposeStats*>(pOwner);
-
-		if (reposeStat)
+#ifdef CLIENT_DLL
+		C_HL2MP_Player* pPlayerStats = dynamic_cast<C_HL2MP_Player*>(pOwner);
+#else
+		CHL2MP_Player* pPlayerStats = dynamic_cast<CHL2MP_Player*>(pOwner);
+#endif // CLIENT_DLL
+		if (pPlayerStats)
 		{
-			added = reposeStat->checkMod(reposeStat->STR);
+			added = pPlayerStats->checkMod(STR);
 			added = int(Sign(added)) * (abs(added) - 3);
 		}
 	}
@@ -1816,11 +1820,11 @@ void CWeaponPhysCannon::ApplyVelocityBasedForce( CBaseEntity *pEntity, const Vec
 	float added = 0.0f;
 	if (pOwner)
 	{
-		CReposeStats* reposeStat = dynamic_cast<CReposeStats*>(pOwner);
+		CHL2MP_Player* pPlayerStats = dynamic_cast<CHL2MP_Player*>(pOwner);
 		
-		if (reposeStat)
+		if (pPlayerStats)
 		{
-			added = MAXFORCE_SCALE * float(reposeStat->checkMod(reposeStat->STR));
+			added = MAXFORCE_SCALE * float(pPlayerStats->checkMod(STR));
 		}
 	}
 	float flForceMax;
@@ -1895,11 +1899,15 @@ void CWeaponPhysCannon::PrimaryAttack( void )
 				return;
 			}
 		}
-		CReposeStats* reposeStat = dynamic_cast<CReposeStats*>(pOwner);
+#ifdef CLIENT_DLL
+		C_HL2MP_Player* pPlayerStats = dynamic_cast<C_HL2MP_Player*>(pOwner);
+#else
+		CHL2MP_Player* pPlayerStats = dynamic_cast<CHL2MP_Player*>(pOwner);
+#endif // CLIENT_DLL
 		float added = 0.0f;
-		if (reposeStat)
+		if (pPlayerStats)
 		{
-			added = MAXFORCE_SCALE * float(reposeStat->checkMod(reposeStat->STR));
+			added = MAXFORCE_SCALE * float(pPlayerStats->checkMod(STR));
 		}
 		float flForceMax;
 		physcannon_hl2mode.GetBool() ? flForceMax = physcannon_maxforce.GetFloat() : flForceMax = hands_maxforce.GetFloat() + added;
@@ -1911,11 +1919,11 @@ void CWeaponPhysCannon::PrimaryAttack( void )
 			float added = 0.0f;
 			if (pOwner)
 			{
-				CReposeStats* reposeStat = dynamic_cast<CReposeStats*>(pOwner);
+				CHL2MP_Player* pPlayerStats = dynamic_cast<CHL2MP_Player*>(pOwner);
 
-				if (reposeStat)
+				if (pPlayerStats)
 				{
-					int strMod = reposeStat->checkMod(CReposeStats::STR);
+					int strMod = pPlayerStats->checkMod(STR);
 					strMod > 0 ? added = MAXMASS_SCALE_POSITIVE * float(strMod) : added = max(-hands_maxmass.GetFloat(), MAXMASS_SCALE_NEGATIVE * float(strMod));
 				}
 			}
@@ -2049,11 +2057,11 @@ void CWeaponPhysCannon::SecondaryAttack( void )
 			float added = 0.0f;
 			if (pOwner)
 			{
-				CReposeStats* reposeStat = dynamic_cast<CReposeStats*>(pOwner);
+				CHL2MP_Player* pPlayerStats = dynamic_cast<CHL2MP_Player*>(pOwner);
 
-				if (reposeStat)
+				if (pPlayerStats)
 				{
-					int strMod = reposeStat->checkMod(CReposeStats::STR);
+					int strMod = pPlayerStats->checkMod(STR);
 					strMod > 0 ? added = MAXMASS_SCALE_POSITIVE * float(strMod) : added = max(-hands_maxmass.GetFloat(), MAXMASS_SCALE_NEGATIVE * float(strMod));
 				}
 			}
@@ -2182,11 +2190,11 @@ bool CWeaponPhysCannon::AttachObject( CBaseEntity *pObject, const Vector &vPosit
 			float added = 0.0f;
 			if (pOwner)
 			{
-				CReposeStats* reposeStat = dynamic_cast<CReposeStats*>(pOwner);
+				CHL2MP_Player* pPlayerStats = dynamic_cast<CHL2MP_Player*>(pOwner);
 
-				if (reposeStat)
+				if (pPlayerStats)
 				{
-					int strMod = reposeStat->checkMod(CReposeStats::STR);
+					int strMod = pPlayerStats->checkMod(STR);
 					strMod > 0 ? added = MAXMASS_SCALE_POSITIVE * float(strMod) : added = max(-hands_maxmass.GetFloat(), MAXMASS_SCALE_NEGATIVE * float(strMod));
 				}
 			}
@@ -2563,11 +2571,12 @@ void CWeaponPhysCannon::UpdateObject( void )
 		{
 			if (pOwnerSuit && pOwnerSuit->SuitPower_GetCurrentPercentage() <= 0.01f) //suit power's drained
 			{
-				CReposeStats* reposeStat = dynamic_cast<CReposeStats*>(pOwner);
+				CHL2MP_Player* pPlayerStats = dynamic_cast<CHL2MP_Player*>(pOwner);
 
-				if (reposeStat)
+
+				if (pPlayerStats)
 				{
-					int strMod = reposeStat->checkMod(CReposeStats::STR);
+					int strMod = pPlayerStats->checkMod(STR);
 					strMod > 0 ? added = MAXMASS_SCALE_POSITIVE * float(strMod) : added = max(-hands_maxmass.GetFloat(), MAXMASS_SCALE_NEGATIVE * float(strMod));
 				}
 				float maxMass = hands_maxmass.GetFloat() + added;
@@ -3034,11 +3043,11 @@ bool CWeaponPhysCannon::CanPickupObject( CBaseEntity *pTarget , float flPickupSc
 	float added = 0.0f;
 	if (pOwner)
 	{
-		CReposeStats* reposeStat = dynamic_cast<CReposeStats*>(pOwner);
-		
-		if (reposeStat)
+		CHL2MP_Player* pPlayerStats = dynamic_cast<CHL2MP_Player*>(pOwner);
+
+		if (pPlayerStats)
 		{
-			int strMod = reposeStat->checkMod(CReposeStats::STR);
+			int strMod = pPlayerStats->checkMod(STR);
 			strMod > 0 ? added = MAXMASS_SCALE_POSITIVE * float(strMod) : added = max(-hands_maxmass.GetFloat(), MAXMASS_SCALE_NEGATIVE * float(strMod));
 		}
 	}
@@ -3140,11 +3149,15 @@ float CWeaponPhysCannon::GetLoadPercentage( void )
 	CBasePlayer *pOwner = ToBasePlayer(GetOwner());
 	if (pOwner)
 	{
-		CReposeStats* reposeStat = dynamic_cast<CReposeStats*>(pOwner);
+#ifdef CLIENT_DLL
+		C_HL2MP_Player* pPlayerStats = dynamic_cast<C_HL2MP_Player*>(pOwner);
+#else
+		CHL2MP_Player* pPlayerStats = dynamic_cast<CHL2MP_Player*>(pOwner);
+#endif // CLIENT_DLL
 
-		if (reposeStat)
+		if (pPlayerStats)
 		{
-			int strMod = reposeStat->checkMod(reposeStat->STR);
+			int strMod = pPlayerStats->checkMod(STR);
 			strMod > 0 ? added = MAXMASS_SCALE_POSITIVE * float(strMod) : added = max(-hands_maxmass.GetFloat(), MAXMASS_SCALE_NEGATIVE * float(strMod));
 		}
 	}

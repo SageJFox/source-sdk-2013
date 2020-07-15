@@ -1001,9 +1001,6 @@
     <ClInclude Include="toolframework_server.h">
       <Filter>Tools Framework</Filter>
     </ClInclude>
-    <ClInclude Include="..\shared\hl2mp\repose_stats.h">
-      <Filter>Source Files\HL2MP</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\game\shared\ai_activity.h">
       <Filter>Source Files\unsorted\ai_entities</Filter>
     </ClInclude>
@@ -1838,6 +1835,9 @@
     <ClInclude Include="world.h">
       <Filter>Source Files\unsorted</Filter>
     </ClInclude>
+    <ClInclude Include="..\shared\hl2mp\repose_stats.h">
+      <Filter>Source Files\Repose</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="gamedll_replay.cpp">
@@ -2457,9 +2457,6 @@
     </ClCompile>
     <ClCompile Include="toolframework_server.cpp">
       <Filter>Tools Framework</Filter>
-    </ClCompile>
-    <ClCompile Include="..\shared\hl2mp\repose_stats.cpp">
-      <Filter>Source Files\HL2MP</Filter>
     </ClCompile>
     <ClCompile Include="..\shared\hl2mp\weapon_healthkit.cpp">
       <Filter>Source Files\HL2MP\Weapons</Filter>

@@ -68,14 +68,14 @@ public:
 #ifdef CLIENT_DLL
 		C_HL2MP_Player* pPlayerStats = dynamic_cast<C_HL2MP_Player*>(pPlayer);
 #else
-		CHL2_Player* pPlayerStats = dynamic_cast<CHL2_Player*>(pPlayer);
+		CHL2MP_Player* pPlayerStats = dynamic_cast<CHL2MP_Player*>(pPlayer);
 #endif // CLIENT_DLL
 
 		if (pPlayer == NULL || pPlayerStats == NULL)
 			return HEALTHKIT_RATE_BASE * 10.0f; //return a really slow firerate so we can tell that something's not right
 		//define our rate of fire
 		float rate = HEALTHKIT_RATE_BASE;
-		int mod = pPlayerStats->checkMod(CReposeStats::INT);
+		int mod = pPlayerStats->checkMod(INT);
 		mod > 0 ? rate -= (HEALTHKIT_RATE_POSITIVE * mod) : rate -= (HEALTHKIT_RATE_NEGATIVE * mod);
 		return rate;
 	}	
@@ -301,43 +301,6 @@ Activity CWeaponHealthkit::GetPrimaryAttackActivity( void )
 
 	return ACT_VM_PRIMARYATTACK;// ACT_VM_RECOIL3;
 }
-
-//-----------------------------------------------------------------------------
-//-----------------------------------------------------------------------------
-//bool CWeaponHealthkit::Reload( void )
-//{
-//	bool fRet;
-	//float fCacheTime = m_flNextSecondaryAttack;
-
-	//TODO: Doesn't seem to be the place to do this. This just makes us play a silent, unnecessary reload animation on non-zero INT mods.
-	/*
-	int addition = 0;
-#ifndef CLIENT_DLL
-	CBasePlayer *pPlayer = ToBasePlayer(GetOwner());
-	CHL2_Player *pPlayerRepose = dynamic_cast<CHL2_Player*>(pPlayer); //cast to CHL2_Player since CBasePlayer doesn't access Repose stats
-
-	if (pPlayerRepose != NULL)
-		addition = pPlayerRepose->checkMod(CReposeStats::INT);
-#else
-	C_BasePlayer *pPlayer = ToBasePlayer(GetOwner());
-	C_HL2MP_Player *pPlayerRepose = dynamic_cast<C_HL2MP_Player*>(pPlayer); //cast to CHL2_Player since CBasePlayer doesn't access Repose stats
-
-	if (pPlayerRepose != NULL)
-		addition = pPlayerRepose->checkMod(CReposeStats::INT);
-#endif // !CLIENT_DLL */
-//	fRet = DefaultReload( GetMaxClip1() /*+ HEALTHKIT_MAXAMMO_MOD * addition*/, GetMaxClip2(), ACT_VM_RELOAD );
-//	if ( fRet )
-//	{
-		// Undo whatever the reload process has done to our secondary
-		// attack timer. We allow you to interrupt reloading to fire
-		// a grenade.
-		//m_flNextSecondaryAttack = GetOwner()->m_flNextAttack = fCacheTime;
-
-//		WeaponSound( RELOAD );
-//	}
-
-//	return fRet;
-//}
 
 //-----------------------------------------------------------------------------
 // Purpose: 
@@ -643,9 +606,9 @@ bool CWeaponHealthkit::Reload(void)
 #ifdef CLIENT_DLL
 	C_HL2MP_Player* pOwnerStats = dynamic_cast<C_HL2MP_Player*>(pOwner);
 #else
-	CHL2_Player* pOwnerStats = dynamic_cast<CHL2_Player*>(pOwner);
+	CHL2MP_Player* pOwnerStats = dynamic_cast<CHL2MP_Player*>(pOwner);
 #endif // CLIENT_DLL
-	if (pOwnerStats && 3 + pOwnerStats->checkMod(CReposeStats::DEX) >= (int)floor(flCurTime))
+	if (pOwnerStats && 3 + pOwnerStats->checkMod(DEX) >= (int)floor(flCurTime))
 		SendWeaponAnim(ACT_SHOTGUN_PUMP); //used as a faster reload
 	else
 		SendWeaponAnim(ACT_VM_RELOAD);
