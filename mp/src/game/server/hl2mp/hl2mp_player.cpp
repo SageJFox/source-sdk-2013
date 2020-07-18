@@ -300,6 +300,7 @@ void CHL2MP_Player::PickDefaultSpawnTeam( void )
 //-----------------------------------------------------------------------------
 void CHL2MP_Player::Spawn(void)
 {
+	//SetPreventWeaponPickup(false);
 	m_flNextModelChangeTime = 0.0f;
 	m_flNextTeamChangeTime = 0.0f;
 
@@ -1985,4 +1986,35 @@ bool CHL2MP_Player::SuitPower_ShouldRecharge(void)
 		return false;
 
 	return true;
+}
+
+
+bool CHL2MP_Player::Weapon_CanUse(CBaseCombatWeapon *pWeapon)
+{
+#ifndef HL2MP	
+	if (pWeapon->ClassMatches("weapon_stunstick"))
+	{
+		if (ApplyBattery(0.5))
+			UTIL_Remove(pWeapon);
+		return false;
+	}
+#endif
+	bool ret = BaseClass::Weapon_CanUse(pWeapon);
+	//hate to YanDev this but can't do a switch statement for strings :c
+	if (pWeapon->ClassMatches("weapon_smg1")) //starts with most likely weapons for players to see (NPCs carry them)
+		(modifiers.Get(STR) >= 0) ? ret = true : ret = false;
+	else if (pWeapon->ClassMatches("weapon_ar2"))
+		(modifiers.Get(DEX) >= 0) ? ret = true : ret = false;
+	else if (pWeapon->ClassMatches("weapon_shotgun"))
+		(modifiers.Get(STR) >= 1) ? ret = true : ret = false;
+	else if (pWeapon->ClassMatches("weapon_frag"))
+		(modifiers.Get(INT) >= 0) ? ret = true : ret = false;
+	else if (pWeapon->ClassMatches("weapon_357"))
+		(modifiers.Get(DEX) >= 1) ? ret = true : ret = false;
+	else if (pWeapon->ClassMatches("weapon_crossbow"))
+		(modifiers.Get(DEX) >= 2) ? ret = true : ret = false;
+	else if (pWeapon->ClassMatches("weapon_rpg"))
+		(modifiers.Get(STR) >= 2) ? ret = true : ret = false;
+	//pistol, crowbar, etc. have no special requirements so no need to check for them, our base check just returns true
+	return ret;
 }

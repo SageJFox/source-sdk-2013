@@ -75,7 +75,7 @@ public:
 //=============================================================================
 // >> HL2_PLAYER
 //=============================================================================
-class CHL2_Player : public CBasePlayer //, public CReposeStats
+class CHL2_Player : public CBasePlayer
 {
 public:
 	DECLARE_CLASS( CHL2_Player, CBasePlayer );

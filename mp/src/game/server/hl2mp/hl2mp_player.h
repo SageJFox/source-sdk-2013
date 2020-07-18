@@ -36,7 +36,7 @@ public:
 	void (CHL2MP_Player::*pfnPreThink)();	// Do a PreThink() in this state.
 };
 
-class CHL2MP_Player : public CHL2_Player//, public CReposeStats
+class CHL2MP_Player : public CHL2_Player
 {
 public:
 	DECLARE_CLASS( CHL2MP_Player, CHL2_Player );
@@ -160,6 +160,8 @@ public:
 	virtual bool SuitPower_AddDevice(const CSuitPowerDevice &device);
 	virtual bool SuitPower_RemoveDevice(const CSuitPowerDevice &device);
 	virtual bool SuitPower_ShouldRecharge(void);
+
+	virtual bool Weapon_CanUse(CBaseCombatWeapon *pWeapon);
 		
 private:
 

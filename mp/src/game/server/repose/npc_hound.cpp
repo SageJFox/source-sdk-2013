@@ -26,10 +26,7 @@
 #include "props.h"
 #include "physics_npc_solver.h"
 #include "physics_prop_ragdoll.h"
-
-#ifdef HL2_EPISODIC
-#include "episodic/ai_behavior_passenger_zombie.h"
-#endif	// HL2_EPISODIC
+#include "ai_behavior_assault.h"
 
 // memdbgon must be the last include file in a .cpp file!!!
 #include "tier0/memdbgon.h"
@@ -48,13 +45,8 @@
 // If flying at an enemy, and this close or closer, start playing the maul animation!!
 #define HOUND_MAUL_RANGE	300
 
-#ifdef HL2_EPISODIC
-
-int AE_PASSENGER_PHYSICS_PUSH;
-int AE_HOUND_VEHICLE_LEAP;
-int AE_HOUND_VEHICLE_SS_DIE;	// Killed while doing scripted sequence on vehicle
-
-#endif // HL2_EPISODIC
+#define	HOUND_MIN_BUGBAIT_GOAL_TARGET_RADIUS	512
+#define	HOUND_BUGBAIT_NAV_TOLERANCE	200
 
 enum
 {
@@ -147,6 +139,7 @@ envelopePoint_t envHoundVolumeFrenzy[] =
 ConVar	sk_hound_dmg_bite("sk_hound_dmg_bite", "0"); //6
 ConVar	sk_hound_dmg_leap("sk_hound_dmg_leap", "0"); //15
 ConVar	sk_hound_health("sk_hound_health", "0");	 //50
+extern ConVar bugbait_radius;
 
 //=========================================================
 // animation events
@@ -154,8 +147,6 @@ ConVar	sk_hound_health("sk_hound_health", "0");	 //50
 int AE_HOUND_LEAP;
 int AE_HOUND_GALLOP_LEFT;
 int AE_HOUND_GALLOP_RIGHT;
-//int AE_HOUND_CLIMB_LEFT;
-//int AE_HOUND_CLIMB_RIGHT;
 
 //=========================================================
 // tasks
@@ -167,6 +158,8 @@ enum
 	TASK_HOUND_UNSTICK_JUMP,
 	TASK_HOUND_JUMP_BACK,
 	TASK_HOUND_VERIFY_ATTACK,
+	TASK_HOUND_GET_PATH_TO_BUGBAIT,
+	TASK_HOUND_FACE_BUGBAIT,
 };
 
 //=========================================================
@@ -186,9 +179,8 @@ enum
 {
 	SCHED_HOUND_RANGE_ATTACK1 = LAST_SHARED_SCHEDULE + 100, // hack to get past the base zombie's schedules
 	SCHED_HOUND_UNSTICK_JUMP,
-	//SCHED_HOUND_CLIMBING_UNSTICK_JUMP,
 	SCHED_HOUND_MELEE_ATTACK1,
-	//SCHED_HOUND_TORSO_MELEE_ATTACK1,
+	SCHED_HOUND_CHASE_BUGBAIT,
 };
 
 
@@ -209,10 +201,7 @@ public:
 
 	int	TranslateSchedule( int scheduleType );
 
-	Activity NPC_TranslateActivity( Activity baseAct );
-
 	void LeapAttackTouch( CBaseEntity *pOther );
-//	void ClimbTouch( CBaseEntity *pOther );
 
 	void StartTask( const Task_t *pTask );
 	void RunTask( const Task_t *pTask );
@@ -287,25 +276,10 @@ public:
 	virtual const char *GetLegsModel( void );
 	virtual const char *GetTorsoModel( void );
 
-//=============================================================================
-#ifdef HL2_EPISODIC
-
-public:
-	virtual bool	CreateBehaviors( void );
-	virtual void	VPhysicsCollision( int index, gamevcollisionevent_t *pEvent );
-	virtual	void	UpdateEfficiency( bool bInPVS );
-	virtual bool	IsInAVehicle( void );
-	void			InputAttachToVehicle( inputdata_t &inputdata );
-	void			VehicleLeapAttackTouch( CBaseEntity *pOther );
-
-private:
-	void			VehicleLeapAttack( void );
-	bool			CanEnterVehicle( CPropJeepEpisodic *pVehicle );
-
-	CAI_PassengerBehaviorZombie		m_PassengerBehavior;
-
-#endif	// HL2_EPISODIC
-//=============================================================================
+	//bugbait chasing
+	bool		CreateBehaviors(void);
+	bool		IsValidEnemy(CBaseEntity *pEnemy);
+	bool		QueryHearSound(CSound *pSound);
 
 protected:
 
@@ -313,7 +287,6 @@ protected:
 
 	// Sound stuff
 	float			m_flDistFactor; 
-	//unsigned char	m_iClimbCount; // counts rungs climbed (for sound)
 	bool			m_fIsNavJumping;
 	bool			m_fIsAttackJumping;
 	bool			m_fHitApex;
@@ -329,7 +302,20 @@ private:
 	//How long until we can make an angry sound (so as to not spam them)
 	float	m_flNextAngrySound = 0.0f;
 
-	CSoundPatch	*m_pLayer2; // used for climbing ladders, and when jumping (pre apex)
+	CSoundPatch	*m_pLayer2; // used when jumping (pre apex)
+
+	//bugbait reaction
+
+	CAI_AssaultBehavior			m_AssaultBehavior;
+
+	bool	FindChasePosition(const Vector &targetPos, Vector &result);
+	bool	GetGroundPosition(const Vector &testPos, Vector &result);
+	void	LockJumpNode(void);
+	float	m_flNextAcknowledgeTime = 0.0f; //allowed to make a sound affirming we've heard bugbait?
+
+	Vector		m_vecHeardSound;
+	bool		m_bHasHeardSound;
+	float		m_flIgnoreSoundTime;		// Sound time to ignore if earlier than
 
 public:
 	DEFINE_CUSTOM_AI;
@@ -337,13 +323,11 @@ public:
 };
 
 LINK_ENTITY_TO_CLASS( npc_hound, CHound );
-//LINK_ENTITY_TO_CLASS( npc_fastzombie_torso, CHound );
 
 
 BEGIN_DATADESC( CHound )
 
 	DEFINE_FIELD( m_flDistFactor, FIELD_FLOAT ),
-	//DEFINE_FIELD( m_iClimbCount, FIELD_CHARACTER ),
 	DEFINE_FIELD( m_fIsNavJumping, FIELD_BOOLEAN ),
 	DEFINE_FIELD( m_fIsAttackJumping, FIELD_BOOLEAN ),
 	DEFINE_FIELD( m_fHitApex, FIELD_BOOLEAN ),
@@ -357,13 +341,7 @@ BEGIN_DATADESC( CHound )
 
 	// Function Pointers
 	DEFINE_ENTITYFUNC( LeapAttackTouch ),
-//	DEFINE_ENTITYFUNC( ClimbTouch ),
 	DEFINE_SOUNDPATCH( m_pLayer2 ),
-
-#ifdef HL2_EPISODIC
-	DEFINE_ENTITYFUNC( VehicleLeapAttackTouch ),
-	DEFINE_INPUTFUNC( FIELD_STRING, "AttachToVehicle", InputAttachToVehicle ),
-#endif	// HL2_EPISODIC
 
 END_DATADESC()
 
@@ -374,30 +352,14 @@ const char *CHound::pMoanSounds[] =
 };
 
 //-----------------------------------------------------------------------------
-// The model we use for our legs when we get blowed up.
-//-----------------------------------------------------------------------------
-//static const char *s_pLegsModel = "models/gibs/fast_zombie_legs.mdl";
-
-
-//-----------------------------------------------------------------------------
 // Purpose: 
 //
 //
 //-----------------------------------------------------------------------------
 void CHound::Precache( void )
 {
-	PrecacheModel( "models/repose/hound.mdl" /*"models/zombie/fast.mdl"*/ );
-#ifdef HL2_EPISODIC
-	//PrecacheModel("models/zombie/Fast_torso.mdl");
-	PrecacheScriptSound( "NPC_FastZombie.CarEnter1" );
-	PrecacheScriptSound( "NPC_FastZombie.CarEnter2" );
-	PrecacheScriptSound( "NPC_FastZombie.CarEnter3" );
-	PrecacheScriptSound( "NPC_FastZombie.CarEnter4" );
-	PrecacheScriptSound( "NPC_FastZombie.CarScream" );
-#endif
-	//PrecacheModel( "models/gibs/fast_zombie_torso.mdl" );
-	//PrecacheModel( "models/gibs/fast_zombie_legs.mdl" );
-	
+	PrecacheModel( "models/repose/hound.mdl" );
+
 	PrecacheScriptSound( "NPC_Hound.LeapAttack" );
 	PrecacheScriptSound( "NPC_Hound.FootstepRight" );
 	PrecacheScriptSound( "NPC_Hound.FootstepLeft" );
@@ -440,20 +402,6 @@ void CHound::OnScheduleChange( void )
 //---------------------------------------------------------
 int CHound::SelectSchedule ( void )
 {
-
-// ========================================================
-#ifdef HL2_EPISODIC
-
-	// Defer all decisions to the behavior if it's running
-	if ( m_PassengerBehavior.CanSelectSchedule() )
-	{
-		DeferSchedulingToBehavior( &m_PassengerBehavior );
-		return BaseClass::SelectSchedule();
-	}
-
-#endif //HL2_EPISODIC
-// ========================================================
-
 	if ( HasCondition( COND_ZOMBIE_RELEASECRAB ) )
 	{
 		// Death waits for no man. Or zombie. Or something.
@@ -492,6 +440,70 @@ int CHound::SelectSchedule ( void )
 			return SCHED_ZOMBIE_WANDER_MEDIUM;
 		}
 		break;
+	}
+
+	//Hear bug bait splattered?
+	if (HasCondition(COND_HEAR_BUGBAIT))
+	{
+		//Play a special sound
+		if (m_flNextAcknowledgeTime < gpGlobals->curtime)
+		{
+			EmitSound("NPC_Hound.Distracted");
+			m_flNextAcknowledgeTime = gpGlobals->curtime + 1.0f;
+		}
+
+		m_flNextAngrySound = gpGlobals->curtime + 4.0f;
+
+		//If the sound is valid, act upon it
+		if (m_bHasHeardSound)
+		{
+			//Mark anything in the area as more interesting
+			CBaseEntity *pTarget = NULL;
+			CBaseEntity *pNewEnemy = NULL;
+			Vector		soundOrg = m_vecHeardSound;
+
+			//Find all entities within that sphere
+			while ((pTarget = gEntList.FindEntityInSphere(pTarget, soundOrg, bugbait_radius.GetInt())) != NULL)
+			{
+				CAI_BaseNPC *pNPC = pTarget->MyNPCPointer();
+
+				if (pNPC == NULL)
+					continue;
+
+				if (pNPC->CanBeAnEnemyOf(this) == false)
+					continue;
+
+				//Check to see if the default relationship is hatred, and if so intensify that
+				if ((IRelationType(pNPC) == D_HT) && (pNPC->IsPlayer() == false))
+				{
+					AddEntityRelationship(pNPC, D_HT, 99);
+
+					//Try to spread out the enemy distribution
+					if ((pNewEnemy == NULL) || (random->RandomInt(0, 1)))
+					{
+						pNewEnemy = pNPC;
+						continue;
+					}
+				}
+			}
+
+			// If we have a new enemy, take it
+			if (pNewEnemy != NULL)
+			{
+				//Setup our ignore info
+				SetEnemy(pNewEnemy);
+			}
+
+			ClearCondition(COND_HEAR_BUGBAIT);
+
+			return SCHED_HOUND_CHASE_BUGBAIT;
+		}
+	}
+
+	if (m_AssaultBehavior.CanSelectSchedule())
+	{
+		DeferSchedulingToBehavior(&m_AssaultBehavior);
+		return BaseClass::SelectSchedule();
 	}
 
 	return BaseClass::SelectSchedule();
@@ -656,34 +668,14 @@ void CHound::Spawn( void )
 
 	m_fIsTorso = m_fIsHeadless = false;
 
-	/*if( FClassnameIs( this, "npc_fastzombie" ) ) //no torso split for the hound!
-	{
-		m_fIsTorso = false; 
-	}
-	else
-	{
-		// This was placed as an npc_fastzombie_torso
-		m_fIsTorso = true;
-	}*/
-
-/*#ifdef HL2_EPISODIC
-	SetBloodColor( BLOOD_COLOR_ZOMBIE );
-#else
-	SetBloodColor( BLOOD_COLOR_YELLOW );
-#endif // HL2_EPISODIC */
-
 	SetBloodColor( BLOOD_COLOR_RED );
 
 	m_iHealth			= sk_hound_health.GetInt();
 	m_flFieldOfView		= 0.2;
 
 	CapabilitiesClear();
-	CapabilitiesAdd( /*bits_CAP_MOVE_CLIMB |*/ bits_CAP_MOVE_JUMP | bits_CAP_MOVE_GROUND | bits_CAP_INNATE_RANGE_ATTACK1 /* | bits_CAP_INNATE_MELEE_ATTACK1 */);
+	CapabilitiesAdd( bits_CAP_MOVE_JUMP | bits_CAP_MOVE_GROUND | bits_CAP_INNATE_RANGE_ATTACK1 );
 
-	/*if ( m_fIsTorso == true )
-	{
-		CapabilitiesRemove( bits_CAP_MOVE_JUMP | bits_CAP_INNATE_RANGE_ATTACK1 );
-	}*/
 
 	m_flNextAttack = gpGlobals->curtime;
 
@@ -693,6 +685,10 @@ void CHound::Spawn( void )
 	EndNavJump();
 
 	m_flDistFactor = 1.0;
+
+	m_vecHeardSound = WorldSpaceCenter();
+	m_bHasHeardSound = false;
+	m_flIgnoreSoundTime = 0.0f;
 
 	BaseClass::Spawn();
 }
@@ -755,38 +751,12 @@ float CHound::MaxYawSpeed( void )
 //-----------------------------------------------------------------------------
 void CHound::SetZombieModel( void )
 {
-	/*Hull_t lastHull = GetHullType();
-
-	if ( m_fIsTorso )
-	{
-		SetModel( "models/zombie/fast_torso.mdl" );
-		SetHullType(HULL_TINY);
-	}
-	else
-	{
-		SetModel( "models/repose/hound.mdl" );
-		SetHullType(HULL_TINY); //HULL_HUMAN
-	}*/
-
 	SetModel("models/repose/hound.mdl");
 	SetHullType(HULL_MEDIUM); //HULL_TINY?
-
-	//SetBodygroup( ZOMBIE_BODYGROUP_HEADCRAB, !m_fIsHeadless );
 
 	SetHullSizeNormal( true );
 	SetDefaultEyeOffset();
 	SetActivity( ACT_IDLE );
-
-	// hull changed size, notify vphysics
-	// UNDONE: Solve this generally, systematically so other
-	// NPCs can change size
-	/*if ( lastHull != GetHullType() )
-	{
-		if ( VPhysicsGetObject() )
-		{
-			SetupVPhysicsHull();
-		}
-	}*/
 }
 
 
@@ -1057,17 +1027,6 @@ int CHound::RangeAttack1Conditions( float flDot, float flDist )
 //-----------------------------------------------------------------------------
 void CHound::HandleAnimEvent( animevent_t *pEvent )
 {
-	/*if ( pEvent->event == AE_HOUND_CLIMB_LEFT || pEvent->event == AE_HOUND_CLIMB_RIGHT )
-	{
-		if( ++m_iClimbCount % 3 == 0 )
-		{
-			ENVELOPE_CONTROLLER.SoundChangePitch( m_pLayer2, random->RandomFloat( 100, 150 ), 0.0 );
-			ENVELOPE_CONTROLLER.SoundPlayEnvelope( m_pLayer2, SOUNDCTRL_CHANGE_VOLUME, envHoundVolumeClimb, ARRAYSIZE(envHoundVolumeClimb) );
-		}
-
-		return;
-	}*/
-
 	if ( pEvent->event == AE_HOUND_LEAP )
 	{
 		LeapAttack();
@@ -1300,7 +1259,7 @@ void CHound::StartTask( const Task_t *pTask )
 			}
 			else
 			{
-				DevMsg("UNHANDLED CASE! Stuck Fast Zombie with no enemy!\n");
+				DevMsg("UNHANDLED CASE! Stuck Hound with no enemy!\n");
 			}
 		}
 		break;
@@ -1356,6 +1315,70 @@ void CHound::StartTask( const Task_t *pTask )
 	case TASK_HOUND_DO_ATTACK:
 		SetActivity( (Activity)ACT_HOUND_LEAP_SOAR );
 		break;
+
+	case TASK_HOUND_FACE_BUGBAIT:
+
+		//Must have a saved sound
+		//FIXME: This isn't assured to be still pointing to the right place, need to protect this
+		if (!m_bHasHeardSound)
+		{
+			TaskFail("No remembered bug bait sound to run to!");
+			return;
+		}
+
+		GetMotor()->SetIdealYawToTargetAndUpdate(m_vecHeardSound);
+		SetTurnActivity();
+
+		break;
+
+	case TASK_HOUND_GET_PATH_TO_BUGBAIT:
+	{
+		//Must have a saved sound
+		//FIXME: This isn't assured to be still pointing to the right place, need to protect this
+		if (!m_bHasHeardSound)
+		{
+			TaskFail("No remembered bug bait sound to run to!");
+			return;
+		}
+
+		Vector	goalPos;
+
+		// Find the position to chase to
+		if (FindChasePosition(m_vecHeardSound, goalPos))
+		{
+			AI_NavGoal_t goal(goalPos, (Activity)ACT_RUN/*ACT_HOUND_RUN_AGITATED*/, HOUND_BUGBAIT_NAV_TOLERANCE);
+			//Try to run directly there
+			if (GetNavigator()->SetGoal(goal, AIN_DISCARD_IF_FAIL) == false)
+			{
+				//Try and get as close as possible otherwise
+				AI_NavGoal_t nearGoal(GOALTYPE_LOCATION_NEAREST_NODE, goalPos, (Activity)ACT_RUN/*ACT_HOUND_RUN_AGITATED*/, HOUND_BUGBAIT_NAV_TOLERANCE);
+
+				if (GetNavigator()->SetGoal(nearGoal, AIN_CLEAR_PREVIOUS_STATE))
+				{
+					//FIXME: HACK! The internal pathfinding is setting this without our consent, so override it!
+					ClearCondition(COND_TASK_FAILED);
+
+					LockJumpNode();
+					TaskComplete();
+					return;
+				}
+				else
+				{
+					TaskFail("Hound failed to find path to bugbait position\n");
+					return;
+				}
+			}
+			else
+			{
+				LockJumpNode();
+				TaskComplete();
+				return;
+			}
+		}
+
+		TaskFail("Hound failed to find path to bugbait position\n");
+		break;
+	}
 
 	default:
 		BaseClass::StartTask( pTask );
@@ -1423,26 +1446,12 @@ int CHound::TranslateSchedule( int scheduleType )
 		break;
 
 	case SCHED_MELEE_ATTACK1:
-		/*if ( m_fIsTorso == true )
-		{
-			return SCHED_HOUND_TORSO_MELEE_ATTACK1;
-		}
-		else
-		{*/
-			return SCHED_HOUND_MELEE_ATTACK1;
-		//}
+		return SCHED_HOUND_MELEE_ATTACK1;
 		break;
 
-	/*case SCHED_HOUND_UNSTICK_JUMP:
-		if ( GetActivity() == ACT_CLIMB_UP || GetActivity() == ACT_CLIMB_DOWN || GetActivity() == ACT_CLIMB_DISMOUNT )
-		{
-			return SCHED_HOUND_CLIMBING_UNSTICK_JUMP;
-		}
-		else
-		{
-			return SCHED_HOUND_UNSTICK_JUMP;
-		}
-		break;*/
+	case SCHED_HOUND_UNSTICK_JUMP:
+		return SCHED_HOUND_UNSTICK_JUMP;
+		break;
 	case SCHED_MOVE_TO_WEAPON_RANGE:
 		{
 			float flZDist = fabs( GetEnemy()->GetLocalOrigin().z - GetLocalOrigin().z );
@@ -1456,16 +1465,6 @@ int CHound::TranslateSchedule( int scheduleType )
 	default:
 		return BaseClass::TranslateSchedule( scheduleType );
 	}
-}
-
-//---------------------------------------------------------
-//---------------------------------------------------------
-Activity CHound::NPC_TranslateActivity( Activity baseAct )
-{
-	//if ( baseAct == ACT_CLIMB_DOWN )
-	//	return ACT_CLIMB_UP;
-	
-	return BaseClass::NPC_TranslateActivity( baseAct );
 }
 
 //---------------------------------------------------------
@@ -1493,46 +1492,6 @@ void CHound::LeapAttackTouch( CBaseEntity *pOther )
 }
 
 //-----------------------------------------------------------------------------
-// Purpose: Lets us know if we touch the player while we're climbing.
-//-----------------------------------------------------------------------------
-/*void CHound::ClimbTouch( CBaseEntity *pOther )
-{
-	if ( pOther->IsPlayer() )
-	{
-		// If I hit the player, shove him aside.
-		Vector vecDir = pOther->WorldSpaceCenter() - WorldSpaceCenter();
-		vecDir.z = 0.0; // planar
-		VectorNormalize( vecDir );
-
-		if( IsXbox() )
-		{
-			vecDir *= 400.0f;
-		}
-		else
-		{
-			vecDir *= 200.0f;
-		}
-
-		pOther->VelocityPunch( vecDir );
-
-		if ( GetActivity() != ACT_CLIMB_DISMOUNT || 
-			 ( pOther->GetGroundEntity() == NULL &&
-			   GetNavigator()->IsGoalActive() &&
-			   pOther->GetAbsOrigin().z - GetNavigator()->GetCurWaypointPos().z < -1.0 ) )
-		{
-			SetCondition( COND_HOUND_CLIMB_TOUCH );
-		}
-
-		SetTouch( NULL );
-	}
-	else if ( dynamic_cast<CPhysicsProp *>(pOther) )
-	{
-		NPCPhysics_CreateSolver( this, pOther, true, 5.0 );
-	}
-}*/
-
-
-//-----------------------------------------------------------------------------
 // Purpose: Shuts down our looping sounds.
 //-----------------------------------------------------------------------------
 void CHound::StopLoopingSounds( void )
@@ -1557,15 +1516,7 @@ void CHound::StopLoopingSounds( void )
 // Purpose: Fast zombie cannot range attack when he's a torso!
 //-----------------------------------------------------------------------------
 void CHound::BecomeTorso( const Vector &vecTorsoForce, const Vector &vecLegsForce )
-{
-	//CapabilitiesRemove( bits_CAP_INNATE_RANGE_ATTACK1 );
-	//CapabilitiesRemove( bits_CAP_MOVE_JUMP );
-	//CapabilitiesRemove( bits_CAP_MOVE_CLIMB );
-
-	//ReleaseHeadcrab( EyePosition(), vecLegsForce * 0.5, true, true, true );
-
-	//BaseClass::BecomeTorso( vecTorsoForce, vecLegsForce );
-}
+{ }
 
 //-----------------------------------------------------------------------------
 // Purpose: Returns true if a reasonable jumping distance
@@ -1600,10 +1551,6 @@ bool CHound::MovementCost( int moveType, const Vector &vecStart, const Vector &v
 	{
 		multiplier = ( delta < 0 ) ? 0.5 : 1.5;
 	}
-	/*else if ( moveType == bits_CAP_MOVE_CLIMB )
-	{
-		multiplier = ( delta > 0 ) ? 0.5 : 4.0;
-	}*/
 
 	*pCost *= multiplier;
 
@@ -1617,13 +1564,13 @@ bool CHound::ShouldFailNav( bool bMovementFailed )
 {
 	if ( !BaseClass::ShouldFailNav( bMovementFailed ) )
 	{
-		DevMsg( 2, "Fast zombie in scripted sequence probably hit bad node configuration at %s\n", VecToString( GetAbsOrigin() ) );
+		DevMsg( 2, "Hound in scripted sequence probably hit bad node configuration at %s\n", VecToString( GetAbsOrigin() ) );
 		
 		if ( GetNavigator()->GetPath()->CurWaypointNavType() == NAV_JUMP && GetNavigator()->RefindPathToGoal( false ) )
 		{
 			return false;
 		}
-		DevMsg( 2, "Fast zombie failed to get to scripted sequence\n" );
+		DevMsg( 2, "Hound failed to get to scripted sequence\n" );
 	}
 
 	return true;
@@ -1631,8 +1578,8 @@ bool CHound::ShouldFailNav( bool bMovementFailed )
 
 
 //---------------------------------------------------------
-// Purpose: Notifier that lets us know when the fast
-//			zombie has hit the apex of a navigational jump.
+// Purpose: Notifier that lets us know when the hound
+//			has hit the apex of a navigational jump.
 //---------------------------------------------------------
 void CHound::OnNavJumpHitApex( void )
 {
@@ -1680,24 +1627,6 @@ void CHound::OnChangeActivity( Activity NewActivity )
 		if ( m_pMoanSound )
 			ENVELOPE_CONTROLLER.SoundChangePitch( m_pMoanSound, HOUND_MIN_PITCH, 0.3 );
 	}
-
-	//if ( NewActivity == ACT_CLIMB_UP )
-	//{
-	//	// Started a climb!
-	//	if ( m_pMoanSound )
-	//		ENVELOPE_CONTROLLER.SoundChangeVolume( m_pMoanSound, 0.0, 0.2 );
-
-	//	SetTouch( &CHound::ClimbTouch );
-	//}
-	//else if ( GetActivity() == ACT_CLIMB_DISMOUNT || ( GetActivity() == ACT_CLIMB_UP && NewActivity != ACT_CLIMB_DISMOUNT ) )
-	//{
-	//	// Ended a climb
-	//	if ( m_pMoanSound )
-	//		ENVELOPE_CONTROLLER.SoundChangeVolume( m_pMoanSound, 1.0, 0.2 );
-
-	//	SetTouch( NULL );
-	//}
-
 	BaseClass::OnChangeActivity( NewActivity );
 }
 
@@ -1771,20 +1700,6 @@ void CHound::BuildScheduleTestBits( void )
 	// For now, make sure our active behavior gets a chance to add its own bits
 	if ( GetRunningBehavior() )
 		GetRunningBehavior()->BridgeBuildScheduleTestBits(); 
-
-#ifdef HL2_EPISODIC
-	SetCustomInterruptCondition( COND_PROVOKED );
-#endif	// HL2_EPISODIC
-
-	// Any schedule that makes us climb should break if we touch player
-	/*if ( GetActivity() == ACT_CLIMB_UP || GetActivity() == ACT_CLIMB_DOWN || GetActivity() == ACT_CLIMB_DISMOUNT)
-	{
-		SetCustomInterruptCondition( COND_HOUND_CLIMB_TOUCH );
-	}
-	else
-	{
-		ClearCustomInterruptCondition( COND_HOUND_CLIMB_TOUCH );
-	}*/
 }
 
 //=========================================================
@@ -1859,163 +1774,162 @@ HeadcrabRelease_t CHound::ShouldReleaseHeadcrab(const CTakeDamageInfo &info, flo
 	return RELEASE_NO;
 }
 
-//=============================================================================
-#ifdef HL2_EPISODIC
+
+//BUGBAIT
+// Number of times the hounds will attempt to generate a random chase position
+#define NUM_CHASE_POSITION_ATTEMPTS		3
 
 //-----------------------------------------------------------------------------
-// Purpose: Add the passenger behavior to our repertoire
+// Purpose: 
+// Input  : &targetPos - 
+//			&result - 
+// Output : Returns true on success, false on failure.
 //-----------------------------------------------------------------------------
-bool CHound::CreateBehaviors( void )
+bool CHound::FindChasePosition(const Vector &targetPos, Vector &result)
 {
-	AddBehavior( &m_PassengerBehavior );
+	/*if (HasSpawnFlags(SF_HOUND_USE_GROUNDCHECKS) == true)
+	{
+		result = targetPos;
+		return true;
+	}*/
 
-	return BaseClass::CreateBehaviors();
+	Vector runDir = (targetPos - GetAbsOrigin());
+	VectorNormalize(runDir);
+
+	Vector	vRight, vUp;
+	VectorVectors(runDir, vRight, vUp);
+
+	for (int i = 0; i < NUM_CHASE_POSITION_ATTEMPTS; i++)
+	{
+		result = targetPos;
+		result += -runDir * random->RandomInt(64, 128);
+		result += vRight * random->RandomInt(-128, 128);
+
+		//FIXME: We need to do a more robust search here
+		// Find a ground position and try to get there
+		if (GetGroundPosition(result, result))
+			return true;
+	}
+	return false;
 }
 
+
 //-----------------------------------------------------------------------------
-// Purpose: Get on the vehicle!
+// Purpose: 
+// Input  : &testPos - 
 //-----------------------------------------------------------------------------
-void CHound::InputAttachToVehicle( inputdata_t &inputdata )
+bool CHound::GetGroundPosition(const Vector &testPos, Vector &result)
 {
-	// Interrupt us
-	SetCondition( COND_PROVOKED );
+	// Trace up to clear the ground
+	trace_t	tr;
+	AI_TraceHull(testPos, testPos + Vector(0, 0, 64), NAI_Hull::Mins(GetHullType()), NAI_Hull::Maxs(GetHullType()), MASK_NPCSOLID, this, COLLISION_GROUP_NONE, &tr);
 
-	// Find the target vehicle
-	CBaseEntity *pEntity = FindNamedEntity( inputdata.value.String() );
-	CPropJeepEpisodic *pVehicle = dynamic_cast<CPropJeepEpisodic *>(pEntity);
+	// If we're stuck in solid, this can't be valid
+	if (tr.allsolid)
+		return false;
 
-	// Get in the car if it's valid
-	if ( pVehicle && CanEnterVehicle( pVehicle ) )
+	// Trace down to find the ground
+	AI_TraceHull(tr.endpos, tr.endpos - Vector(0, 0, 128), NAI_Hull::Mins(GetHullType()), NAI_Hull::Maxs(GetHullType()), MASK_NPCSOLID, this, COLLISION_GROUP_NONE, &tr);
+
+	// We must end up on the floor with this trace
+	if (tr.fraction < 1.0f)
 	{
-		// Set her into a "passenger" behavior
-		m_PassengerBehavior.Enable( pVehicle );
-		m_PassengerBehavior.AttachToVehicle();
+		result = tr.endpos;
+		return true;
 	}
 
-	RemoveSpawnFlags( SF_NPC_GAG );
+	// Ended up in open space
+	return false;
 }
 
-//-----------------------------------------------------------------------------
-// Purpose: Passed along from the vehicle's callback list
-//-----------------------------------------------------------------------------
-void CHound::VPhysicsCollision( int index, gamevcollisionevent_t *pEvent )
+void CHound::LockJumpNode(void)
 {
-	// Only do the override while riding on a vehicle
-	if ( m_PassengerBehavior.CanSelectSchedule() && m_PassengerBehavior.GetPassengerState() != PASSENGER_STATE_OUTSIDE )
-	{
-		int damageType = 0;
-		float flDamage = CalculatePhysicsImpactDamage( index, pEvent, gZombiePassengerImpactDamageTable, 1.0, true, damageType );
+	if (GetNavigator()->GetPath() == NULL)
+		return;
 
-		if ( flDamage > 0  )
+	AI_Waypoint_t *pWaypoint = GetNavigator()->GetPath()->GetCurWaypoint();
+
+	while (pWaypoint)
+	{
+		AI_Waypoint_t *pNextWaypoint = pWaypoint->GetNext();
+		if (pNextWaypoint && pNextWaypoint->NavType() == NAV_JUMP && pWaypoint->iNodeID != NO_NODE)
 		{
-			Vector damagePos;
-			pEvent->pInternalData->GetContactPoint( damagePos );
-			Vector damageForce = pEvent->postVelocity[index] * pEvent->pObjects[index]->GetMass();
-			CTakeDamageInfo info( this, this, damageForce, damagePos, flDamage, (damageType|DMG_VEHICLE) );
-			TakeDamage( info );
-		}
-		return;
-	}
+			CAI_Node *pNode = GetNavigator()->GetNetwork()->GetNode(pWaypoint->iNodeID);
 
-	BaseClass::VPhysicsCollision( index, pEvent );
+			if (pNode)
+			{
+				//NDebugOverlay::Box( pNode->GetOrigin(), Vector( -16, -16, -16 ), Vector( 16, 16, 16 ), 255, 0, 0, 0, 2 );
+				pNode->Lock(0.5f);
+				break;
+			}
+		}
+		else
+		{
+			pWaypoint = pWaypoint->GetNext();
+		}
+	}
 }
 
 //-----------------------------------------------------------------------------
-// Purpose: FIXME: Fold this into LeapAttack using different jump targets!
+// Purpose: 
+// Input  : *pEnemy - 
+// Output : Returns true on success, false on failure.
 //-----------------------------------------------------------------------------
-void CHound::VehicleLeapAttack( void )
+bool CHound::IsValidEnemy(CBaseEntity *pEnemy)
 {
-	CBaseEntity *pEnemy = GetEnemy();
-	if ( pEnemy == NULL )
-		return;
+	if (pEnemy->IsWorld())
+		return false;
 
-	Vector vecEnemyPos;
-	UTIL_PredictedPosition( pEnemy, 1.0f, &vecEnemyPos );
+	//If we're chasing bugbait, close to within a certain radius before picking up enemies
+	if (IsCurSchedule(GetGlobalScheduleId(SCHED_HOUND_CHASE_BUGBAIT)) && (GetNavigator() != NULL))
+	{
+		//If the enemy is without the target radius, then don't allow them
+		if ((GetNavigator()->IsGoalActive()) && (GetNavigator()->GetGoalPos() - pEnemy->GetAbsOrigin()).Length() > bugbait_radius.GetFloat())
+			return false;
+	}
+	return BaseClass::IsValidEnemy(pEnemy);
+}
 
-	// Move
-	SetGroundEntity( NULL );
-	BeginAttackJump();
-	
+//-----------------------------------------------------------------------------
+// Purpose: 
+// Input  : *pSound - 
+//-----------------------------------------------------------------------------
+bool CHound::QueryHearSound(CSound *pSound)
+{
+	if (!BaseClass::QueryHearSound(pSound))
+		return false;
 
-	// Take him off ground so engine doesn't instantly reset FL_ONGROUND.
-	UTIL_SetOrigin( this, GetLocalOrigin() + Vector( 0 , 0 , 1 ));
+	if (pSound->m_iType == SOUND_BUGBAIT)
+	{
+		//Must be more recent than the current
+		if (pSound->SoundExpirationTime() <= m_flIgnoreSoundTime)
+			return false;
 
-	// FIXME: This should be the exact position we'll enter at, but this approximates it generally
-	//vecEnemyPos[2] += 16;
+		//If we can hear it, store it
+		m_bHasHeardSound = (pSound != NULL);
+		if (m_bHasHeardSound)
+		{
+			DevMsg("Hound heard bugbait splat!\n");
+			m_vecHeardSound = pSound->GetSoundOrigin();
+			m_flIgnoreSoundTime = pSound->SoundExpirationTime();
+		}
+	}
 
-	Vector vecMins = GetHullMins();
-	Vector vecMaxs = GetHullMaxs();
-	Vector vecJumpDir = VecCheckToss( this, GetAbsOrigin(), vecEnemyPos, 0.1f, 1.0f, false, &vecMins, &vecMaxs );
-
-	SetAbsVelocity( vecJumpDir );
-	m_flNextAttack = gpGlobals->curtime + 2.0f;
-	SetTouch( &CHound::VehicleLeapAttackTouch );
+	//Do the normal behavior at this point
+	return true;
 }
 
 //-----------------------------------------------------------------------------
 // Purpose: 
 // Output : Returns true on success, false on failure.
 //-----------------------------------------------------------------------------
-bool CHound::CanEnterVehicle( CPropJeepEpisodic *pVehicle )
+bool CHound::CreateBehaviors(void)
 {
-	if ( pVehicle == NULL )
-		return false;
+	//AddBehavior(&m_FollowBehavior);
+	AddBehavior(&m_AssaultBehavior);
 
-	return pVehicle->NPC_CanEnterVehicle( this, false );
+	return BaseClass::CreateBehaviors();
 }
-
-//-----------------------------------------------------------------------------
-// Purpose: FIXME: Move into behavior?
-// Input  : *pOther - 
-//-----------------------------------------------------------------------------
-void CHound::VehicleLeapAttackTouch( CBaseEntity *pOther )
-{
-	if ( pOther->GetServerVehicle() )
-	{
-		m_PassengerBehavior.AttachToVehicle();
-
-		// HACK: Stop us cold
-		SetLocalVelocity( vec3_origin );
-	}
-}
-
-//-----------------------------------------------------------------------------
-// Purpose: Determine whether we're in a vehicle or not
-// Output : Returns true on success, false on failure.
-//-----------------------------------------------------------------------------
-bool CHound::IsInAVehicle( void )
-{
-	// Must be active and getting in/out of vehicle
-	if ( m_PassengerBehavior.IsEnabled() && m_PassengerBehavior.GetPassengerState() != PASSENGER_STATE_OUTSIDE )
-		return true;
-
-	return false;
-}
-
-//-----------------------------------------------------------------------------
-// Purpose: Override our efficiency so that we don't jitter when we're in the middle
-//			of our enter/exit animations.
-// Input  : bInPVS - Whether we're in the PVS or not
-//-----------------------------------------------------------------------------
-void CHound::UpdateEfficiency( bool bInPVS )
-{ 
-	// If we're transitioning and in the PVS, we override our efficiency
-	if ( IsInAVehicle() && bInPVS )
-	{
-		PassengerState_e nState = m_PassengerBehavior.GetPassengerState();
-		if ( nState == PASSENGER_STATE_ENTERING || nState == PASSENGER_STATE_EXITING )
-		{
-			SetEfficiency( AIE_NORMAL );
-			return;
-		}
-	}
-
-	// Do the default behavior
-	BaseClass::UpdateEfficiency( bInPVS );
-}
-
-#endif	// HL2_EPISODIC
-//=============================================================================
 
 //-----------------------------------------------------------------------------
 
@@ -2033,22 +1947,13 @@ AI_BEGIN_CUSTOM_NPC( npc_hound, CHound )
 	DECLARE_TASK( TASK_HOUND_UNSTICK_JUMP )
 	DECLARE_TASK( TASK_HOUND_JUMP_BACK )
 	DECLARE_TASK( TASK_HOUND_VERIFY_ATTACK )
-
-	//DECLARE_CONDITION( COND_HOUND_CLIMB_TOUCH )
+	DECLARE_TASK(TASK_HOUND_GET_PATH_TO_BUGBAIT)
+	DECLARE_TASK(TASK_HOUND_FACE_BUGBAIT)
 
 	//Adrian: events go here
 	DECLARE_ANIMEVENT( AE_HOUND_LEAP )
 	DECLARE_ANIMEVENT( AE_HOUND_GALLOP_LEFT )
 	DECLARE_ANIMEVENT( AE_HOUND_GALLOP_RIGHT )
-	//DECLARE_ANIMEVENT( AE_HOUND_CLIMB_LEFT )
-	//DECLARE_ANIMEVENT( AE_HOUND_CLIMB_RIGHT )
-
-#ifdef HL2_EPISODIC
-	// FIXME: Move!
-	DECLARE_ANIMEVENT( AE_PASSENGER_PHYSICS_PUSH )
-	DECLARE_ANIMEVENT( AE_HOUND_VEHICLE_LEAP )
-	DECLARE_ANIMEVENT( AE_HOUND_VEHICLE_SS_DIE )
-#endif	// HL2_EPISODIC
 
 	//=========================================================
 	// 
@@ -2083,19 +1988,6 @@ AI_BEGIN_CUSTOM_NPC( npc_hound, CHound )
 	)
 
 	//=========================================================
-	//=========================================================
-	/*DEFINE_SCHEDULE
-	(
-		SCHED_HOUND_CLIMBING_UNSTICK_JUMP,
-
-		"	Tasks"
-		"		TASK_SET_ACTIVITY				ACTIVITY:ACT_IDLE"
-		"		TASK_HOUND_UNSTICK_JUMP	0"
-		"	"
-		"	Interrupts"
-	)*/
-
-	//=========================================================
 	// > Melee_Attack1
 	//=========================================================
 	DEFINE_SCHEDULE
@@ -2117,29 +2009,30 @@ AI_BEGIN_CUSTOM_NPC( npc_hound, CHound )
 		"		COND_NEW_ENEMY"
 		"		COND_ENEMY_DEAD"
 		"		COND_ENEMY_OCCLUDED"
-	);
+	)
 
-	//=========================================================
-	// > Melee_Attack1
-	//=========================================================
-	/*DEFINE_SCHEDULE
+	//==================================================
+	// SCHED_HOUND_CHASE_BUGBAIT
+	//==================================================
+	DEFINE_SCHEDULE
 		(
-		SCHED_HOUND_TORSO_MELEE_ATTACK1,
+		SCHED_HOUND_CHASE_BUGBAIT,
 
 		"	Tasks"
-		"		TASK_STOP_MOVING				0"
-		"		TASK_FACE_ENEMY					0"
-		"		TASK_MELEE_ATTACK1				0"
-		"		TASK_MELEE_ATTACK1				0"
-		"		TASK_SET_FAIL_SCHEDULE			SCHEDULE:SCHED_CHASE_ENEMY"
-		"		TASK_HOUND_VERIFY_ATTACK	0"
-
+		"		TASK_STOP_MOVING					0"
+		"		TASK_HOUND_GET_PATH_TO_BUGBAIT	0"
+		"		TASK_RUN_PATH						0"
+		"		TASK_WAIT_FOR_MOVEMENT				0"
+		"		TASK_STOP_MOVING					0"
+		"		TASK_HOUND_FACE_BUGBAIT			0"
 		""
 		"	Interrupts"
-		"		COND_NEW_ENEMY"
-		"		COND_ENEMY_DEAD"
-		"		COND_ENEMY_OCCLUDED"
-		);*/
+		"		COND_CAN_MELEE_ATTACK1"
+		"		COND_SEE_ENEMY"
+		"		COND_LIGHT_DAMAGE"
+		"		COND_HEAVY_DAMAGE"
+		);
+
 
 AI_END_CUSTOM_NPC()
 

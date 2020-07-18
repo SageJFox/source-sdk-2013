@@ -11,6 +11,7 @@
 #include "ammodef.h"
 #include "eventlist.h"
 #include "npcevent.h"
+#include "hl2mp_player.h"
 
 // memdbgon must be the last include file in a .cpp file!!!
 #include "tier0/memdbgon.h"
@@ -124,12 +125,11 @@ public:
 	}
 	bool MyTouch( CBasePlayer *pPlayer )
 	{
-		if (ITEM_GiveAmmo( pPlayer, SIZE_AMMO_SMG1, "SMG1"))
+		CHL2MP_Player* pMPPlayer = dynamic_cast<CHL2MP_Player*>(pPlayer);
+		if (pMPPlayer && pMPPlayer->checkMod(STR) >= 0 && ITEM_GiveAmmo(pPlayer, SIZE_AMMO_SMG1, "SMG1"))
 		{
 			if ( g_pGameRules->ItemShouldRespawn( this ) == GR_ITEM_RESPAWN_NO )
-			{
 				UTIL_Remove(this);	
-			}
 			return true;
 		}
 		return false;
@@ -158,7 +158,8 @@ public:
 	}
 	bool MyTouch( CBasePlayer *pPlayer )
 	{
-		if (ITEM_GiveAmmo( pPlayer, SIZE_AMMO_SMG1_LARGE, "SMG1"))
+		CHL2MP_Player* pMPPlayer = dynamic_cast<CHL2MP_Player*>(pPlayer);
+		if (pMPPlayer && pMPPlayer->checkMod(STR) >= 0 && ITEM_GiveAmmo(pPlayer, SIZE_AMMO_SMG1_LARGE, "SMG1"))
 		{
 			if ( g_pGameRules->ItemShouldRespawn( this ) == GR_ITEM_RESPAWN_NO )
 			{
@@ -192,7 +193,8 @@ public:
 	}
 	bool MyTouch( CBasePlayer *pPlayer )
 	{
-		if (ITEM_GiveAmmo( pPlayer, SIZE_AMMO_AR2, "AR2"))
+		CHL2MP_Player* pMPPlayer = dynamic_cast<CHL2MP_Player*>(pPlayer);
+		if (pMPPlayer && pMPPlayer->checkMod(DEX) >= 0 && ITEM_GiveAmmo(pPlayer, SIZE_AMMO_AR2, "AR2"))
 		{
 			if ( g_pGameRules->ItemShouldRespawn( this ) == GR_ITEM_RESPAWN_NO )
 			{
@@ -226,7 +228,8 @@ public:
 	}
 	bool MyTouch( CBasePlayer *pPlayer )
 	{
-		if (ITEM_GiveAmmo( pPlayer, SIZE_AMMO_AR2_LARGE, "AR2"))
+		CHL2MP_Player* pMPPlayer = dynamic_cast<CHL2MP_Player*>(pPlayer);
+		if (pMPPlayer && pMPPlayer->checkMod(DEX) >= 0 && ITEM_GiveAmmo(pPlayer, SIZE_AMMO_AR2_LARGE, "AR2"))
 		{
 			if ( g_pGameRules->ItemShouldRespawn( this ) == GR_ITEM_RESPAWN_NO )
 			{
@@ -262,7 +265,8 @@ public:
 
 	bool MyTouch( CBasePlayer *pPlayer )
 	{
-		if (ITEM_GiveAmmo( pPlayer, SIZE_AMMO_357, "357"))
+		CHL2MP_Player* pMPPlayer = dynamic_cast<CHL2MP_Player*>(pPlayer);
+		if (pMPPlayer && pMPPlayer->checkMod(DEX) >= 1 && ITEM_GiveAmmo(pPlayer, SIZE_AMMO_357, "357"))
 		{
 			if ( g_pGameRules->ItemShouldRespawn( this ) == GR_ITEM_RESPAWN_NO )
 			{
@@ -297,7 +301,8 @@ public:
 
 	bool MyTouch( CBasePlayer *pPlayer )
 	{
-		if (ITEM_GiveAmmo( pPlayer, SIZE_AMMO_357_LARGE, "357"))
+		CHL2MP_Player* pMPPlayer = dynamic_cast<CHL2MP_Player*>(pPlayer);
+		if (pMPPlayer && pMPPlayer->checkMod(DEX) >= 1 && ITEM_GiveAmmo(pPlayer, SIZE_AMMO_357_LARGE, "357"))
 		{
 			if ( g_pGameRules->ItemShouldRespawn( this ) == GR_ITEM_RESPAWN_NO )
 			{
@@ -333,7 +338,8 @@ public:
 
 	bool MyTouch( CBasePlayer *pPlayer )
 	{
-		if (ITEM_GiveAmmo( pPlayer, SIZE_AMMO_CROSSBOW, "XBowBolt" ))
+		CHL2MP_Player* pMPPlayer = dynamic_cast<CHL2MP_Player*>(pPlayer);
+		if (pMPPlayer && pMPPlayer->checkMod(DEX) >= 2 && ITEM_GiveAmmo(pPlayer, SIZE_AMMO_CROSSBOW, "XBowBolt"))
 		{
 			if ( g_pGameRules->ItemShouldRespawn( this ) == GR_ITEM_RESPAWN_NO )
 			{
@@ -435,7 +441,8 @@ public:
 	}
 	bool MyTouch( CBasePlayer *pPlayer )
 	{
-		if (ITEM_GiveAmmo( pPlayer, SIZE_AMMO_RPG_ROUND, "RPG_Round"))
+		CHL2MP_Player* pMPPlayer = dynamic_cast<CHL2MP_Player*>(pPlayer);
+		if (pMPPlayer && pMPPlayer->checkMod(STR) >= 2 && ITEM_GiveAmmo(pPlayer, SIZE_AMMO_RPG_ROUND, "RPG_Round"))
 		{
 			if ( g_pGameRules->ItemShouldRespawn( this ) == GR_ITEM_RESPAWN_NO )
 			{
@@ -469,7 +476,8 @@ public:
 	}
 	bool MyTouch( CBasePlayer *pPlayer )
 	{
-		if (ITEM_GiveAmmo( pPlayer, SIZE_AMMO_SMG1_GRENADE, "SMG1_Grenade"))
+		CHL2MP_Player* pMPPlayer = dynamic_cast<CHL2MP_Player*>(pPlayer);
+		if (pMPPlayer && pMPPlayer->checkMod(STR) >= 0 && pMPPlayer->checkMod(INT) >= 1 && ITEM_GiveAmmo(pPlayer, SIZE_AMMO_SMG1_GRENADE, "SMG1_Grenade"))
 		{
 			if ( g_pGameRules->ItemShouldRespawn( this ) == GR_ITEM_RESPAWN_NO )
 			{
@@ -539,7 +547,8 @@ public:
 	}
 	bool MyTouch( CBasePlayer *pPlayer )
 	{
-		if (ITEM_GiveAmmo( pPlayer, SIZE_AMMO_BUCKSHOT, "Buckshot"))
+		CHL2MP_Player* pMPPlayer = dynamic_cast<CHL2MP_Player*>(pPlayer);
+		if (pMPPlayer && pMPPlayer->checkMod(STR) >= 1 && ITEM_GiveAmmo(pPlayer, SIZE_AMMO_BUCKSHOT, "Buckshot"))
 		{
 			if ( g_pGameRules->ItemShouldRespawn( this ) == GR_ITEM_RESPAWN_NO )
 			{
@@ -575,7 +584,8 @@ public:
 
 	bool MyTouch( CBasePlayer *pPlayer )
 	{
-		if (ITEM_GiveAmmo( pPlayer, SIZE_AMMO_AR2_ALTFIRE, "AR2AltFire" ) )
+		CHL2MP_Player* pMPPlayer = dynamic_cast<CHL2MP_Player*>(pPlayer);
+		if (pMPPlayer && pMPPlayer->checkMod(DEX) >= 0 && pMPPlayer->checkMod(INT) >= 2 && ITEM_GiveAmmo(pPlayer, SIZE_AMMO_AR2_ALTFIRE, "AR2AltFire"))
 		{
 			if ( g_pGameRules->ItemShouldRespawn( this ) == GR_ITEM_RESPAWN_NO )
 			{

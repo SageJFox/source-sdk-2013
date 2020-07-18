@@ -1899,55 +1899,36 @@ void CWeaponPhysCannon::PrimaryAttack( void )
 				return;
 			}
 		}
-#ifdef CLIENT_DLL
-		C_HL2MP_Player* pPlayerStats = dynamic_cast<C_HL2MP_Player*>(pOwner);
-#else
-		CHL2MP_Player* pPlayerStats = dynamic_cast<CHL2MP_Player*>(pOwner);
-#endif // CLIENT_DLL
-		float added = 0.0f;
-		if (pPlayerStats)
-		{
-			added = MAXFORCE_SCALE * float(pPlayerStats->checkMod(STR));
-		}
-		float flForceMax;
-		physcannon_hl2mode.GetBool() ? flForceMax = physcannon_maxforce.GetFloat() : flForceMax = hands_maxforce.GetFloat() + added;
 #ifndef CLIENT_DLL
 		//drain some serious energy if we just threw an object that's too heavy for us normally
 		if (!physcannon_hl2mode.GetBool())
 		{
-			CHL2MP_Player *pOwner = (CHL2MP_Player *)ToBasePlayer(GetOwner());
-			float added = 0.0f;
-			if (pOwner)
+			CHL2MP_Player* pPlayerStats = dynamic_cast<CHL2MP_Player*>(pOwner);
+			
+			if (pPlayerStats)
 			{
-				CHL2MP_Player* pPlayerStats = dynamic_cast<CHL2MP_Player*>(pOwner);
+				float added;// = MAXFORCE_SCALE * float(pPlayerStats->checkMod(STR));
+				//float flForceMax = hands_maxforce.GetFloat() + added;
+				int strMod = pPlayerStats->checkMod(STR);
+				(strMod > 0) ? added = MAXMASS_SCALE_POSITIVE * float(strMod) : added =  MAXMASS_SCALE_NEGATIVE * float(strMod);
+				float maxMass = MAX(0.0f, hands_maxmass.GetFloat() + added);
 
-				if (pPlayerStats)
-				{
-					int strMod = pPlayerStats->checkMod(STR);
-					strMod > 0 ? added = MAXMASS_SCALE_POSITIVE * float(strMod) : added = max(-hands_maxmass.GetFloat(), MAXMASS_SCALE_NEGATIVE * float(strMod));
-				}
-			}
-			float maxMass = hands_maxmass.GetFloat() + added;
-
-			CHL2_Player* pOwnerSuit = dynamic_cast<CHL2_Player*>(pOwner);
-			float flDrainRatePercentage = 1.0f - ((maxMass * MAX_LIFT_MULTIPLIER - PhysGetEntityMass(pHeld)) / maxMass);
-			if (pOwnerSuit )
-			{
+				float flDrainRatePercentage = 1.0f - ((maxMass * MAX_LIFT_MULTIPLIER - PhysGetEntityMass(pHeld)) / maxMass);
 				CSuitPowerDevice SuitDeviceLift(bits_SUIT_DEVICE_LIFT, MAX_LIFT_DRAIN * flDrainRatePercentage);
-				if (pOwnerSuit->SuitPower_IsDeviceActive(SuitDeviceLift))
+				if (pPlayerStats->SuitPower_IsDeviceActive(SuitDeviceLift))
 				{
-					pOwnerSuit->SuitPower_RemoveDevice(SuitDeviceLift);
+					pPlayerStats->SuitPower_RemoveDevice(SuitDeviceLift);
 					//if we're lacking in power for this throw, scale its force down
-					float flSuitPowerRemaining = max(0.01f,min(1.0f,abs(pOwnerSuit->SuitPower_GetCurrentPercentage() / (MAX_LIFT_DRAIN * flDrainRatePercentage * -3.0f))));
-					//DevMsg("Suit Power Remaining is %.2f (%.2f/%.2f)\n", flSuitPowerRemaining, pOwnerSuit->SuitPower_GetCurrentPercentage(), (MAX_LIFT_DRAIN * flDrainRatePercentage * -3.0f));
-					pOwnerSuit->SuitPower_Drain(MAX_LIFT_DRAIN * flDrainRatePercentage * -3.0f); //3seconds of power usage for this object
+					float flSuitPowerRemaining = max(0.01f, min(1.0f, abs(pPlayerStats->SuitPower_GetCurrentPercentage() / (MAX_LIFT_DRAIN * flDrainRatePercentage * -3.0f))));
+					pPlayerStats->SuitPower_Drain(MAX_LIFT_DRAIN * flDrainRatePercentage * -3.0f); //3seconds of power usage for this object
 					LaunchObject(forward, /*flForceMax * */flSuitPowerRemaining);
 				}
-				else LaunchObject(forward, 1.0f /*flForceMax*/);
+				else
+					LaunchObject(forward, 1.0f /*flForceMax*/);
 			}
 		}
 		else
-			LaunchObject(forward, flForceMax);
+			LaunchObject(forward, physcannon_maxforce.GetFloat());
 #endif // !CLIENT_DLL
 
 		PrimaryFireEffect();
@@ -2054,27 +2035,22 @@ void CWeaponPhysCannon::SecondaryAttack( void )
 		//deactivate the suit device, if it exists
 		if (!physcannon_hl2mode.GetBool())
 		{
-			float added = 0.0f;
-			if (pOwner)
+			CHL2MP_Player* pPlayerStats = dynamic_cast<CHL2MP_Player*>(pOwner);
+			if (pPlayerStats)
 			{
-				CHL2MP_Player* pPlayerStats = dynamic_cast<CHL2MP_Player*>(pOwner);
+				float added = 0.0f;
+				int strMod = pPlayerStats->checkMod(STR);
+				strMod > 0 ? added = MAXMASS_SCALE_POSITIVE * float(strMod) : added = max(-hands_maxmass.GetFloat(), MAXMASS_SCALE_NEGATIVE * float(strMod));
 
-				if (pPlayerStats)
+				float maxMass = hands_maxmass.GetFloat() + added;
+
+				//CHL2MP_Player* pOwnerSuit = dynamic_cast<CHL2MP_Player*>(pOwner);
+				float flDrainRatePercentage = 1.0f - ((maxMass * MAX_LIFT_MULTIPLIER - PhysGetEntityMass(m_hAttachedObject)) / maxMass);
+				if (CBasePlayer::CanPickupObject(m_hAttachedObject, maxMass * MAX_LIFT_MULTIPLIER, 0))
 				{
-					int strMod = pPlayerStats->checkMod(STR);
-					strMod > 0 ? added = MAXMASS_SCALE_POSITIVE * float(strMod) : added = max(-hands_maxmass.GetFloat(), MAXMASS_SCALE_NEGATIVE * float(strMod));
+					CSuitPowerDevice SuitDeviceLift(bits_SUIT_DEVICE_LIFT, MAX_LIFT_DRAIN * flDrainRatePercentage);
+					pPlayerStats->SuitPower_RemoveDevice(SuitDeviceLift);
 				}
-			}
-			float maxMass = hands_maxmass.GetFloat() + added;
-
-			CHL2_Player* pOwnerSuit = dynamic_cast<CHL2_Player*>(pOwner);
-			float flDrainRatePercentage = 1.0f - ((maxMass * MAX_LIFT_MULTIPLIER - PhysGetEntityMass(m_hAttachedObject)) / maxMass);
-			if (pOwnerSuit
-				//&& !CBasePlayer::CanPickupObject(m_hAttachedObject, maxMass, 0) //we can't lift this normally, but we could lift it at our pick up scale
-				&& CBasePlayer::CanPickupObject(m_hAttachedObject, maxMass * MAX_LIFT_MULTIPLIER, 0))
-			{
-				CSuitPowerDevice SuitDeviceLift(bits_SUIT_DEVICE_LIFT, MAX_LIFT_DRAIN * flDrainRatePercentage);
-				pOwnerSuit->SuitPower_RemoveDevice(SuitDeviceLift);
 			}
 		}
 		DetachObject();
@@ -2188,27 +2164,16 @@ bool CWeaponPhysCannon::AttachObject( CBaseEntity *pObject, const Vector &vPosit
 		if (!physcannon_hl2mode.GetBool())
 		{
 			float added = 0.0f;
-			if (pOwner)
-			{
-				CHL2MP_Player* pPlayerStats = dynamic_cast<CHL2MP_Player*>(pOwner);
-
-				if (pPlayerStats)
-				{
-					int strMod = pPlayerStats->checkMod(STR);
-					strMod > 0 ? added = MAXMASS_SCALE_POSITIVE * float(strMod) : added = max(-hands_maxmass.GetFloat(), MAXMASS_SCALE_NEGATIVE * float(strMod));
-				}
-			}
-			float maxMass = hands_maxmass.GetFloat() + added;
-			
-			CHL2_Player* pOwnerSuit = dynamic_cast<CHL2_Player*>(pOwner);
+			int strMod = pOwner->checkMod(STR);
+			strMod > 0 ? added = MAXMASS_SCALE_POSITIVE * float(strMod) : added = MAXMASS_SCALE_NEGATIVE * float(strMod);
+			float maxMass = MAX(0.0f, hands_maxmass.GetFloat() + added);
 			float flDrainRatePercentage = 1.0f - ((maxMass * MAX_LIFT_MULTIPLIER - PhysGetEntityMass(pObject)) / maxMass);
-			if (pOwnerSuit
-			&& !CBasePlayer::CanPickupObject(pObject, maxMass, 0) //we can't lift this normally, but...
+			if (!CBasePlayer::CanPickupObject(pObject, maxMass, 0) //we can't lift this normally, but...
 			//we CAN lift it at our pick up scale (and have the suit power to do so for at least a second)
-			&& (CBasePlayer::CanPickupObject(pObject, maxMass * MAX_LIFT_MULTIPLIER, 0) && pOwnerSuit->SuitPower_GetCurrentPercentage() >= MAX_LIFT_DRAIN * flDrainRatePercentage))
+			&& (CBasePlayer::CanPickupObject(pObject, maxMass * MAX_LIFT_MULTIPLIER, 0) && pOwner->SuitPower_GetCurrentPercentage() >= MAX_LIFT_DRAIN * flDrainRatePercentage))
 			{
 				CSuitPowerDevice SuitDeviceLift(bits_SUIT_DEVICE_LIFT, MAX_LIFT_DRAIN * flDrainRatePercentage);
-				pOwnerSuit->SuitPower_AddDevice(SuitDeviceLift);
+				pOwner->SuitPower_AddDevice(SuitDeviceLift);
 			}
 		}
 		// NOTE: This can change the mass; so it must be done before max speed setting
@@ -2564,39 +2529,24 @@ void CWeaponPhysCannon::UpdateObject( void )
 	//Check if we've run out of energy while lifting a heavy object
 	if (!physcannon_hl2mode.GetBool())
 	{
-		float added = 0.0f;
-		CBasePlayer *pOwner = ToBasePlayer(GetOwner());
-		CHL2_Player* pOwnerSuit = dynamic_cast<CHL2_Player*>(pOwner);
-		if (pOwner)
+		CHL2MP_Player *pOwner = (CHL2MP_Player*)ToBasePlayer(GetOwner());
+		if (pOwner && pOwner->SuitPower_GetCurrentPercentage() <= 0.01f) //suit power's drained
 		{
-			if (pOwnerSuit && pOwnerSuit->SuitPower_GetCurrentPercentage() <= 0.01f) //suit power's drained
+			float added = 0.0f;
+			int strMod = pOwner->checkMod(STR);
+			strMod > 0 ? added = MAXMASS_SCALE_POSITIVE * float(strMod) : added = max(-hands_maxmass.GetFloat(), MAXMASS_SCALE_NEGATIVE * float(strMod));
+
+			float maxMass = hands_maxmass.GetFloat() + added;
+
+			float flDrainRatePercentage = 1.0f - ((maxMass * MAX_LIFT_MULTIPLIER - PhysGetEntityMass(m_hAttachedObject)) / maxMass);
+			CSuitPowerDevice SuitDeviceLift(bits_SUIT_DEVICE_LIFT, MAX_LIFT_DRAIN * flDrainRatePercentage);
+			if (pOwner->SuitPower_IsDeviceActive(SuitDeviceLift))
 			{
-				CHL2MP_Player* pPlayerStats = dynamic_cast<CHL2MP_Player*>(pOwner);
-
-
-				if (pPlayerStats)
-				{
-					int strMod = pPlayerStats->checkMod(STR);
-					strMod > 0 ? added = MAXMASS_SCALE_POSITIVE * float(strMod) : added = max(-hands_maxmass.GetFloat(), MAXMASS_SCALE_NEGATIVE * float(strMod));
-				}
-				float maxMass = hands_maxmass.GetFloat() + added;
-
-
-				float flDrainRatePercentage = 1.0f - ((maxMass * MAX_LIFT_MULTIPLIER - PhysGetEntityMass(m_hAttachedObject)) / maxMass);
-				CSuitPowerDevice SuitDeviceLift(bits_SUIT_DEVICE_LIFT, MAX_LIFT_DRAIN * flDrainRatePercentage);
-				if (pOwnerSuit->SuitPower_IsDeviceActive(SuitDeviceLift))
-				{
-					pOwnerSuit->SuitPower_RemoveDevice(SuitDeviceLift);
-					DetachObject();
-					return;
-				}
-				else return;
+				pOwner->SuitPower_RemoveDevice(SuitDeviceLift);
+				DetachObject();
 			}
-			else return;
 		}
-		else return;
 	}
-	else return;
 #endif // !CLIENT_DLL
 }
 
@@ -3040,31 +2990,26 @@ bool CWeaponPhysCannon::CanPickupObject( CBaseEntity *pTarget , float flPickupSc
 	{
 		return (CBasePlayer::CanPickupObject( pTarget, 0, 0 ) & physcannon_hl2mode.GetBool());
 	}
-	float added = 0.0f;
-	if (pOwner)
-	{
-		CHL2MP_Player* pPlayerStats = dynamic_cast<CHL2MP_Player*>(pOwner);
-
-		if (pPlayerStats)
-		{
-			int strMod = pPlayerStats->checkMod(STR);
-			strMod > 0 ? added = MAXMASS_SCALE_POSITIVE * float(strMod) : added = max(-hands_maxmass.GetFloat(), MAXMASS_SCALE_NEGATIVE * float(strMod));
-		}
-	}
-	float maxMass;
-	physcannon_hl2mode.GetBool() ? maxMass = physcannon_maxmass.GetFloat() : maxMass = hands_maxmass.GetFloat() + added;
 	//enable lifting up to flPickupScale our max strenth
 	if (!physcannon_hl2mode.GetBool())
 	{
-		CHL2_Player* pOwnerSuit = dynamic_cast<CHL2_Player*>(pOwner);
-		float flDrainRatePercentage = 1.0f - ((maxMass * flPickupScale - PhysGetEntityMass(pTarget)) / maxMass);
-		if (pOwnerSuit
-		&& !CBasePlayer::CanPickupObject(pTarget, maxMass, 0) //we can't lift this normally, but...
-		//we CAN lift it at our pick up scale (and have the suit power to do so for at least a second)
-		&& (CBasePlayer::CanPickupObject(pTarget, maxMass * flPickupScale, 0) && pOwnerSuit->SuitPower_GetCurrentPercentage() >= MAX_LIFT_DRAIN * flDrainRatePercentage))
-			return true;
+		CHL2MP_Player* pPlayerStats = dynamic_cast<CHL2MP_Player*>(pOwner);
+		if (pPlayerStats)
+		{
+			float added = 0.0f;
+			int strMod = pPlayerStats->checkMod(STR);
+			strMod > 0 ? added = MAXMASS_SCALE_POSITIVE * float(strMod) : added = MAXMASS_SCALE_NEGATIVE * float(strMod);
+			float maxMass = MAX(0.0f, hands_maxmass.GetFloat() + added);
+			float flDrainRatePercentage = 1.0f - ((maxMass * flPickupScale - PhysGetEntityMass(pTarget)) / maxMass);
+			if (!CBasePlayer::CanPickupObject(pTarget, maxMass, 0) //we can't lift this normally, but...
+				//we CAN lift it at our pick up scale (and have the suit power to do so for at least a second)
+				&& (CBasePlayer::CanPickupObject(pTarget, maxMass * flPickupScale, 0) && pPlayerStats->SuitPower_GetCurrentPercentage() >= MAX_LIFT_DRAIN * flDrainRatePercentage))
+				return true;
+			else
+				return CBasePlayer::CanPickupObject(pTarget, maxMass, 0);
+		}
 	}
-	return CBasePlayer::CanPickupObject( pTarget, maxMass, 0 );
+	return CBasePlayer::CanPickupObject(pTarget, physcannon_maxmass.GetFloat(), 0);
 #else
 	return false;
 #endif
