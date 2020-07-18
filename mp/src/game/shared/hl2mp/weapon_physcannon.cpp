@@ -2027,7 +2027,7 @@ void CWeaponPhysCannon::SecondaryAttack( void )
 		return;
 
 	// See if we should drop a held item
-	if ( ( m_bActive ) && ( pOwner->m_afButtonPressed & IN_ATTACK2 ) )
+	if ((m_bActive) && ((pOwner->m_afButtonPressed & IN_ATTACK2) || (pOwner->m_afButtonPressed & IN_USE)))
 	{
 		// Drop the held object
 		m_flNextPrimaryAttack = gpGlobals->curtime + 0.5;

@@ -60,6 +60,7 @@ extern CBaseEntity *FindPickerEntity( CBasePlayer *pPlayer );
 ConVar g_debug_doors( "g_debug_doors", "0" );
 ConVar breakable_disable_gib_limit( "breakable_disable_gib_limit", "0" );
 ConVar breakable_multiplayer( "breakable_multiplayer", "1" );
+extern ConVar physcannon_hl2mode;
 
 // AI Interaction for being hit by a physics object
 int g_interactionHitByPlayerThrownPhysObj = 0;
@@ -455,13 +456,13 @@ void CBreakableProp::HandleFirstCollisionInteractions( int index, gamevcollision
 {
 	if ( pEvent->pEntities[ !index ]->IsWorld() )
 	{
-		if ( HasInteraction( PROPINTER_PHYSGUN_WORLD_STICK ) )
+		if (HasInteraction(PROPINTER_PHYSGUN_WORLD_STICK) && physcannon_hl2mode.GetBool())
 		{
 			HandleInteractionStick( index, pEvent );
 		}
 	}
 
-	if( HasInteraction( PROPINTER_PHYSGUN_FIRST_BREAK ) )
+	if( HasInteraction( PROPINTER_PHYSGUN_FIRST_BREAK ) && physcannon_hl2mode.GetBool())
 	{
 		// Looks like it's best to break by having the object damage itself. 
 		CTakeDamageInfo info;
@@ -484,7 +485,7 @@ void CBreakableProp::HandleFirstCollisionInteractions( int index, gamevcollision
 		return;
 	}
 	
-	if( HasInteraction( PROPINTER_PHYSGUN_FIRST_PAINT ) )
+	if (HasInteraction(PROPINTER_PHYSGUN_FIRST_PAINT) && physcannon_hl2mode.GetBool())
 	{
 		IPhysicsObject *pObj = VPhysicsGetObject();
  
@@ -524,7 +525,7 @@ void CBreakableProp::HandleFirstCollisionInteractions( int index, gamevcollision
 		}
 	}
 
-	if ( HasInteraction( PROPINTER_PHYSGUN_NOTIFY_CHILDREN ) )
+	if (HasInteraction(PROPINTER_PHYSGUN_NOTIFY_CHILDREN) && physcannon_hl2mode.GetBool())
 	{
 		CUtlVector<CBaseEntity *> children;
 		GetAllChildren( this, children );
@@ -558,7 +559,7 @@ void CBreakableProp::CheckRemoveRagdolls()
 void CPhysicsProp::HandleAnyCollisionInteractions( int index, gamevcollisionevent_t *pEvent )
 {
 	// If we're supposed to impale, and we've hit an NPC, impale it
-	if ( HasInteraction( PROPINTER_PHYSGUN_FIRST_IMPALE ) )
+	if (HasInteraction(PROPINTER_PHYSGUN_FIRST_IMPALE) && physcannon_hl2mode.GetBool())
 	{
 		Vector vel = pEvent->preVelocity[index];
 
@@ -1440,7 +1441,7 @@ void CBreakableProp::OnPhysGunPickup( CBasePlayer *pPhysGunUser, PhysGunPickup_t
 		SetContextThink( &CBreakableProp::RampToDefaultFadeScale, gpGlobals->curtime + 2.0f, s_pFadeScaleThink );
 	}
 
-	if( reason == PUNTED_BY_CANNON )
+	if (reason == PUNTED_BY_CANNON )
 	{
 		PlayPuntSound(); 
 	}
@@ -1517,7 +1518,7 @@ void CBreakableProp::OnPhysGunDrop( CBasePlayer *pPhysGunUser, PhysGunDrop_t Rea
 
 	SetPhysicsAttacker( pPhysGunUser, gpGlobals->curtime );
 
-	if( (int)Reason == (int)PUNTED_BY_CANNON )
+	if ((int)Reason == (int)PUNTED_BY_CANNON )
 	{
 		PlayPuntSound(); 
 	}
@@ -1530,7 +1531,7 @@ void CBreakableProp::OnPhysGunDrop( CBasePlayer *pPhysGunUser, PhysGunDrop_t Rea
 //-----------------------------------------------------------------------------
 AngularImpulse CBreakableProp::PhysGunLaunchAngularImpulse()
 {
-	if( HasInteraction( PROPINTER_PHYSGUN_LAUNCH_SPIN_NONE ) || HasInteraction( PROPINTER_PHYSGUN_LAUNCH_SPIN_Z ) )
+	if ((HasInteraction(PROPINTER_PHYSGUN_LAUNCH_SPIN_NONE) || HasInteraction(PROPINTER_PHYSGUN_LAUNCH_SPIN_Z)) || !physcannon_hl2mode.GetBool())
 	{
 		// Don't add in random angular impulse if this object is supposed to spin in a specific way.
 		AngularImpulse ang( 0, 0, 0 );
@@ -1570,6 +1571,9 @@ void CBreakableProp::PlayPuntSound()
 		return;
 
 	if( m_iszPuntSound == NULL_STRING )
+		return;
+
+	if (!physcannon_hl2mode.GetBool())
 		return;
 
 	EmitSound( STRING(m_iszPuntSound) );
@@ -1775,7 +1779,7 @@ void CBreakableProp::Break( CBaseEntity *pBreaker, const CTakeDamageInfo &info )
 		PropBreakableCreateAll( GetModelIndex(), pPhysics, params, this, -1, ( m_PerformanceMode == PM_FULL_GIBS ) );
 	}
 
-	if( HasInteraction( PROPINTER_PHYSGUN_BREAK_EXPLODE ) )
+	if (HasInteraction(PROPINTER_PHYSGUN_BREAK_EXPLODE) && physcannon_hl2mode.GetBool())
 	{
 		if ( bExploded == false )
 		{
@@ -2594,7 +2598,7 @@ bool CPhysicsProp::CreateVPhysics()
 	}
 
 	// fix up any noncompliant blades.
-	if( HasInteraction( PROPINTER_PHYSGUN_LAUNCH_SPIN_Z ) )
+	if (HasInteraction(PROPINTER_PHYSGUN_LAUNCH_SPIN_Z) && physcannon_hl2mode.GetBool())
 	{
 		if( !(VPhysicsGetObject()->GetGameFlags() & FVPHYSICS_DMG_SLICE) )
 		{
@@ -2774,7 +2778,7 @@ void CPhysicsProp::OnPhysGunDrop( CBasePlayer *pPhysGunUser, PhysGunDrop_t Reaso
 {
 	BaseClass::OnPhysGunDrop( pPhysGunUser, Reason );
 
-	if ( Reason == LAUNCHED_BY_CANNON )
+	if (Reason == LAUNCHED_BY_CANNON  && physcannon_hl2mode.GetBool())
 	{
 		if ( HasInteraction( PROPINTER_PHYSGUN_LAUNCH_SPIN_Z ) )
 		{

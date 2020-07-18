@@ -178,13 +178,14 @@ void CHL2MP_Player::GiveAllItems( void )
 	CBasePlayer::GiveAmmo( 255,	"AR2" );
 	CBasePlayer::GiveAmmo( 5,	"AR2AltFire" );
 	CBasePlayer::GiveAmmo( 255,	"SMG1");
-	CBasePlayer::GiveAmmo( 1,	"smg1_grenade");
+	CBasePlayer::GiveAmmo( 3,	"smg1_grenade");
 	CBasePlayer::GiveAmmo( 255,	"Buckshot");
 	CBasePlayer::GiveAmmo( 32,	"357" );
 	CBasePlayer::GiveAmmo( 3,	"rpg_round");
-
-	CBasePlayer::GiveAmmo( 1,	"grenade" );
-	CBasePlayer::GiveAmmo( 2,	"slam" );
+	CBasePlayer::GiveAmmo( 30,	"xbowbolt");
+	CBasePlayer::GiveAmmo( 5,	"grenade" );
+	CBasePlayer::GiveAmmo( 5,	"slam" );
+	CBasePlayer::GiveAmmo(30,	"healthkit" );
 
 	GiveNamedItem( "weapon_crowbar" );
 	GiveNamedItem( "weapon_stunstick" );
@@ -204,7 +205,9 @@ void CHL2MP_Player::GiveAllItems( void )
 	GiveNamedItem( "weapon_slam" );
 
 	GiveNamedItem( "weapon_physcannon" );
-	
+
+	GiveNamedItem( "weapon_healthkit" );
+	GiveNamedItem( "weapon_bugbait" );
 }
 
 void CHL2MP_Player::GiveDefaultItems( void )
@@ -349,11 +352,49 @@ void CHL2MP_Player::Spawn(void)
 	SetPlayerUnderwater(false);
 
 	m_bReady = false;
+
+	for (int i = 0; i < STAT_COUNT; i++) //flush stats to reset effect
+	{
+		addToStatBase(i, 1);
+		addToStatBase(i, -1);
+	}
 }
 
 void CHL2MP_Player::PickupObject( CBaseEntity *pObject, bool bLimitMassAndSize )
 {
-	
+	/*
+	CBaseCombatWeapon* pPhyscannon = Weapon_OwnsThisType("weapon_physcannon");
+
+	if (Weapon_CanSwitchTo(pPhyscannon) || GetActiveWeapon() == pPhyscannon)
+	{
+		if (GetActiveWeapon() != pPhyscannon) Weapon_Switch(pPhyscannon);
+		pPhyscannon->SecondaryAttack();
+	}
+	return;*/
+}
+extern ConVar physcannon_hl2mode;
+void CHL2MP_Player::PlayerUse(void)
+{
+	if (!physcannon_hl2mode.GetBool())
+	{
+		// Was use pressed or released?
+		if (!((m_nButtons | m_afButtonPressed | m_afButtonReleased) & IN_USE))
+			return;
+		//CBaseEntity* pEntity = //TODO: need a way to tell that we're looking at a physics prop so we don't switch to physcannon on every +USE!
+		if ((m_afButtonPressed & IN_USE) /*&& pEntity && CanPickupObject(pEntity, 0, 0)*/)
+		{
+			CBaseCombatWeapon* pPhyscannon = Weapon_OwnsThisType("weapon_physcannon");
+			if (Weapon_CanSwitchTo(pPhyscannon) || GetActiveWeapon() == pPhyscannon)
+			{
+				if (GetActiveWeapon() != pPhyscannon) Weapon_Switch(pPhyscannon);
+				pPhyscannon->SecondaryAttack();
+			}
+			//else
+				BaseClass::PlayerUse();
+		}
+	}
+	else
+		BaseClass::PlayerUse();
 }
 
 bool CHL2MP_Player::ValidatePlayerModel( const char *pModel )
