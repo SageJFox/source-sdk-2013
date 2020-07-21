@@ -373,6 +373,7 @@ void CHL2MP_Player::PickupObject( CBaseEntity *pObject, bool bLimitMassAndSize )
 	return;*/
 }
 extern ConVar physcannon_hl2mode;
+extern ConVar hands_tracelength;
 void CHL2MP_Player::PlayerUse(void)
 {
 	if (!physcannon_hl2mode.GetBool())
@@ -380,18 +381,72 @@ void CHL2MP_Player::PlayerUse(void)
 		// Was use pressed or released?
 		if (!((m_nButtons | m_afButtonPressed | m_afButtonReleased) & IN_USE))
 			return;
-		//CBaseEntity* pEntity = //TODO: need a way to tell that we're looking at a physics prop so we don't switch to physcannon on every +USE!
-		if ((m_afButtonPressed & IN_USE) /*&& pEntity && CanPickupObject(pEntity, 0, 0)*/)
+
+		if ((m_afButtonPressed & IN_USE))
 		{
+			// this should drop our held object if we have one (as the following checks don't pick it up)
 			CBaseCombatWeapon* pPhyscannon = Weapon_OwnsThisType("weapon_physcannon");
-			if (Weapon_CanSwitchTo(pPhyscannon) || GetActiveWeapon() == pPhyscannon)
+			if (pPhyscannon)
 			{
-				if (GetActiveWeapon() != pPhyscannon) Weapon_Switch(pPhyscannon);
-				pPhyscannon->SecondaryAttack();
+				if (GetActiveWeapon() == pPhyscannon)
+					pPhyscannon->SecondaryAttack();
+
+				Vector forward, up;
+				EyeVectors(&forward, NULL, &up);
+				trace_t tr;
+				Vector searchCenter = EyePosition();
+				int useableContents = MASK_SOLID | CONTENTS_DEBRIS | CONTENTS_PLAYERCLIP;
+				UTIL_TraceLine(searchCenter, searchCenter + forward * hands_tracelength.GetFloat(), useableContents, this, COLLISION_GROUP_NONE, &tr);
+				CBaseEntity* pEntity = tr.m_pEnt;
+				if (pEntity)
+				{
+					// These don't seem to want to work, so we'll just not bother looking at them for now.
+					if (pEntity->MyNPCPointer() /*&&						//we're not an NPC, unless we're a physics based NPC (that can be safely picked up by hand)
+					!(pEntity->ClassMatches("npc_grenade_frag")
+					|| pEntity->ClassMatches("npc_turret_floor")
+					|| pEntity->ClassMatches("npc_cscanner")
+					|| pEntity->ClassMatches("npc_clawscanner")
+					)*/)
+					{
+						pEntity = NULL;
+					}
+					else if (pEntity->GetMoveType() == MOVETYPE_NONE ||
+						//our "exception" list, these are cases we want to pull the hands out for
+						!(
+						//Physics props not flagged "Prevent Pickup", or "Motion Disabled" *UNLESS* flagged "Enable Motion on Physcannon Grab" or "Generate output on +USE" (which seems to work for enabling motion too, per dm_lockdown?)
+						(pEntity->ClassMatches("prop_physics*") && (!pEntity->HasSpawnFlags(1 << 7) && (!pEntity->HasSpawnFlags(1 << 3) || pEntity->HasSpawnFlags(1 << 4) || pEntity->HasSpawnFlags(1 << 6))))
+						//weapons not flagged "Start Constrained"
+						|| (pEntity->ClassMatches("weapon_*") && !pEntity->HasSpawnFlags(1 << 0))
+						//items that are not HEV suit, not wall mounted chargers, and not flagged "Start Constrained"
+						|| (pEntity->ClassMatches("item_*") && !pEntity->ClassMatches("item_suit*") && !pEntity->ClassMatches("item_healthcharger") && !pEntity->HasSpawnFlags(1 << 0))
+						//TODO: Enable ragdoll pickup (not a rabbit hole I'm willing to go down at the moment)
+						//ragdolls not flagged "Motion Disabled"
+						//|| (pEntity->ClassMatches("prop_ragdoll") && !(pEntity->HasSpawnFlags(1 << 2))
+						//func_physbox not flagged "Ignore +USE for Pickup", "Motion Disabled", or "Physgun is NOT allowed to pick this up.", *UNLESS* flagged "Enable Motion on Physcannon Grab"
+						|| (pEntity->ClassMatches("func_physbox") && (!(pEntity->HasSpawnFlags(1 << 1) || pEntity->HasSpawnFlags(1 << 3) || pEntity->HasSpawnFlags(1 << 9)) || pEntity->HasSpawnFlags(1 << 5)))
+						//|| pEntity->ClassMatches("combine_mine")
+						|| pEntity->ClassMatches("physics_cannister")
+						))
+					{
+						pEntity = NULL;
+					}
+				}
+				if (!pEntity)
+				{
+					BaseClass::PlayerUse();
+					if (GetActiveWeapon() == pPhyscannon)
+						pPhyscannon->SecondaryAttack(); // this should drop our held object if we have one (as the previous checks don't pick it up), and shouldn't cause harm if we're not
+				}
+				else if (Weapon_CanSwitchTo(pPhyscannon) || GetActiveWeapon() == pPhyscannon)
+				{
+					if (GetActiveWeapon() != pPhyscannon)
+						Weapon_Switch(pPhyscannon);
+					pPhyscannon->SecondaryAttack();
+				}
 			}
-			//else
-				BaseClass::PlayerUse();
 		}
+		else
+			BaseClass::PlayerUse();
 	}
 	else
 		BaseClass::PlayerUse();

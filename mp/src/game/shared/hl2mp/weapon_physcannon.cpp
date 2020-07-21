@@ -546,6 +546,7 @@ void CGrabController::AttachEntity( CBasePlayer *pPlayer, CBaseEntity *pEntity, 
 
 	pPhys->Wake();
 	PhysSetGameFlags( pPhys, FVPHYSICS_PLAYER_HELD );
+
 	SetTargetPosition( position, angles );
 	m_attachedEntity = pEntity;
 	IPhysicsObject *pList[VPHYSICS_MAX_OBJECT_LIST_COUNT];
@@ -2257,14 +2258,17 @@ CWeaponPhysCannon::FindObjectResult_t CWeaponPhysCannon::FindObject( void )
 	// If we hit something, pick it up or pull it
 	if ( ( tr.fraction != 1.0f ) && ( tr.m_pEnt ) && ( tr.m_pEnt->IsWorld() == false ) )
 	{
-		// Attempt to attach if within range
-		if ( tr.fraction <= 0.25f )
+		if (physcannon_hl2mode.GetBool() || !(tr.m_pEnt->ClassMatches("func_physbox") && tr.m_pEnt->HasSpawnFlags(1 << 1))) //In HL2 mode, or not a func_physbox with spawnflag "Ignore +USE for Pickup"
 		{
-			bAttach = true;
-		}
-		else if ( tr.fraction > 0.25f )
-		{
-			bPull = true;
+			// Attempt to attach if within range
+			if (tr.fraction <= 0.25f)
+			{
+				bAttach = true;
+			}
+			else if (tr.fraction > 0.25f)
+			{
+				bPull = true;
+			}
 		}
 	}
 	
@@ -2282,14 +2286,18 @@ CWeaponPhysCannon::FindObjectResult_t CWeaponPhysCannon::FindObject( void )
 	{
 		pEntity = pConeEntity;
 
-		// If the object is near, grab it. Else, pull it a bit.
-		if ( pEntity->WorldSpaceCenter().DistToSqr( start ) <= (testLength * testLength) )
+		
+		if (physcannon_hl2mode.GetBool() || !(tr.m_pEnt->ClassMatches("func_physbox") && tr.m_pEnt->HasSpawnFlags(1 << 1))) //In HL2 mode, or not a func_physbox with spawnflag "Ignore +USE for Pickup"
 		{
-			bAttach = true;
-		}
-		else
-		{
-			bPull = true;
+			// If the object is near, grab it. Else, pull it a bit.
+			if (pEntity->WorldSpaceCenter().DistToSqr(start) <= (testLength * testLength))
+			{
+				bAttach = true;
+			}
+			else
+			{
+				bPull = true;
+			}
 		}
 	}
 	float liftMult = 1.0f;
