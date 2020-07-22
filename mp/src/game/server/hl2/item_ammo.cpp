@@ -550,7 +550,7 @@ public:
 	bool MyTouch( CBasePlayer *pPlayer )
 	{
 		CHL2MP_Player* pMPPlayer = dynamic_cast<CHL2MP_Player*>(pPlayer);
-		if (pMPPlayer && pMPPlayer->Weapon_OwnsThisType("weapon_shotgun") && ITEM_GiveAmmo(pPlayer, SIZE_AMMO_BUCKSHOT, "Buckshot"))
+		if (pMPPlayer && (pMPPlayer->Weapon_OwnsThisType("weapon_shotgun") || pMPPlayer->Weapon_OwnsThisType("weapon_dbshotgun")) && ITEM_GiveAmmo(pPlayer, SIZE_AMMO_BUCKSHOT, "Buckshot"))
 		{
 			if ( g_pGameRules->ItemShouldRespawn( this ) == GR_ITEM_RESPAWN_NO )
 			{

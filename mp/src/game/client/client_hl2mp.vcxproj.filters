@@ -3529,6 +3529,9 @@
     <ClCompile Include="repose\hud_stats.cpp">
       <Filter>Source Files\Repose\HUD</Filter>
     </ClCompile>
+    <ClCompile Include="..\shared\Repose\weapon_dbshotgun.cpp">
+      <Filter>Source Files\Repose</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <CustomBuild Include="..\..\public\tier0\pointeroverride.asm">

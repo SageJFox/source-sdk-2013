@@ -196,6 +196,7 @@ void CHL2MP_Player::GiveAllItems( void )
 	GiveNamedItem( "weapon_ar2" );
 	
 	GiveNamedItem( "weapon_shotgun" );
+	GiveNamedItem("weapon_dbshotgun");
 	GiveNamedItem( "weapon_frag" );
 	
 	GiveNamedItem( "weapon_crossbow" );
@@ -2102,6 +2103,8 @@ bool CHL2MP_Player::Weapon_CanUse(CBaseCombatWeapon *pWeapon)
 	else if (pWeapon->ClassMatches("weapon_ar2"))
 		(modifiers.Get(DEX) >= 0) ? ret = true : ret = false;
 	else if (pWeapon->ClassMatches("weapon_shotgun"))
+		(modifiers.Get(STR) >= 1) ? ret = true : ret = false;
+	else if (pWeapon->ClassMatches("weapon_dbshotgun"))
 		(modifiers.Get(STR) >= 1) ? ret = true : ret = false;
 	else if (pWeapon->ClassMatches("weapon_frag"))
 		(modifiers.Get(INT) >= 0) ? ret = true : ret = false;

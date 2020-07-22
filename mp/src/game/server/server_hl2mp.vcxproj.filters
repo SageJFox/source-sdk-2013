@@ -3583,6 +3583,9 @@
     <ClCompile Include="hl2\weapon_citizenpackage.cpp">
       <Filter>Source Files\Repose</Filter>
     </ClCompile>
+    <ClCompile Include="..\shared\Repose\weapon_dbshotgun.cpp">
+      <Filter>Source Files\Repose</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <CustomBuild Include="..\..\public\tier0\pointeroverride.asm">
