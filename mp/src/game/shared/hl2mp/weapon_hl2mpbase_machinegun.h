@@ -44,6 +44,9 @@ public:
 	// utility function
 	static void DoMachineGunKick( CBasePlayer *pPlayer, float dampEasy, float maxVerticleKickAngle, float fireDurationTime, float slideLimitTime );
 
+	virtual void	AddViewmodelBob(CBaseViewModel *viewmodel, Vector &origin, QAngle &angles);
+	virtual	float	CalcViewmodelBob(void);
+
 private:
 	
 	CHL2MPMachineGun( const CHL2MPMachineGun & );
