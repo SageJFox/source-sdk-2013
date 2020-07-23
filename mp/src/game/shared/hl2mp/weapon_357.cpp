@@ -127,7 +127,19 @@ void CWeapon357::PrimaryAttack( void )
 	Vector vecSrc		= pPlayer->Weapon_ShootPosition();
 	Vector vecAiming	= pPlayer->GetAutoaimVector( AUTOAIM_5DEGREES );	
 
-	FireBulletsInfo_t info( 1, vecSrc, vecAiming, vec3_origin, MAX_TRACE_LENGTH, m_iPrimaryAmmoType );
+	Vector vBulletSpread = vec3_origin;
+	CHL2MP_Player* pOwner = dynamic_cast<CHL2MP_Player*>(GetOwner());
+	if (pOwner)
+	{
+		float base = 3.0f; //3 degrees
+		int dex = pOwner->checkMod(DEX) - 1; // - 1 since we need at least a +1 mod to pick this up
+		base -= (float)dex / 2.0f;
+		base = Max(0.0f, base);
+		base = sin(DEG2RAD(base / 2.0f));
+		vBulletSpread = Vector(base, base, base);
+	}
+
+	FireBulletsInfo_t info( 1, vecSrc, vecAiming, vBulletSpread, MAX_TRACE_LENGTH, m_iPrimaryAmmoType );
 	info.m_pAttacker = pPlayer;
 
 	// Fire the bullets, and force the first shot to be perfectly accuracy

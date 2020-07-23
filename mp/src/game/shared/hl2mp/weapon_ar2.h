@@ -67,10 +67,17 @@ public:
 
 	virtual const Vector& GetBulletSpread( void )
 	{
-		static Vector cone;
-		
-		cone = VECTOR_CONE_3DEGREES;
-
+		static Vector cone = VECTOR_CONE_3DEGREES;
+		CHL2MP_Player* pOwner = dynamic_cast<CHL2MP_Player*>(GetOwner());
+		if (pOwner)
+		{
+			float base = 4.0f; //4 degrees
+			int dex = pOwner->checkMod(DEX);
+			base -= (float)dex / 2.0f;
+			base = Max(0.0f, base);
+			base = sin(DEG2RAD(base / 2.0f));
+			cone = Vector(base, base, base);
+		}
 		return cone;
 	}
 	

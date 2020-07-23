@@ -633,7 +633,23 @@ void CWeaponCrossbow::FireBolt( void )
 		return;
 
 #ifndef CLIENT_DLL
-	Vector vecAiming	= pOwner->GetAutoaimVector( 0 );	
+	Vector vecAiming	= pOwner->GetAutoaimVector( 0 );
+
+	CHL2MP_Player* pStats = dynamic_cast<CHL2MP_Player*>(pOwner);
+	Vector cone = Vector(0.0f, 0.0f, 0.0f);
+	if (pStats)
+	{
+		float base = 1.0f; //1 degree
+		int dex = pStats->checkMod(DEX) - 2;
+		base -= (float)dex / 5.0f;
+		base = Max(0.0f, base);
+		base = sin(DEG2RAD(base / 2.0f));
+		cone = Vector(RandomFloat(-base, base),
+			RandomFloat(-base, base),
+			RandomFloat(-base, base));
+	}
+	vecAiming += cone;
+
 	Vector vecSrc		= pOwner->Weapon_ShootPosition();
 
 	QAngle angAiming;

@@ -47,7 +47,19 @@ public:
 	virtual const Vector& GetBulletSpread( void )
 	{
 		static Vector cone = VECTOR_CONE_10DEGREES;
-		return cone;
+		CHL2MP_Player* pOwner = dynamic_cast<CHL2MP_Player*>(GetOwner());
+		if (pOwner)
+		{
+			float base = 10.0f; //10 degrees
+			int dex = pOwner->checkMod(DEX);
+			if (dex < 0)
+				dex *= 2;
+			base -= (float)dex;
+			base = Max(0.0f, base);
+			base = sin(DEG2RAD(base / 2.0f));
+			cone = Vector(base, base, base);
+		}
+			return cone;
 	}
 
 	virtual int				GetMinBurst() { return 1; }

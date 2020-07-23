@@ -437,8 +437,19 @@ void CWeaponFrag::ThrowGrenade( CBasePlayer *pPlayer )
 
 	Vector vecThrow;
 	pPlayer->GetVelocity( &vecThrow, NULL );
-	vecThrow += vForward * 1200;
-	CBaseGrenade *pGrenade = Fraggrenade_Create( vecSrc, vec3_angle, vecThrow, AngularImpulse(600,random->RandomInt(-1200,1200),0), pPlayer, GRENADE_TIMER, false );
+
+	CHL2MP_Player* pStats = dynamic_cast<CHL2MP_Player*>(pPlayer);
+	int iScale = 1200;
+	if (pStats)
+	{
+		iScale = 1000 + pStats->checkMod(STR) * 100;
+		if (pStats->checkMod(DEX) < 0)
+			vForward += Vector(0.0f,
+			sin(DEG2RAD(RandomFloat((float)pStats->checkMod(DEX), -(float)pStats->checkMod(DEX)) / 2.0f)),
+			sin(DEG2RAD(RandomFloat((float)pStats->checkMod(DEX), -(float)pStats->checkMod(DEX)) / 2.0f)));
+	}
+	vecThrow += vForward * iScale;
+	CBaseGrenade *pGrenade = Fraggrenade_Create( vecSrc, vec3_angle, vecThrow, AngularImpulse(iScale/2,random->RandomInt(-iScale,iScale),0), pPlayer, GRENADE_TIMER, false );
 
 	if ( pGrenade )
 	{

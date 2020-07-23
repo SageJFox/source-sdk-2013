@@ -69,9 +69,29 @@ public:
 											PISTOL_ACCURACY_MAXIMUM_PENALTY_TIME, 
 											0.0f, 
 											1.0f ); 
+		Vector vBestAccuracy = VECTOR_CONE_1DEGREES;
+		Vector vWorstAccuracy = VECTOR_CONE_6DEGREES;
+		CHL2MP_Player* pOwner = dynamic_cast<CHL2MP_Player*>(GetOwner());
+		if (pOwner)
+		{
+			float flBestBase = 2.0f; //2 degrees
+			float flWorstBase = 8.0f; //8 degrees
+			int dex = pOwner->checkMod(DEX);
+			if (dex < 0)
+				dex *= 2;
+			flBestBase -= (float)dex / 4.0f;
+			flBestBase = Max(0.0f, flBestBase);
+			flBestBase = sin(DEG2RAD(flBestBase / 2.0f));
+			
+			vBestAccuracy = Vector(flBestBase, flBestBase, flBestBase);
+			flWorstBase -= (float)dex;
+			flWorstBase = Max(flBestBase, flWorstBase);
+			flWorstBase = sin(DEG2RAD(flWorstBase / 2.0f));
+			vWorstAccuracy = Vector(flWorstBase, flWorstBase, flWorstBase);
+		}
 
 			// We lerp from very accurate to inaccurate over time
-		VectorLerp( VECTOR_CONE_1DEGREES, VECTOR_CONE_6DEGREES, ramp, cone );
+		VectorLerp( vBestAccuracy, vWorstAccuracy, ramp, cone );
 
 		return cone;
 	}

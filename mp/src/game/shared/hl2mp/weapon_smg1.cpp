@@ -59,8 +59,20 @@ public:
 
 	virtual const Vector& GetBulletSpread( void )
 	{
-		static const Vector cone = VECTOR_CONE_5DEGREES;
-		return cone;
+		static Vector cone = VECTOR_CONE_5DEGREES;
+		CHL2MP_Player* pOwner = dynamic_cast<CHL2MP_Player*>(GetOwner());
+		if (pOwner)
+		{
+			float base = 5.0f; //5 degrees
+			int dex = pOwner->checkMod(DEX);
+			if (dex < 0)
+				dex *= 4;
+			base -= (float)dex / 2.0f;
+			base = Max(0.0f, base);
+			base = sin(DEG2RAD(base / 2.0f));
+			cone = Vector(base, base, base);
+		}
+			return cone;
 	}
 
 	const WeaponProficiencyInfo_t *GetProficiencyValues();
