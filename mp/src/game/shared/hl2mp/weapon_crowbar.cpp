@@ -82,7 +82,14 @@ CWeaponCrowbar::CWeaponCrowbar( void )
 //-----------------------------------------------------------------------------
 float CWeaponCrowbar::GetDamageForActivity( Activity hitActivity )
 {
-	return 25.0f;
+	float flDamage = 25.0f;
+	CHL2MP_Player* pPlayer = dynamic_cast<CHL2MP_Player*>(GetOwner());
+	if (pPlayer)
+	{
+		int iSTRMod = pPlayer->checkMod(STR);
+		flDamage += (float)iSTRMod * (iSTRMod > 0 ? 3.0f : 4.0f);
+	}
+	return flDamage;
 }
 
 //-----------------------------------------------------------------------------

@@ -13,6 +13,7 @@
 #include "tier1/strtools.h"
 #include "buttons.h"
 #include "eventqueue.h"
+#include "hl2mp_player.h"
 
 // memdbgon must be the last include file in a .cpp file!!!
 #include "tier0/memdbgon.h"
@@ -45,6 +46,8 @@ BEGIN_DATADESC( CBaseButton )
 	DEFINE_FIELD( m_sNoise, FIELD_SOUNDNAME ),
 	DEFINE_FIELD( m_flUseLockedTime, FIELD_TIME ),
 	DEFINE_FIELD( m_bSolidBsp, FIELD_BOOLEAN ),
+	DEFINE_KEYFIELD( m_nStat, FIELD_INTEGER, "stat"),
+	DEFINE_KEYFIELD( m_nDifficulty, FIELD_INTEGER, "difficulty"),
 	
 	DEFINE_KEYFIELD( m_sounds, FIELD_INTEGER, "sounds" ),
 	
@@ -69,6 +72,7 @@ BEGIN_DATADESC( CBaseButton )
 	// Outputs
 	DEFINE_OUTPUT( m_OnDamaged, "OnDamaged" ),
 	DEFINE_OUTPUT( m_OnPressed, "OnPressed" ),
+	DEFINE_OUTPUT( m_OnPressedFailed, "OnPressedFailed" ),
 	DEFINE_OUTPUT( m_OnUseLocked, "OnUseLocked" ),
 	DEFINE_OUTPUT( m_OnIn, "OnIn" ),
 	DEFINE_OUTPUT( m_OnOut, "OnOut" ),
@@ -550,14 +554,142 @@ void CBaseButton::ButtonUse( CBaseEntity *pActivator, CBaseEntity *pCaller, USE_
 				EmitSound( filter, entindex(), ep );
 			}
 
-			m_OnPressed.FireOutput(m_hActivator, this);
+			//Alert that we've been pressed
+			if (m_nStat == -1) //button's not set to use stats
+				m_OnPressed.FireOutput(m_hActivator, this);
+			else
+			{
+				int iChance;
+				int iPos = 5;
+				int iNeg = 10;
+				switch (m_nDifficulty)
+				{
+				case 0:
+					iChance = 75;
+					break;
+				case 1:
+					iChance = 60;
+					break;
+				case 2:
+					iChance = 50;
+					break;
+				case 3:
+					iChance = 30;
+					iPos = 7;
+					iNeg = 8;
+					break;
+				case 4:
+					iChance = 5;
+					iPos = 10;
+					iNeg = 2;
+					break;
+				default:
+					iChance = 60;
+					break;
+				}
+				int iMod = -1;
+				CHL2MP_Player* pPlayer = dynamic_cast<CHL2MP_Player*>(pActivator);
+				if (pPlayer)
+				{
+					switch (m_nStat) //making sure we have a valid stat in place
+					{
+					case STR:
+						iMod = pPlayer->checkMod(STR);
+						break;
+					case DEX:
+						iMod = pPlayer->checkMod(DEX);
+						break;
+					case INT:
+						iMod = pPlayer->checkMod(INT);
+						break;
+					case CHA:
+						iMod = pPlayer->checkMod(CHA);
+						break;
+					default:
+						m_OnPressed.FireOutput(m_hActivator, this); //invalid stat, just fire like a normal button
+						ButtonReturn();
+						return;
+						break;
+					}
+					int iRandom = RandomInt(0, 100);
+					iChance += iMod * (iMod > 0 ? iPos : iNeg);
+					if (iChance >= iRandom)
+						m_OnPressed.FireOutput(m_hActivator, this);
+					else
+						m_OnPressedFailed.FireOutput(m_hActivator, this);
+				}
+			}
 			ButtonReturn();
 		}
 	}
 	else
 	{
-		m_OnPressed.FireOutput(m_hActivator, this);
-		ButtonActivate( );
+		//Alert that we've been pressed
+		if (m_nStat == -1) //button's not set to use stats
+			m_OnPressed.FireOutput(m_hActivator, this);
+		else
+		{
+			int iChance;
+			int iPos = 5;
+			int iNeg = 10;
+			switch (m_nDifficulty)
+			{
+			case 0:
+				iChance = 75;
+				break;
+			case 1:
+				iChance = 60;
+				break;
+			case 2:
+				iChance = 50;
+				break;
+			case 3:
+				iChance = 30;
+				iPos = 7;
+				iNeg = 8;
+				break;
+			case 4:
+				iChance = 5;
+				iPos = 10;
+				iNeg = 2;
+				break;
+			default:
+				iChance = 60;
+				break;
+			}
+			int iMod = -1;
+			CHL2MP_Player* pPlayer = dynamic_cast<CHL2MP_Player*>(pActivator);
+			if (pPlayer)
+			{
+				switch (m_nStat) //making sure we have a valid stat in place
+				{
+				case STR:
+					iMod = pPlayer->checkMod(STR);
+					break;
+				case DEX:
+					iMod = pPlayer->checkMod(DEX);
+					break;
+				case INT:
+					iMod = pPlayer->checkMod(INT);
+					break;
+				case CHA:
+					iMod = pPlayer->checkMod(CHA);
+					break;
+				default:
+					m_OnPressed.FireOutput(m_hActivator, this); //invalid stat, just fire like a normal button
+					ButtonActivate();
+					return;
+					break;
+				}
+				int iRandom = RandomInt(0, 100);
+				iChance += iMod * (iMod > 0 ? iPos : iNeg);
+				if (iChance >= iRandom)
+					m_OnPressed.FireOutput(m_hActivator, this);
+				else
+					m_OnPressedFailed.FireOutput(m_hActivator, this);
+			}
+		}
+		ButtonActivate();
 	}
 }
 
@@ -1354,7 +1486,69 @@ void CMomentaryRotButton::Use( CBaseEntity *pActivator, CBaseEntity *pCaller, US
 		m_direction = -m_direction;
 
 		//Alert that we've been pressed
-		m_OnPressed.FireOutput( m_hActivator, this );
+		if (m_nStat == -1) //button's not set to use stats
+			m_OnPressed.FireOutput(m_hActivator, this);
+		else
+		{
+			int iChance;
+			int iPos = 5;
+			int iNeg = 10;
+			switch (m_nDifficulty)
+			{
+			case 0:
+				iChance = 75;
+				break;
+			case 1:
+				iChance = 60;
+				break;
+			case 2:
+				iChance = 50;
+				break;
+			case 3:
+				iChance = 30;
+				iPos = 7;
+				iNeg = 8;
+				break;
+			case 4:
+				iChance = 5;
+				iPos = 10;
+				iNeg = 2;
+				break;
+			default:
+				iChance = 60;
+				break;
+			}
+			int iMod = -1;
+			CHL2MP_Player* pPlayer = dynamic_cast<CHL2MP_Player*>(pActivator);
+			if (pPlayer)
+			{
+				switch (m_nStat) //making sure we have a valid stat in place
+				{
+				case STR:
+					iMod = pPlayer->checkMod(STR);
+					break;
+				case DEX:
+					iMod = pPlayer->checkMod(DEX);
+					break;
+				case INT:
+					iMod = pPlayer->checkMod(INT);
+					break;
+				case CHA:
+					iMod = pPlayer->checkMod(CHA);
+					break;
+				default:
+					m_OnPressed.FireOutput(m_hActivator, this); //invalid stat, just fire like a normal button
+					return;
+					break;
+				}
+				int iRandom = RandomInt(0, 100);
+				iChance += iMod * (iMod > 0 ? iPos : iNeg);
+				if (iChance >= iRandom)
+					m_OnPressed.FireOutput(m_hActivator, this);
+				else
+					m_OnPressedFailed.FireOutput(m_hActivator, this);
+			}
+		}
 	}
 
 	m_lastUsed = 1;

@@ -80,11 +80,15 @@ protected:
 
 	COutputEvent m_OnDamaged;
 	COutputEvent m_OnPressed;
+	COutputEvent m_OnPressedFailed;
 	COutputEvent m_OnUseLocked;
 	COutputEvent m_OnIn;
 	COutputEvent m_OnOut;
 
 	int		m_nState;
+
+	int		m_nStat = -1;
+	int		m_nDifficulty = 1;
 };
 
 

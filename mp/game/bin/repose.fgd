@@ -1,0 +1,264 @@
+//-------------------------------------------------------------------------
+//
+// Game data for Repose.
+//
+//-------------------------------------------------------------------------
+
+@include "hl2mp.fgd"
+
+//////////////////////////////////////////////////////////////////////////////
+//
+//weapons/items
+//
+//////////////////////////////////////////////////////////////////////////////
+
+@PointClass base(Weapon) studio("models/weapons/w_healthkit.mdl") = weapon_healthkit : "Healthkit" []
+@PointClass base(Weapon) studio("models/weapons/w_dbshotgun.mdl") = weapon_dbshotgun : "Double Barreled Shotgun" []
+
+//////////////////////////////////////////////////////////////////////////////
+//
+//NPCs
+//
+//////////////////////////////////////////////////////////////////////////////
+
+@NPCClass base(BaseNPC) studio("models/repose/hound.mdl") = npc_hound : "Hound"
+[
+]
+
+//////////////////////////////////////////////////////////////////////////////
+//
+//altered entities
+//
+//////////////////////////////////////////////////////////////////////////////
+
+@SolidClass base(Targetname, Parentname, Origin, RenderFields,DamageFilter, Button) = func_button : 
+	"A brush entity that's designed to be used for a player-useable button. When used by the player, it moves to a pressed position."
+[
+	stat(choices) : "Stat" : -1 : "Stat used to determine chances of success, if any. Fires OnPressed on success, OnPressedFailed on failure. Each press is independent of any others. (i.e. a player who succeeded at pressing this button once has no guarantee that a proceeding check will work)" =
+	[
+		-1: "None (No Failure)"
+		0: "Strength"
+		1: "Dexterity"
+		2: "Intellect"
+		3: "Charisma"
+	]
+	difficulty(choices) : "Difficulty" : 1 : "If stat-checking is used, how difficult the check would be. (Chance at +0 mod, addition per positive mod/subtraction per negative mod)" =
+	[
+		0: "Very Easy (75%, +5%/-10%)"
+		1: "Easy (60%, +5%/-10%)"
+		2: "Medium (50%, +5%/-10%)"
+		3: "Hard (30%, +7%/-8%)"
+		4: "Very Hard (5%, +10%/-2%)"
+	]
+	output OnPressedFailed(void) : "Fired when the button is pressed, but our stat check failed."
+	movedir(angle) : "Move Direction (Pitch Yaw Roll)" : "0 0 0" : "Specifies the direction of motion to move when the button is used."
+	speed(integer) : "Speed" : 5 : "The speed that the button moves, in inches per second."
+	health(integer) : "Health (Obsolete)" : 0 : "Legacy method of specifying whether or not the button can be shot to activate it. Use the 'Damage Activates' spawnflag instead."
+	lip(integer) : "Lip" : 0 : "The amount, in inches, of the button to leave sticking out of the wall it recedes into when pressed. Negative values make the button recede even further into the wall."
+	master(string) : "Master (Obsolete)" : : "Legacy support: The name of a master entity. If the master hasn't been activated, this button cannot be pressed."
+	sounds(choices) : "Sounds" : 0 = 
+	[
+		0: "None (Silent)"
+		1: "Big zap & Warmup"
+		2: "Access Denied"
+		3: "Access Granted"
+		4: "Quick Combolock"
+		5: "Power Deadbolt 1"
+		6: "Power Deadbolt 2"
+		7: "Plunger"
+		8: "Small zap"
+		9: "Keycard Sound"
+		10: "Buzz"
+		11: "Buzz Off"
+		12: "latch locked"
+		13: "Latch Unlocked"
+		14: "Lightswitch"
+		15: "small bleek"
+		16: "small deny"
+		17: "small doop"
+		18: "small tech deny"
+		19: "click and combine screen fuzz"
+		20: "roomy beep"
+		21: "lever or wheel: turn + move sqeek"
+		22: "lever or wheel: latch + release gas"
+		23: "lever or wheel: ratchet + sqeek"
+		24: "lever or wheel: large ratchet"
+		25: "lever or wheel: clanky + gas release"
+		26: "lever or wheel: latch + large metal thud"
+		27: "lever or wheel: smaller ratchet"
+		28: "lever or wheel: smaller lever move"
+		31: "shock buzz"
+		32: "clickbeep"
+		33: "tech blip"
+		34: "clickbeepbeep open"
+		35: "small high blip"
+		36: "small tech fuzz blip"
+		37: "small click bleep (change to lightswitch)"
+		40: "combine door lock - locked"
+		41: "combine blip growl"
+		42: "combine squick growl"
+		43: "combine whine purr"
+		44: "combine click talk"
+		45: "combine click growl fizz"
+		46: "combine click fizz (deny)"
+		47: "combine click talker"
+	]	
+	wait(integer) : "Delay Before Reset (-1 stay)" : 3 : "Amount of time, in seconds, after the button has been pressed before it returns to the starting position. Once it has returned, it can be used again. If the value is set to -1, the button never returns."
+	spawnflags(flags) =
+	[
+		1: "Don't move" : 0
+		32: "Toggle" : 0
+		256: "Touch Activates": 0
+		512: "Damage Activates": 0
+		1024: "Use Activates" : 1
+		2048: "Starts locked" : 0
+		4096: "Sparks" : 0
+	]
+	locked_sound(choices) : "Locked Sound" : 0 : "Sound played when the player tries to use the button, and fails because it's locked." = 
+	[
+		0: "None"
+		2: "Access Denied"
+		8: "Small zap"
+		10: "Buzz"
+		11: "Buzz Off"
+		12: "Latch Locked"
+	]
+	unlocked_sound(choices) : "Unlocked Sound" : 0 : "Sound played when the button is unlocked." = 
+	[
+		0: "None"
+		1: "Big zap & Warmup"
+		3: "Access Granted"
+		4: "Quick Combolock"
+		5: "Power Deadbolt 1"
+		6: "Power Deadbolt 2"
+		7: "Plunger"
+		8: "Small zap"
+		9: "Keycard Sound"
+		10: "Buzz"
+		13: "Latch Unlocked"
+		14: "Lightswitch"
+	]
+	locked_sentence(choices) : "Locked Sentence" : 0 : "A sentence played when the player tries to use the button, and fails because it's locked." = 
+	[
+		0: "None"
+		1: "Gen. Access Denied"
+		2: "Security Lockout"
+		3: "Blast Door"
+		4: "Fire Door"
+		5: "Chemical Door"
+		6: "Radiation Door"
+		7: "Gen. Containment"
+		8: "Maintenance Door"
+		9: "Broken Shut Door"
+	]
+	unlocked_sentence(choices) : "Unlocked Sentence" : 0 : "A sentence played when the button is unlocked." = 
+	[
+		0: "None"
+		1: "Gen. Access Granted"
+		2: "Security Disengaged"
+		3: "Blast Door"
+		4: "Fire Door"
+		5: "Chemical Door"
+		6: "Radiation Door"
+		7: "Gen. Containment"
+		8: "Maintenance area"
+	]
+	_minlight(string) : "Minimum Light Level" : : "The minimum level of ambient light that hits this brush."
+]
+
+@SolidClass base(Targetname, Parentname, Origin, Angles, Global, Button, EnableDisable) = func_rot_button : 
+	"A brush entity that's designed to be used for a rotating player-useable button. When used by the player, it rotates to a pressed position."
+[
+	stat(choices) : "Stat to Check" : -1 : "Stat used to determine chances of success, if any. Fires OnPressed on success, OnPressedFailed on failure. Each press is independent of any others (i.e. a player who succeeded at pressing this button once has no guarantee that a proceeding check will work)." =
+	[
+		-1: "None (No Failure)"
+		0: "Strength"
+		1: "Dexterity"
+		2: "Intellect"
+		3: "Charisma"
+	]
+	difficulty(choices) : "Difficulty" : 1 : "If stat-checking is used, how difficult the check would be. (Chance at +0 mod, addition per positive mod/subtraction per negative mod)" =
+	[
+		0: "Very Easy (75%, +5%/-10%)"
+		1: "Easy (60%, +5%/-10%)"
+		2: "Medium (50%, +5%/-10%)"
+		3: "Hard (30%, +7%/-8%)"
+		4: "Very Hard (5%, +10%/-2%)"
+	]
+	output OnPressedFailed(void) : "Fired when the button is pressed, but our stat check failed."
+	master(string) : "Master (Obsolete)" : : "Legacy support: The name of a master entity. If the master hasn't been activated, this button cannot be used."
+	speed(integer) : "Speed" : 50 : "The speed that the button rotates, in degrees per second."
+	health(integer) : "Health (Obsolete)" : 0 : "Legacy method of specifying whether or not the button can be shot to activate it. Use the 'Damage Activates' spawnflag instead."
+	sounds(choices) : "Sounds" : 21 = 
+	[
+		0: "None (Silent)"
+		21: "Squeaky"
+		22: "Squeaky Pneumatic"
+		23: "Ratchet Groan"
+		24: "Clean Ratchet"
+		25: "Gas Clunk"
+	]
+	wait(integer) : "Delay Before Reset (-1 stay)" : 3 : "Amount of time, in seconds, after the button has been pressed before it returns to the starting position. Once it has returned, it can be used again. If the value is set to -1, the button never returns."
+	distance(integer) : "Distance (deg)" : 90 : "The amount, in degrees, that the button should rotate when it's pressed."
+	// TODO: move spawnflags into Button base class?
+	spawnflags(flags) =
+	[
+		1 : "Not solid" : 0
+		2 : "Reverse Dir" : 0
+		32: "Toggle" : 0
+		64: "X Axis" : 0
+		128: "Y Axis" : 0
+		256: "Touch Activates": 0
+		512: "Damage Activates": 0
+		1024: "Use Activates": 1
+		2048: "Starts locked" : 0
+	]
+	_minlight(string) : "Minimum Light Level" : : "The minimum level of ambient light that hits this brush."
+]
+
+//////////////////////////////////////////////////////////////////////////////
+//
+//fixed up FGD entries (no functional changes, just making them work better in Hammer)
+//
+//////////////////////////////////////////////////////////////////////////////
+
+@PointClass base(Targetname, Parentname, RenderFields,DXLevelChoice) size(-2 -2 -2, 2 2 2) sprite() color(20 140 20) = env_sprite : 
+	"An entity that controls the drawing of a sprite in the world." 
+[
+	rendermode(choices) : "Render Mode" : 9 : "Used to set a non-standard rendering mode on this entity. See also 'FX Amount' and 'FX Color'." =
+	[
+		//0: "Normal (Doesn't support transparency!)"
+		//1: "Color (Doesn't support transparency!)"
+		//2: "Texture (Doesn't support transparency!)"
+		3: "Glow"
+		//4: "Solid (Doesn't support transparency!)"
+		5: "Additive"
+		6: "Environmental"
+		7: "Additive Fractional Frame"
+		8: "Alpha Add"
+		9: "World Space Glow"
+		10: "Dont Render"
+	]
+	framerate(string) : "Framerate" : "10.0" : "Rate at which the sprite should animate, if at all."
+	model(sprite) : "Sprite Name" : "sprites/glow01.spr" : "Material of the sprite to be drawn."
+	scale(float) : "Scale" : "0.25" : "Scale multiplier of the sprite."
+	spawnflags(flags) =
+	[
+		1: "Start on" : 1
+		2: "Play Once" : 0
+	]
+
+	GlowProxySize(float) : "Size of Glow Proxy Geometry." : "2.0" : "Size of the glow to be rendered for visibility testing. Must be larger than the distance from the sprite center to empty space.  So if this glow is inside geometry (like a light bulb), set this value to be bigger than the bulb's radius. Any time a sphere of this radius would be visible (poking through any nearby geometry), the glow will be rendered."
+
+	HDRColorScale(float) : "HDR color scale." : "1.0" : "float value to multiply sprite color by when running in HDR mode."
+	
+	// Inputs
+	input ColorRedValue(float) : "Sets the red color channel's value (0 - 255)."
+	input ColorGreenValue(float) : "Sets the green color channel's value (0 - 255)."
+	input ColorBlueValue(float) : "Sets the blue color channel's value (0 - 255)."
+	input SetScale(float) : "Set the sprite's scale (0 - 8.0)."
+	input HideSprite(void) : "Hide the sprite. Won't be drawn until the 'ShowSprite' input is received."
+	input ShowSprite(void) : "Show the sprite."
+	input ToggleSprite(void) : "Toggle the sprite between hidden and shown."
+]
+

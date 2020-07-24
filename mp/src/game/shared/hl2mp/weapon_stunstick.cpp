@@ -216,7 +216,14 @@ void CWeaponStunStick::Precache()
 //-----------------------------------------------------------------------------
 float CWeaponStunStick::GetDamageForActivity( Activity hitActivity )
 {
-	return 40.0f;
+	float flDamage = 40.0f;
+	CHL2MP_Player* pPlayer = dynamic_cast<CHL2MP_Player*>(GetOwner());
+	if (pPlayer)
+	{
+		int iSTRMod = pPlayer->checkMod(STR);
+		flDamage += (float)iSTRMod * (iSTRMod > 0 ? 4.0f : 6.0f);
+	}
+	return flDamage;
 }
 
 //-----------------------------------------------------------------------------
