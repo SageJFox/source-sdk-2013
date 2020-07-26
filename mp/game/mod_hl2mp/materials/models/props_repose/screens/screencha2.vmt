@@ -1,0 +1,10 @@
+"VertexLitGeneric"
+{
+	"$basetexture"	"models/props_repose/screens/screencha"
+	"$detail"		"models/props_repose/screens/screennumbers"
+	"$detailtexturetransform"	"center 0 0 scale .25 .0625 rotate 0 translate 0 0.1875"
+	"$detailblendmode"	1
+	"$model"		1
+	"$nodecal"		1
+	"$selfillum"	1
+}

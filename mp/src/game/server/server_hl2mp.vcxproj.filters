@@ -1841,6 +1841,9 @@
     <ClInclude Include="hl2\weapon_citizenpackage.h">
       <Filter>Source Files\Repose</Filter>
     </ClInclude>
+    <ClInclude Include="finds.h">
+      <Filter>Source Files\Repose</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="gamedll_replay.cpp">

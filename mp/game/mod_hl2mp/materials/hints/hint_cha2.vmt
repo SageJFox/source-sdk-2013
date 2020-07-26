@@ -1,0 +1,7 @@
+"UnlitGeneric"
+{
+	"$basetexture" "hints/hint_cha2"
+	"$additive"	1
+	"$nodecal" 1
+	"%keywords"	"repose"
+}

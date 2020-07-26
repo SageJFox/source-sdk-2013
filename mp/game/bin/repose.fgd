@@ -27,6 +27,69 @@
 
 //////////////////////////////////////////////////////////////////////////////
 //
+//Logical entities
+//
+//////////////////////////////////////////////////////////////////////////////
+
+@PointClass base(Targetname, EnableDisable) iconsprite("editor/math_counter.vmt") = find_counter : "Tracks player finds."
+[
+	// Keys
+	startvalue(integer) : "Starting Finds" : 2 : "Start with this number of random finds."
+
+	// Inputs
+	input Add(integer) : "Add to the specified find and fire the OutValue output of that find with the resulting count."
+	input Subtract(integer): "Subtract from the specified find and fire the OutValue output of that find with the resulting count."
+	input GetValue(integer): "Fires the specified find's OnGetValue output with its current count. Used for polling the counter when you don't want constant updates from the OutValue output."
+
+	// Outputs
+	output OutValue_BlackmailSmall(integer) : "Fired when the counter value changes."
+	output OnHitMin_BlackmailSmall(integer) : "Fired when the counter value meets or goes below the min value. The counter must go back above the min value before the output will fire again."
+	output OnHitMax_BlackmailSmall(integer) : "Fired when the counter value meets or exceeds the max value. The counter must go below the max value before the output will fire again."
+	output OnGetValue_BlackmailSmall(integer) : "Fired in response to the GetValue input. Used for polling the counter when you don't want constant updates from the OutValue output."
+	
+	output OutValue_BlackmailBig(integer) : "Fired when the counter value changes."
+	output OnHitMin_BlackmailBig(integer) : "Fired when the counter value meets or goes below the min value. The counter must go back above the min value before the output will fire again."
+	output OnHitMax_BlackmailBig(integer) : "Fired when the counter value meets or exceeds the max value. The counter must go below the max value before the output will fire again."
+	output OnGetValue_BlackmailBig(integer) : "Fired in response to the GetValue input. Used for polling the counter when you don't want constant updates from the OutValue output."
+	
+	output OutValue_SecretSmall(integer) : "Fired when the counter value changes."
+	output OnHitMin_SecretSmall(integer) : "Fired when the counter value meets or goes below the min value. The counter must go back above the min value before the output will fire again."
+	output OnHitMax_SecretSmall(integer) : "Fired when the counter value meets or exceeds the max value. The counter must go below the max value before the output will fire again."
+	output OnGetValue_SecretSmall(integer) : "Fired in response to the GetValue input. Used for polling the counter when you don't want constant updates from the OutValue output."
+	
+	output OutValue_SecretBig(integer) : "Fired when the counter value changes."
+	output OnHitMin_SecretBig(integer) : "Fired when the counter value meets or goes below the min value. The counter must go back above the min value before the output will fire again."
+	output OnHitMax_SecretBig(integer) : "Fired when the counter value meets or exceeds the max value. The counter must go below the max value before the output will fire again."
+	output OnGetValue_SecretBig(integer) : "Fired in response to the GetValue input. Used for polling the counter when you don't want constant updates from the OutValue output."
+	
+	output OutValue_AdvLieSmall(integer) : "Fired when the counter value changes."
+	output OnHitMin_AdvLieSmall(integer) : "Fired when the counter value meets or goes below the min value. The counter must go back above the min value before the output will fire again."
+	output OnHitMax_AdvLieSmall(integer) : "Fired when the counter value meets or exceeds the max value. The counter must go below the max value before the output will fire again."
+	output OnGetValue_AdvLieSmall(integer) : "Fired in response to the GetValue input. Used for polling the counter when you don't want constant updates from the OutValue output."
+	
+	output OutValue_AdvLieBig(integer) : "Fired when the counter value changes."
+	output OnHitMin_AdvLieBig(integer) : "Fired when the counter value meets or goes below the min value. The counter must go back above the min value before the output will fire again."
+	output OnHitMax_AdvLieBig(integer) : "Fired when the counter value meets or exceeds the max value. The counter must go below the max value before the output will fire again."
+	output OnGetValue_AdvLieBig(integer) : "Fired in response to the GetValue input. Used for polling the counter when you don't want constant updates from the OutValue output."
+	
+	output OutValue_AdvAdvice(integer) : "Fired when the counter value changes."
+	output OnHitMin_AdvAdvice(integer) : "Fired when the counter value meets or goes below the min value. The counter must go back above the min value before the output will fire again."
+	output OnHitMax_AdvAdvice(integer) : "Fired when the counter value meets or exceeds the max value. The counter must go below the max value before the output will fire again."
+	output OnGetValue_AdvAdvice(integer) : "Fired in response to the GetValue input. Used for polling the counter when you don't want constant updates from the OutValue output."
+	
+	output OutValue_AdvThreat(integer) : "Fired when the counter value changes."
+	output OnHitMin_AdvThreat(integer) : "Fired when the counter value meets or goes below the min value. The counter must go back above the min value before the output will fire again."
+	output OnHitMax_AdvThreat(integer) : "Fired when the counter value meets or exceeds the max value. The counter must go below the max value before the output will fire again."
+	output OnGetValue_AdvThreat(integer) : "Fired in response to the GetValue input. Used for polling the counter when you don't want constant updates from the OutValue output."
+	
+	output OutValue_AdvRead(integer) : "Fired when the counter value changes."
+	output OnHitMin_AdvRead(integer) : "Fired when the counter value meets or goes below the min value. The counter must go back above the min value before the output will fire again."
+	output OnHitMax_AdvRead(integer) : "Fired when the counter value meets or exceeds the max value. The counter must go below the max value before the output will fire again."
+	output OnGetValue_AdvRead(integer) : "Fired in response to the GetValue input. Used for polling the counter when you don't want constant updates from the OutValue output."
+]
+
+//////////////////////////////////////////////////////////////////////////////
+//
 //altered entities
 //
 //////////////////////////////////////////////////////////////////////////////

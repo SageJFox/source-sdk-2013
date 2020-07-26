@@ -618,6 +618,8 @@ void CBaseButton::ButtonUse( CBaseEntity *pActivator, CBaseEntity *pCaller, USE_
 					else
 						m_OnPressedFailed.FireOutput(m_hActivator, this);
 				}
+				else
+					m_OnPressed.FireOutput(m_hActivator, this);
 			}
 			ButtonReturn();
 		}
@@ -688,6 +690,8 @@ void CBaseButton::ButtonUse( CBaseEntity *pActivator, CBaseEntity *pCaller, USE_
 				else
 					m_OnPressedFailed.FireOutput(m_hActivator, this);
 			}
+			else
+				m_OnPressed.FireOutput(m_hActivator, this);
 		}
 		ButtonActivate();
 	}
@@ -1548,6 +1552,8 @@ void CMomentaryRotButton::Use( CBaseEntity *pActivator, CBaseEntity *pCaller, US
 				else
 					m_OnPressedFailed.FireOutput(m_hActivator, this);
 			}
+			else
+				m_OnPressed.FireOutput(m_hActivator, this);
 		}
 	}
 
