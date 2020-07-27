@@ -3004,7 +3004,7 @@ void CFindCounter::InputSubtract(inputdata_t &inputdata)
 {
 	if (m_bDisabled)
 	{
-		DevMsg("Math Counter %s ignoring SUBTRACT because it is disabled\n", GetDebugName());
+		DevMsg("Find Counter %s ignoring SUBTRACT because it is disabled\n", GetDebugName());
 		return;
 	}
 	if (inputdata.value.Int() < 0) //-1 is our random find
@@ -3095,19 +3095,16 @@ bool CFindCounter::InputAddRandom(CBaseEntity *pActivator)
 	for (int i = 0; i < FIND_COUNT; i++)
 	{
 		if (!m_bHitMax[i])
-		{
-			nRemap[nTotal] = i;
-			nTotal++;
-		}
+			nRemap[nTotal++] = i;
 	}
-	if (nTotal == 0) // all finds are full
+	if (!nTotal) // all finds are full
 	{
 		DevMsg("Find Counter %s cannot ADD because all finds are full!\n", GetDebugName());
 		return false;
 	}
 	int nRandom = 0;
-	if (nTotal > 1)
-		nRandom = RandomInt(0, --nTotal);
+	if (--nTotal) //we have more than one find to pick from (and we need to shave that last increment off anyway)
+		nRandom = RandomInt(0, nTotal);
 	UpdateOutValue(pActivator, nRemap[nRandom], m_OutValue[nRemap[nRandom]].Get() + 1);
 	return true;
 }

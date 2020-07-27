@@ -1761,6 +1761,7 @@ bool CHalfLife2::IsAlyxInDarknessMode()
 //-----------------------------------------------------------------------------
 bool CHalfLife2::ShouldBurningPropsEmitLight()
 {
+
 #ifdef HL2_EPISODIC
 	return IsAlyxInDarknessMode();
 #else

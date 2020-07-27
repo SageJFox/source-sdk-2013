@@ -38,8 +38,42 @@
 
 	// Inputs
 	input Add(integer) : "Add to the specified find and fire the OutValue output of that find with the resulting count."
+	// [
+		// -1: "Random"
+		// 0: "Inconvenient Blackmail"
+		// 1: "Damning Blackmail"
+		// 2: "Juicy Secret"
+		// 3: "Dangerous Secret"
+		// 4: "Adv. Little White Lie"
+		// 5: "Adv. Bold-Faced Lie"
+		// 6: "Adv. Sound Advice"
+		// 7: "Adv. Threatening Action"
+		// 8: "Adv. Read Target"
+	// ]
 	input Subtract(integer): "Subtract from the specified find and fire the OutValue output of that find with the resulting count."
+	// [
+		// 0: "Inconvenient Blackmail"
+		// 1: "Damning Blackmail"
+		// 2: "Juicy Secret"
+		// 3: "Dangerous Secret"
+		// 4: "Adv. Little White Lie"
+		// 5: "Adv. Bold-Faced Lie"
+		// 6: "Adv. Sound Advice"
+		// 7: "Adv. Threatening Action"
+		// 8: "Adv. Read Target"
+	// ]
 	input GetValue(integer): "Fires the specified find's OnGetValue output with its current count. Used for polling the counter when you don't want constant updates from the OutValue output."
+	// [
+		// 0: "Inconvenient Blackmail"
+		// 1: "Damning Blackmail"
+		// 2: "Juicy Secret"
+		// 3: "Dangerous Secret"
+		// 4: "Adv. Little White Lie"
+		// 5: "Adv. Bold-Faced Lie"
+		// 6: "Adv. Sound Advice"
+		// 7: "Adv. Threatening Action"
+		// 8: "Adv. Read Target"
+	// ]
 
 	// Outputs
 	output OutValue_BlackmailSmall(integer) : "Fired when the counter value changes."
