@@ -11,69 +11,70 @@
 //weapons/items
 //
 //////////////////////////////////////////////////////////////////////////////
+@BaseClass color(0 0 200) base(Targetname, Angles) sphere(fademindist) sphere(fademaxdist) = Weapon
+[
+	spawnflags(Flags) =
+	[
+		1 : "Start constrained" : 0
+		2 : "Deny player pickup (reserve for NPC)" : 0
+		4 : "Not puntable by Gravity Gun" : 0
+		1073741824 : "No Respawn" : 1
+	]
+
+	output OnPlayerUse(void) : "Fires when the player +uses this weapon"
+	output OnPlayerPickup(void) : "Fires when the player picks up this weapon"
+	output OnNPCPickup(void) : "Fires when an NPC picks up this weapon"
+	output OnCacheInteraction(void) : "Fires when the player 'proves' they've found this weapon. Fires on: Player Touch, +USE pickup, Physcannon pickup, Physcannon punt."
+
+	fademindist(float) : "Start Fade Dist/Pixels" : -1 : "Distance at which the prop starts to fade (<0 = use fademaxdist). If 'Screen Space Fade' is selected, this represents the number of pixels wide covered by the prop when it starts to fade."
+	fademaxdist(float) : "End Fade Dist/Pixels" : 0 : "Maximum distance at which the prop is visible (0 = don't fade out). If 'Screen Space Fade' is selected, this represents the *minimum* number of pixels wide covered by the prop when it fades."
+	fadescale(float) : "Fade Scale" : 1 : "If you specify a fade in the worldspawn, or if the engine is running under dx7, then the engine will forcibly fade out props even if fademindist/fademaxdist isn't specified." +
+												 " This scale factor gives you some control over the fade. Using 0 here turns off the forcible fades." +
+]
+
+@BaseClass color(0 0 200) base(Targetname, Angles, Shadow) sphere(fademindist) sphere(fademaxdist) = Item
+[
+	output OnPlayerTouch(void) : "Fires when the player touches this object"
+
+	output OnCacheInteraction(void) : "This output fires when the player proves they have 'found' this item. Fires on: Player Touch (whether or not player actually acquires the item), Picked up by +USE, Picked up by Physcannon, Punted by Physcannon."
+
+	fademindist(float) : "Start Fade Dist/Pixels" : -1 : "Distance at which the prop starts to fade (<0 = use fademaxdist). If 'Screen Space Fade' is selected, this represents the number of pixels wide covered by the prop when it starts to fade."
+	fademaxdist(float) : "End Fade Dist/Pixels" : 0 : "Maximum distance at which the prop is visible (0 = don't fade out). If 'Screen Space Fade' is selected, this represents the *minimum* number of pixels wide covered by the prop when it fades."
+	fadescale(float) : "Fade Scale" : 1 : "If you specify a fade in the worldspawn, or if the engine is running under dx7, then the engine will forcibly fade out props even if fademindist/fademaxdist isn't specified." +
+												 " This scale factor gives you some control over the fade. Using 0 here turns off the forcible fades." +
+
+	spawnflags(Flags) =
+	[
+		1 : "Start Constrained" : 0
+		1073741824 : "No Respawn" : 1
+	]
+]
 
 @PointClass base(Weapon) studio("models/weapons/w_healthkit.mdl") = weapon_healthkit : "Healthkit" []
 @PointClass base(Weapon) studio("models/weapons/w_dbshotgun.mdl") = weapon_dbshotgun : "Double Barreled Shotgun" []
-
-//////////////////////////////////////////////////////////////////////////////
-//
-//NPCs
-//
-//////////////////////////////////////////////////////////////////////////////
-
-@NPCClass base(BaseNPC) studio("models/repose/hound.mdl") = npc_hound : "Hound"
-[
-]
-
-//////////////////////////////////////////////////////////////////////////////
-//
-//Logical entities
-//
-//////////////////////////////////////////////////////////////////////////////
-
-@PointClass base(Targetname, EnableDisable) iconsprite("editor/math_counter.vmt") = find_counter : "Tracks player finds."
+@PointClass base(Weapon) studio("models/weapons/w_find.mdl") = weapon_find : "The pickup-able version of finds" []
+@PointClass base(Weapon) studio("models/weapons/w_suitcase.mdl") = weapon_suitcase : "Briefcase" 
 [
 	// Keys
 	startvalue(integer) : "Starting Finds" : 2 : "Start with this number of random finds."
+	noeffect(choices): "Find Numbers by Name" : -1 : "This doesn't do anything to the entity, just serves as a quick look up list for manually adding specific kinds of finds in I/O." =
+	[
+		-1: "Random (-1)"
+		0: "Inconvenient Blackmail (0)"
+		1: "Damning Blackmail (1)"
+		2: "Juicy Secret (2)"
+		3: "Dangerous Secret (3)"
+		4: "Adv. Little White Lie (4)"
+		5: "Adv. Bold-Faced Lie (5)"
+		6: "Adv. Sound Advice (6)"
+		7: "Adv. Threatening Action (7)"
+		8: "Adv. Read Target (8)"
+	]
 
 	// Inputs
 	input Add(integer) : "Add to the specified find and fire the OutValue output of that find with the resulting count."
-	// [
-		// -1: "Random"
-		// 0: "Inconvenient Blackmail"
-		// 1: "Damning Blackmail"
-		// 2: "Juicy Secret"
-		// 3: "Dangerous Secret"
-		// 4: "Adv. Little White Lie"
-		// 5: "Adv. Bold-Faced Lie"
-		// 6: "Adv. Sound Advice"
-		// 7: "Adv. Threatening Action"
-		// 8: "Adv. Read Target"
-	// ]
 	input Subtract(integer): "Subtract from the specified find and fire the OutValue output of that find with the resulting count."
-	// [
-		// 0: "Inconvenient Blackmail"
-		// 1: "Damning Blackmail"
-		// 2: "Juicy Secret"
-		// 3: "Dangerous Secret"
-		// 4: "Adv. Little White Lie"
-		// 5: "Adv. Bold-Faced Lie"
-		// 6: "Adv. Sound Advice"
-		// 7: "Adv. Threatening Action"
-		// 8: "Adv. Read Target"
-	// ]
 	input GetValue(integer): "Fires the specified find's OnGetValue output with its current count. Used for polling the counter when you don't want constant updates from the OutValue output."
-	// [
-		// 0: "Inconvenient Blackmail"
-		// 1: "Damning Blackmail"
-		// 2: "Juicy Secret"
-		// 3: "Dangerous Secret"
-		// 4: "Adv. Little White Lie"
-		// 5: "Adv. Bold-Faced Lie"
-		// 6: "Adv. Sound Advice"
-		// 7: "Adv. Threatening Action"
-		// 8: "Adv. Read Target"
-	// ]
 
 	// Outputs
 	output OutValue_BlackmailSmall(integer) : "Fired when the counter value changes."
@@ -121,6 +122,24 @@
 	output OnHitMax_AdvRead(integer) : "Fired when the counter value meets or exceeds the max value. The counter must go below the max value before the output will fire again."
 	output OnGetValue_AdvRead(integer) : "Fired in response to the GetValue input. Used for polling the counter when you don't want constant updates from the OutValue output."
 ]
+
+//////////////////////////////////////////////////////////////////////////////
+//
+//NPCs
+//
+//////////////////////////////////////////////////////////////////////////////
+
+@NPCClass base(BaseNPC) studio("models/repose/hound.mdl") = npc_hound : "Hound"
+[
+]
+
+//////////////////////////////////////////////////////////////////////////////
+//
+//Logical entities
+//
+//////////////////////////////////////////////////////////////////////////////
+
+
 
 //////////////////////////////////////////////////////////////////////////////
 //

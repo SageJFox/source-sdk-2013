@@ -2748,7 +2748,7 @@ int CLogicBranchList::DrawDebugTextOverlays( void )
 	return text_offset;
 }
 
-
+/*
 //-----------------------------------------------------------------------------
 // Purpose: Holds our finds
 //-----------------------------------------------------------------------------
@@ -2793,7 +2793,7 @@ private:
 	DECLARE_DATADESC();
 };
 
-LINK_ENTITY_TO_CLASS(find_counter, CFindCounter);
+//LINK_ENTITY_TO_CLASS(find_counter, CFindCounter);
 
 
 BEGIN_DATADESC(CFindCounter)
@@ -2940,15 +2940,6 @@ int CFindCounter::DrawDebugTextOverlays(void)
 	if (m_debugOverlays & OVERLAY_TEXT_BIT)
 	{
 		char tempstr[512];
-		/*
-		Q_snprintf(tempstr, sizeof(tempstr), "    min value: %n", m_nMin);
-		EntityText(text_offset, tempstr, 0);
-		text_offset++;
-
-		Q_snprintf(tempstr, sizeof(tempstr), "    max value: %n", m_nMax);
-		EntityText(text_offset, tempstr, 0);
-		text_offset++;
-		*/
 		for (int i = 0; i < FIND_COUNT; i++)
 		{
 			Q_snprintf(tempstr, sizeof(tempstr), "find %n: %n/%n", i, m_OutValue[i].Get(), m_nMax);
@@ -3107,4 +3098,4 @@ bool CFindCounter::InputAddRandom(CBaseEntity *pActivator)
 		nRandom = RandomInt(0, nTotal);
 	UpdateOutValue(pActivator, nRemap[nRandom], m_OutValue[nRemap[nRandom]].Get() + 1);
 	return true;
-}
+}*/
