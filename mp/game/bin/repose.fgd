@@ -52,7 +52,23 @@
 
 @PointClass base(Weapon) studio("models/weapons/w_healthkit.mdl") = weapon_healthkit : "Healthkit" []
 @PointClass base(Weapon) studio("models/weapons/w_dbshotgun.mdl") = weapon_dbshotgun : "Double Barreled Shotgun" []
-@PointClass base(Weapon) studio("models/weapons/w_find.mdl") = weapon_find : "The pickup-able version of finds" []
+//@PointClass base(Weapon) studio("models/weapons/w_find.mdl") = weapon_find : "The pickup-able version of finds" [] //NOT TO BE MANUALLY PLACED!
+@PointClass base(Item) studio("models/weapons/w_find.mdl") = item_find : "A Piece of Information Helpful During Negotiations"
+[
+	type(choices): "Type of Find" : -1 : "The type of find that this item represents." =
+	[
+		-1: "Random"
+		0: "Inconvenient Blackmail"
+		1: "Damning Blackmail"
+		2: "Juicy Secret"
+		3: "Dangerous Secret"
+		4: "Adv. Little White Lie"
+		5: "Adv. Bold-Faced Lie"
+		6: "Adv. Sound Advice"
+		7: "Adv. Threatening Action"
+		8: "Adv. Read Target"
+	]
+]
 @PointClass base(Weapon) studio("models/weapons/w_suitcase.mdl") = weapon_suitcase : "Briefcase" 
 [
 	// Keys

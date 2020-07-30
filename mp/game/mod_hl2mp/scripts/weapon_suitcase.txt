@@ -5,7 +5,7 @@ WeaponData
 	// Weapon data is loaded by both the Game and Client DLLs.
 	"printname"	"#Repose_Briefcase"
 	"viewmodel"			"models/weapons/v_suitcase.mdl"
-	"playermodel"			"models/weapons/w_suitcase_passenger.mdl"
+	"playermodel"			"models/weapons/w_suitcase.mdl"
 	"anim_prefix"			"smg2"
 	"bucket"				"5"
 	"bucket_position"			"1"

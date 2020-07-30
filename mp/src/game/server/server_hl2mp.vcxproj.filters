@@ -3583,9 +3583,6 @@
     <ClCompile Include="..\shared\Repose\weapon_dbshotgun.cpp">
       <Filter>Source Files\Repose</Filter>
     </ClCompile>
-    <ClCompile Include="..\shared\Repose\weapon_find.cpp">
-      <Filter>Source Files\Repose</Filter>
-    </ClCompile>
     <ClCompile Include="..\shared\Repose\weapon_suitcase.cpp">
       <Filter>Source Files\Repose</Filter>
     </ClCompile>

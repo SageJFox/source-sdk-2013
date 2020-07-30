@@ -14,7 +14,6 @@
 #else
 	#include "hl2mp_player.h"
 	#include "te_effect_dispatch.h"
-	#include "grenade_frag.h"
 #endif
 
 #include "weapon_ar2.h"
@@ -41,7 +40,7 @@ ConVar sk_max_find("sk_max_find", "3");
 #endif
 
 //-----------------------------------------------------------------------------
-// Fragmentation grenades
+// Find weapon. Allows a player without the briefcase to carry up to three finds without needing to carry them as a 
 //-----------------------------------------------------------------------------
 class CWeaponFind: public CBaseHL2MPCombatWeapon
 {
@@ -461,7 +460,7 @@ void CWeaponFind::ThrowGrenade( CBasePlayer *pPlayer )
 			sin(DEG2RAD(RandomFloat((float)pStats->checkMod(DEX), -(float)pStats->checkMod(DEX)) / 2.0f)));
 	}
 	vecThrow += vForward * iScale;
-	CBaseGrenade *pGrenade = Fraggrenade_Create( vecSrc, vec3_angle, vecThrow, AngularImpulse(iScale/2,random->RandomInt(-iScale,iScale),0), pPlayer, GRENADE_TIMER, false );
+	/*CBaseGrenade *pGrenade = Fraggrenade_Create( vecSrc, vec3_angle, vecThrow, AngularImpulse(iScale/2,random->RandomInt(-iScale,iScale),0), pPlayer, GRENADE_TIMER, false );
 
 	if ( pGrenade )
 	{
@@ -478,7 +477,7 @@ void CWeaponFind::ThrowGrenade( CBasePlayer *pPlayer )
 		
 		pGrenade->SetDamage( GetHL2MPWpnData().m_iPlayerDamage );
 		pGrenade->SetDamageRadius( GRENADE_DAMAGE_RADIUS );
-	}
+	}*/
 #endif
 
 	m_bRedraw = true;
@@ -559,13 +558,13 @@ void CWeaponFind::RollGrenade( CBasePlayer *pPlayer )
 	QAngle orientation(0,pPlayer->GetLocalAngles().y,-90);
 	// roll it
 	AngularImpulse rotSpeed(0,0,720);
-	CBaseGrenade *pGrenade = Fraggrenade_Create( vecSrc, orientation, vecThrow, rotSpeed, pPlayer, GRENADE_TIMER, false );
+	/*CBaseGrenade *pGrenade = Fraggrenade_Create( vecSrc, orientation, vecThrow, rotSpeed, pPlayer, GRENADE_TIMER, false );
 
 	if ( pGrenade )
 	{
 		pGrenade->SetDamage( GetHL2MPWpnData().m_iPlayerDamage );
 		pGrenade->SetDamageRadius( GRENADE_DAMAGE_RADIUS );
-	}
+	}*/
 
 #endif
 

@@ -1,6 +1,6 @@
-//========= Copyright Valve Corporation, All rights reserved. ============//
+//=============================================================================//
 //
-// Purpose: 
+// Purpose: defines weapons/items related to player finds.
 //
 //=============================================================================//
 
@@ -8,14 +8,51 @@
 #include "weapon_hl2mpbasebasebludgeon.h"
 #ifndef CLIENT_DLL
 #include "entityoutput.h"
+#include "items.h"
 #include "finds.h"
 #endif // !CLIENT_DLL
+
+#include "npcevent.h"
+#include "in_buttons.h"
+
+#ifdef CLIENT_DLL
+#include "c_hl2mp_player.h"
+#include "c_te_effect_dispatch.h"
+#else
+#include "hl2mp_player.h"
+#include "te_effect_dispatch.h"
+#endif
+
+#include "weapon_ar2.h"
+#include "effect_dispatch_data.h"
+#include "weapon_hl2mpbasehlmpcombatweapon.h"
+
+
 // memdbgon must be the last include file in a .cpp file!!!
 #include "tier0/memdbgon.h"
 
+#define GRENADE_TIMER	2.5f //Seconds
+
+#define GRENADE_PAUSED_NO			0
+#define GRENADE_PAUSED_PRIMARY		1
+#define GRENADE_PAUSED_SECONDARY	2
+
+#define GRENADE_RADIUS	4.0f // inches
+
+#define GRENADE_DAMAGE_RADIUS 250.0f
+
+#define MAX_FINDS 3
+ConVar sk_max_find("sk_max_find", "3");
+
+
 #ifdef CLIENT_DLL
 #define CWeaponSuitcase C_WeaponSuitcase
+#define CWeaponFind C_WeaponFind
 #endif
+
+//-----------------------------------------------------------------------------
+//	Briefcase weapon. Negotiator carries this to organize their finds for meetup with the base boss.
+//-----------------------------------------------------------------------------
 
 class CWeaponSuitcase : public CBaseHL2MPBludgeonWeapon
 {
@@ -31,6 +68,11 @@ public:
 #endif
 	void		PrimaryAttack(void)	{}
 	void		SecondaryAttack(void)	{}
+
+	void InputAdd(int);
+	void InputSubtract(int);
+	void InputGetValue(int);
+
 #ifndef CLIENT_DLL
 private:
 	int m_nMin = 0;		// Minimum clamp value. If min and max are BOTH zero, no clamping is done.
@@ -234,15 +276,6 @@ int CWeaponSuitcase::DrawDebugTextOverlays(void)
 	if (m_debugOverlays & OVERLAY_TEXT_BIT)
 	{
 		char tempstr[512];
-		/*
-		Q_snprintf(tempstr, sizeof(tempstr), "    min value: %n", m_nMin);
-		EntityText(text_offset, tempstr, 0);
-		text_offset++;
-
-		Q_snprintf(tempstr, sizeof(tempstr), "    max value: %n", m_nMax);
-		EntityText(text_offset, tempstr, 0);
-		text_offset++;
-		*/
 		for (int i = 0; i < FIND_COUNT; i++)
 		{
 			Q_snprintf(tempstr, sizeof(tempstr), "find %n: %n/%n", i, m_OutValue[i].Get(), m_nMax);
@@ -309,25 +342,24 @@ void CWeaponSuitcase::UpdateOutValue(CBaseEntity *pActivator, int find, int nNew
 {
 	if ((m_nMin != 0) || (m_nMax != 0))
 	{
-		//
 		// Fire an output any time we reach or exceed our maximum value.
-		//
 		if (nNewValue >= m_nMax[find])
 		{
 			if (!m_bHitMax[find])
 			{
 				m_bHitMax[find] = true;
 				m_OnHitMax[find].FireOutput(pActivator, this);
+				//TODO: randomize finds of this type here
 			}
 		}
 		else
 		{
 			m_bHitMax[find] = false;
+			//TODO: de-randomize finds of this type here
 		}
+		
 
-		//
 		// Fire an output any time we reach or go below our minimum value.
-		//
 		if (nNewValue <= m_nMin)
 		{
 			if (!m_bHitMin[find])
@@ -337,9 +369,7 @@ void CWeaponSuitcase::UpdateOutValue(CBaseEntity *pActivator, int find, int nNew
 			}
 		}
 		else
-		{
 			m_bHitMin[find] = false;
-		}
 
 		nNewValue = clamp(nNewValue, m_nMin, m_nMax[find]);
 	}
@@ -368,4 +398,700 @@ bool CWeaponSuitcase::InputAddRandom(CBaseEntity *pActivator)
 	UpdateOutValue(pActivator, nRemap[nRandom], m_OutValue[nRemap[nRandom]].Get() + 1);
 	return true;
 }
+
+
+//-----------------------------------------------------------------------------
+// Purpose: Input handler for adding to the accumulator value.
+// Input  : Integer value to add.
+//-----------------------------------------------------------------------------
+void CWeaponSuitcase::InputAdd(int find)
+{
+	if (find < 0) //-1 is our random find
+	{
+		InputAddRandom(GetOwner());
+		return;
+	}
+	int nNewValue = m_OutValue[find].Get();
+	nNewValue++;
+	if (nNewValue > m_nMax[find])
+		InputAddRandom(GetOwner());
+	else
+		UpdateOutValue(GetOwner(), find, nNewValue);
+}
+
+//-----------------------------------------------------------------------------
+// Purpose: Input handler for subtracting from the current value.
+// Input  : Integer value to subtract.
+//-----------------------------------------------------------------------------
+void CWeaponSuitcase::InputSubtract(int find)
+{
+	if (find < 0) //-1 is our random find
+	{
+		DevMsg("Find Counter %s cannot subtract from a random find!\n", GetDebugName());
+		return;
+	}
+	int nNewValue = m_OutValue[find].Get();
+	nNewValue--;
+	if (nNewValue >= m_nMin)
+		UpdateOutValue(GetOwner(), find, nNewValue);
+}
+
+
+//-----------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
+void CWeaponSuitcase::InputGetValue(int find)
+{
+	int nOutValue = m_OutValue[find].Get();
+	m_OnGetValue[find].Set(nOutValue, GetOwner(), GetOwner());
+}
+
+
 #endif // !CLIENT_DLL
+
+#ifndef CLIENT_DLL
+//-----------------------------------------------------------------------------
+//
+// Find Item. Placed into briefcase if the player has it, otherwise gives the find carry weapon.
+//
+//-----------------------------------------------------------------------------
+
+#define FIND_MODEL "models/weapons/w_find.mdl"
+#define FIND_DROPTIME 1.0f
+
+class CItemFind : public CItem
+{
+public:
+	DECLARE_CLASS(CItemFind, CItem);
+
+	void Spawn(void)
+	{
+		Precache();
+		SetModel(FIND_MODEL);
+		BaseClass::Spawn();
+	}
+	void Precache(void)
+	{
+		UTIL_PrecacheOther("weapon_find");
+		PrecacheModel(FIND_MODEL);
+	}
+	void Reactivate(void)
+	{
+		m_bActive = true;
+		m_flClearOwnerTime = gpGlobals->curtime + FIND_DROPTIME;
+	}
+	int GetType(void)
+	{
+		return m_nType;
+	}
+	bool IsOriginalType(void)
+	{
+		return m_nType == m_nTypeOriginal;
+	}
+	void Randomize(void)
+	{
+		m_nType = FIND_RANDOM;
+		m_nSkin = 0;
+	}
+	void Derandomize(void)
+	{
+		m_nType = m_nTypeOriginal;
+		m_nSkin = m_nType + 1;
+	}
+	void Derandomize(int type)
+	{
+		if (m_nType == type)
+		{
+			m_nType = m_nTypeOriginal;
+			m_nSkin = m_nType + 1;
+		}
+	}
+	bool MyTouch(CBasePlayer *pPlayer);
+private:
+	bool KeyValue(const char *szKeyName, const char *szValue);
+	bool m_bActive = true;
+	int m_nType = FIND_RANDOM;
+	int m_nTypeOriginal = FIND_RANDOM; //In case this find is randomized from being maxed out, we can return it to its level-designer designated type if it drops back below max.
+	CHL2MP_Player* m_pOwner = NULL;
+	float m_flClearOwnerTime = FLT_MAX; //when the player willingly drops us, we want to delay removing them as our owner so they don't pick us up again immediately.
+	void Think(void);
+};
+
+LINK_ENTITY_TO_CLASS(item_find, CItemFind);
+
+#endif
+
+//-----------------------------------------------------------------------------
+//
+// Find weapon. Allows a player without the briefcase to carry up to three finds and still use other weapons. Alerts guards if you're seen with it out! 
+//
+//-----------------------------------------------------------------------------
+
+class CWeaponFind : public CBaseHL2MPCombatWeapon
+{
+	DECLARE_CLASS(CWeaponFind, CBaseHL2MPCombatWeapon);
+public:
+
+	DECLARE_NETWORKCLASS();
+	DECLARE_PREDICTABLE();
+
+	CWeaponFind();
+
+	void	Precache(void);
+	void	Spawn(void);
+	void	PrimaryAttack(void);
+	void	SecondaryAttack(void) {}
+	void	DecrementAmmo(CBaseCombatCharacter *pOwner);
+	void	ItemPostFrame(void);
+
+	bool	Deploy(void);
+	bool	Holster(CBaseCombatWeapon *pSwitchingTo = NULL);
+
+	bool	Reload(void);
+
+	void	UpdateBodygroups(void)
+	{
+		CBasePlayer* pOwner = ToBasePlayer(GetOwner());
+		if (pOwner)
+		{
+			SetBodygroup(1, min(0, max(MAX_FINDS, pOwner->GetAmmoCount(GetPrimaryAmmoType())) - 1));
+			CBaseViewModel *pViewModel = pOwner->GetViewModel();
+
+			if (pViewModel)
+				pViewModel->SetBodygroup(1, min(0, max(MAX_FINDS, pOwner->GetAmmoCount(GetPrimaryAmmoType())) - 1));
+		}
+	}
+	void	UpdateSkin(int nSkin)
+	{
+		m_nSkin = nSkin;
+		CBasePlayer *pOwner = ToBasePlayer(GetOwner());
+
+		if (pOwner == NULL)
+			return;
+
+		CBaseViewModel *pViewModel = pOwner->GetViewModel();
+
+		if (pViewModel == NULL)
+			return;
+
+		pViewModel->m_nSkin = nSkin;
+	}
+
+#ifndef CLIENT_DLL
+	void	Delete(void);
+
+	void	AddFind(CItemFind*);
+	void	ReactivateFinds(bool lob = false);
+	void	Operator_HandleAnimEvent(animevent_t *pEvent, CBaseCombatCharacter *pOperator);
+	int		CapabilitiesGet(void) { return bits_CAP_WEAPON_RANGE_ATTACK1; }
+#endif
+
+private:
+
+	//void	RollGrenade(CBasePlayer *pPlayer);
+	void	LobGrenade(CBasePlayer *pPlayer);
+	// check a throw from vecSrc.  If not valid, move the position back along the line to vecEye
+	void	CheckThrowPosition(CBasePlayer *pPlayer, const Vector &vecEye, Vector &vecSrc);
+
+	CNetworkVar(bool, m_bRedraw);	//Draw the weapon again after throwing a grenade
+
+	CNetworkVar(int, m_AttackPaused);
+	CNetworkVar(bool, m_fDrawbackFinished);
+
+	CWeaponFind(const CWeaponFind &);
+
+#ifndef CLIENT_DLL
+	CItemFind* m_pFinds[2];
+	DECLARE_ACTTABLE();
+#endif
+};
+
+#ifndef CLIENT_DLL
+
+//-----------------------------------------------------------------------------
+//
+// Find Item members
+//
+//-----------------------------------------------------------------------------
+
+//Player has touched us. Put us in the briefcase, or pick us up as our own weapon if not.
+bool CItemFind::MyTouch(CBasePlayer *pPlayer)
+{
+	if (m_flClearOwnerTime <= gpGlobals->curtime)
+	{
+		m_flClearOwnerTime = FLT_MAX;
+		m_pOwner = NULL;
+		m_bActive = true;
+	}
+	if (!m_bActive)
+	{
+		if (m_pOwner)
+		{
+			if (!m_pOwner->IsAlive() || m_pOwner->IsDisconnecting())
+			{
+				m_bActive = true;
+				m_flClearOwnerTime = gpGlobals->curtime;
+			}
+			else if (!m_pOwner->Weapon_OwnsThisType("weapon_find"))
+			{
+				m_bActive = true;
+				m_flClearOwnerTime = gpGlobals->curtime + FIND_DROPTIME;
+			}
+		}
+	}
+	if (!m_bActive)
+		return false;
+	if (pPlayer == m_pOwner)
+		return false;
+	CWeaponSuitcase* pSuitcase = dynamic_cast<CWeaponSuitcase*>(pPlayer->Weapon_OwnsThisType("weapon_suitcase"));
+	CWeaponFind* pFindWep = dynamic_cast<CWeaponFind*>(pPlayer->Weapon_OwnsThisType("weapon_find"));
+	if (pSuitcase)
+	{
+		pSuitcase->InputAdd(m_nType);
+		UTIL_Remove(this);
+		return true;
+	}
+	else if (pFindWep)
+	{
+		if (pPlayer->GiveAmmo(1, pFindWep->GetPrimaryAmmoType(), true))
+		{
+			m_pOwner = dynamic_cast<CHL2MP_Player*>(pPlayer);
+			m_flClearOwnerTime = FLT_MAX;
+			pFindWep->UpdateBodygroups();
+			pFindWep->AddFind(this);
+			m_bActive = false;
+		}
+	}
+	else
+	{
+		pPlayer->GiveNamedItem("weapon_find");
+		m_pOwner = dynamic_cast<CHL2MP_Player*>(pPlayer);
+		m_flClearOwnerTime = FLT_MAX;
+		m_bActive = false;
+		//set the find's skin to reflect this first find
+		pFindWep = dynamic_cast<CWeaponFind*>(pPlayer->Weapon_OwnsThisType("weapon_find"));
+		if (pFindWep)
+		{
+			pFindWep->AddFind(this);
+			pFindWep->UpdateSkin(m_nSkin);
+			pFindWep->UpdateBodygroups();
+		}
+	}
+	return false;
+}
+
+//-----------------------------------------------------------------------------
+// Purpose: Handles key values from the BSP before spawn is called.
+//-----------------------------------------------------------------------------
+
+bool CItemFind::KeyValue(const char *szKeyName, const char *szValue)
+{
+	// Set our find type
+	if (!stricmp(szKeyName, "type"))
+	{
+		m_nType = atoi(szValue);
+		if (m_nType >= FIND_COUNT)
+			m_nType = FIND_RANDOM;
+
+		m_nSkin = m_nType + 1;
+		m_nTypeOriginal = m_nType;
+		return(true);
+	}
+
+	return(BaseClass::KeyValue(szKeyName, szValue));
+}
+//-----------------------------------------------------------------------------
+// Purpose: Reactivate us if our owner dies or drops us.
+//-----------------------------------------------------------------------------
+void CItemFind::Think(void)
+{
+	if (!m_bActive)
+	{
+		if (m_pOwner)
+		{
+			if (!m_pOwner->IsAlive() || m_pOwner->IsDisconnecting())
+			{
+				m_bActive = true;
+				m_flClearOwnerTime = gpGlobals->curtime - 1.0f;
+			}
+			else if (!m_pOwner->Weapon_OwnsThisType("weapon_find"))
+			{
+				m_bActive = true;
+				m_flClearOwnerTime = gpGlobals->curtime + FIND_DROPTIME;
+			}
+		}
+	}
+	if (m_flClearOwnerTime <= gpGlobals->curtime)
+	{
+		m_flClearOwnerTime = FLT_MAX;
+		m_pOwner = NULL;
+		m_bActive = true;
+	}
+}
+#endif // !CLIENT_DLL
+
+//-----------------------------------------------------------------------------
+//
+// Find weapon members.
+//
+//-----------------------------------------------------------------------------
+
+#ifndef CLIENT_DLL
+
+acttable_t	CWeaponFind::m_acttable[] =
+{
+	{ ACT_HL2MP_IDLE, ACT_HL2MP_IDLE_PHYSGUN, false },
+	{ ACT_HL2MP_RUN, ACT_HL2MP_RUN_PHYSGUN, false },
+	{ ACT_HL2MP_IDLE_CROUCH, ACT_HL2MP_IDLE_CROUCH_PHYSGUN, false },
+	{ ACT_HL2MP_WALK_CROUCH, ACT_HL2MP_WALK_CROUCH_PHYSGUN, false },
+	{ ACT_HL2MP_GESTURE_RANGE_ATTACK, ACT_HL2MP_GESTURE_RANGE_ATTACK_SLAM, false },
+	{ ACT_HL2MP_GESTURE_RELOAD, ACT_HL2MP_GESTURE_RELOAD_PHYSGUN, false },
+	{ ACT_HL2MP_JUMP, ACT_HL2MP_JUMP_PHYSGUN, false },
+	//NPC
+	{ ACT_RANGE_ATTACK1, ACT_RANGE_ATTACK_SLAM, true },
+};
+
+IMPLEMENT_ACTTABLE(CWeaponFind);
+
+#endif
+
+IMPLEMENT_NETWORKCLASS_ALIASED(WeaponFind, DT_WeaponFind)
+
+BEGIN_NETWORK_TABLE(CWeaponFind, DT_WeaponFind)
+
+#ifdef CLIENT_DLL
+RecvPropBool(RECVINFO(m_bRedraw)),
+RecvPropBool(RECVINFO(m_fDrawbackFinished)),
+RecvPropInt(RECVINFO(m_AttackPaused)),
+#else
+SendPropBool(SENDINFO(m_bRedraw)),
+SendPropBool(SENDINFO(m_fDrawbackFinished)),
+SendPropInt(SENDINFO(m_AttackPaused)),
+#endif
+
+END_NETWORK_TABLE()
+
+#ifdef CLIENT_DLL
+BEGIN_PREDICTION_DATA(CWeaponFind)
+DEFINE_PRED_FIELD(m_bRedraw, FIELD_BOOLEAN, FTYPEDESC_INSENDTABLE),
+DEFINE_PRED_FIELD(m_fDrawbackFinished, FIELD_BOOLEAN, FTYPEDESC_INSENDTABLE),
+DEFINE_PRED_FIELD(m_AttackPaused, FIELD_INTEGER, FTYPEDESC_INSENDTABLE),
+END_PREDICTION_DATA()
+#endif
+
+LINK_ENTITY_TO_CLASS(weapon_find, CWeaponFind);
+PRECACHE_WEAPON_REGISTER(weapon_find);
+
+CWeaponFind::CWeaponFind(void) :
+CBaseHL2MPCombatWeapon()
+{
+	m_bRedraw = false;
+}
+
+//-----------------------------------------------------------------------------
+// Purpose: 
+//-----------------------------------------------------------------------------
+void CWeaponFind::Precache(void)
+{
+	BaseClass::Precache();
+	PrecacheScriptSound("WeaponFind.Throw");
+}
+
+//-----------------------------------------------------------------------------
+// Purpose: Called before spawning
+//-----------------------------------------------------------------------------
+void CWeaponFind::Spawn(void)
+{
+#ifndef CLIENT_DLL
+	// null out our finds
+	for (int i = 0; i < MAX_FINDS; i++)
+		m_pFinds[i] = NULL;
+#endif // !CLIENT_DLL
+	BaseClass::Spawn();
+}
+
+#ifndef CLIENT_DLL
+//-----------------------------------------------------------------------------
+// Purpose: 
+// Input  : *pEvent - 
+//			*pOperator - 
+//-----------------------------------------------------------------------------
+void CWeaponFind::Operator_HandleAnimEvent(animevent_t *pEvent, CBaseCombatCharacter *pOperator)
+{
+	CBasePlayer *pOwner = ToBasePlayer(GetOwner());
+	bool fThrewGrenade = false;
+
+	switch (pEvent->event)
+	{
+	case EVENT_WEAPON_SEQUENCE_FINISHED:
+		m_fDrawbackFinished = true;
+		break;
+	case EVENT_WEAPON_THROW3:
+		LobGrenade(pOwner);
+		DecrementAmmo(pOwner);
+		fThrewGrenade = true;
+		break;
+
+	default:
+		BaseClass::Operator_HandleAnimEvent(pEvent, pOperator);
+		break;
+	}
+
+#define RETHROW_DELAY	0.5
+	if (fThrewGrenade)
+	{
+		m_flNextPrimaryAttack = gpGlobals->curtime + RETHROW_DELAY;
+		m_flNextSecondaryAttack = FLT_MAX;
+		m_flTimeWeaponIdle = FLT_MAX; //NOTE: This is set once the animation has finished up!
+	}
+}
+
+//-----------------------------------------------------------------------------
+// Purpose: Add a find to our list, so we know what we're dealing with
+//-----------------------------------------------------------------------------
+void CWeaponFind::AddFind(CItemFind* pFind)
+{
+	for (int i = 0; i < MAX_FINDS; i++)
+	{
+		if (!m_pFinds[i])
+		{
+			m_pFinds[i] = pFind;
+			return;
+		}
+	}
+}
+
+void CWeaponFind::ReactivateFinds(bool lob)
+{
+	for (int i = 0; i < MAX_FINDS; i++)
+	{
+		if (m_pFinds[i])
+		{
+			m_pFinds[i]->Reactivate();
+			CBasePlayer* pOwner = ToBasePlayer(GetOwner());
+			if (pOwner)
+			{
+				Vector vecZero = Vector(0.0f, 0.0f, 0.0f);
+				QAngle qRot = pOwner->GetAbsAngles();
+				if (!lob) //just drop them
+				{
+					Vector vecSpawn = pOwner->GetAbsOrigin();
+					vecSpawn.z += 8 * i; //don't spawn them all inside oneanother
+					m_pFinds[i]->Teleport(&vecSpawn, &qRot, &vecZero);
+				}
+				else //give'em a toss!
+				{
+					Vector	vecEye = pOwner->EyePosition();
+					Vector	vForward, vRight;
+
+					pOwner->EyeVectors(&vForward, &vRight, NULL);
+					Vector vecSrc = vecEye + vForward * 18.0f + vRight * 8.0f + Vector(0, 0, -8);
+					CheckThrowPosition(pOwner, vecEye, vecSrc);
+					vecSrc.z += 8 * i;
+
+					Vector vecThrow;
+					pOwner->GetVelocity(&vecThrow, NULL);
+					vecThrow += vForward * 350 + Vector(0, 0, 50);
+					if(i)
+						vecThrow.z += RandomFloat(-2.5f, 2.5f); //stagger later papers some so they don't stack neatly
+					m_pFinds[i]->Teleport(&vecSrc, &qRot, &vecThrow); //A bit of a delay, but...
+				}
+			}
+			m_pFinds[i] = NULL;
+		}
+	}
+}
+
+
+//-----------------------------------------------------------------------------
+// Purpose: 
+//-----------------------------------------------------------------------------
+void CWeaponFind::Delete(void)
+{
+	ReactivateFinds();
+	BaseClass::Delete();
+}
+#endif
+//-----------------------------------------------------------------------------
+// Purpose: 
+//-----------------------------------------------------------------------------
+bool CWeaponFind::Deploy(void)
+{
+	m_bRedraw = false;
+	m_fDrawbackFinished = false;
+
+	return BaseClass::Deploy();
+}
+
+//-----------------------------------------------------------------------------
+// Purpose: 
+// Output : Returns true on success, false on failure.
+//-----------------------------------------------------------------------------
+bool CWeaponFind::Holster(CBaseCombatWeapon *pSwitchingTo)
+{
+	m_bRedraw = false;
+	m_fDrawbackFinished = false;
+
+	return BaseClass::Holster(pSwitchingTo);
+}
+
+//-----------------------------------------------------------------------------
+// Purpose: 
+// Output : Returns true on success, false on failure.
+//-----------------------------------------------------------------------------
+bool CWeaponFind::Reload(void)
+{
+	CBaseCombatCharacter *pOwner = GetOwner();
+	if (!pOwner)
+		return false;
+	CBasePlayer *pPlayer = ToBasePlayer(pOwner);
+
+	if (!pPlayer)
+		return false;
+
+	if (!HasPrimaryAmmo())
+	{
+		pPlayer->SwitchToNextBestWeapon(this);
+		Remove();
+		return false;
+	}
+
+	if ((m_bRedraw) && (m_flNextPrimaryAttack <= gpGlobals->curtime))
+	{
+		//Redraw the weapon
+		SendWeaponAnim(ACT_VM_DRAW);
+
+		//Update our times
+		m_flNextPrimaryAttack = gpGlobals->curtime + SequenceDuration();
+		m_flNextSecondaryAttack = FLT_MAX;
+		m_flTimeWeaponIdle = gpGlobals->curtime + SequenceDuration();
+
+		//Mark this as done
+		m_bRedraw = false;
+	}
+
+	return true;
+}
+
+//-----------------------------------------------------------------------------
+// Purpose: 
+//-----------------------------------------------------------------------------
+void CWeaponFind::PrimaryAttack(void)
+{
+	if (m_bRedraw)
+		return;
+
+	if (!HasPrimaryAmmo())
+		return;
+
+	CBasePlayer *pPlayer = ToBasePlayer(GetOwner());;
+
+	if (!pPlayer)
+		return;
+
+	// Note that this is a primary attack and prepare the grenade attack to pause.
+	m_AttackPaused = GRENADE_PAUSED_PRIMARY;
+	//SendWeaponAnim( ACT_VM_PULLBACK_HIGH );
+	SendWeaponAnim(ACT_VM_PULLBACK_LOW);
+
+	// Put both of these off indefinitely. We do not know how long
+	// the player will hold the grenade.
+	m_flTimeWeaponIdle = FLT_MAX;
+	m_flNextPrimaryAttack = FLT_MAX;
+
+	// If I'm now out of ammo, switch away and remove
+	if (!HasPrimaryAmmo())
+	{
+		pPlayer->SwitchToNextBestWeapon(this);
+		Remove();
+	}
+}
+
+//-----------------------------------------------------------------------------
+// Purpose: 
+// Input  : *pOwner - 
+//-----------------------------------------------------------------------------
+void CWeaponFind::DecrementAmmo(CBaseCombatCharacter *pOwner)
+{
+	pOwner->RemoveAmmo(pOwner->GetAmmoCount(m_iPrimaryAmmoType), m_iPrimaryAmmoType); //use it all at once
+}
+
+//-----------------------------------------------------------------------------
+// Purpose: 
+//-----------------------------------------------------------------------------
+void CWeaponFind::ItemPostFrame(void)
+{
+	if (m_fDrawbackFinished)
+	{
+		CBasePlayer *pOwner = ToBasePlayer(GetOwner());
+
+		if (pOwner)
+		{
+			switch (m_AttackPaused)
+			{
+			case GRENADE_PAUSED_PRIMARY:
+				if (!(pOwner->m_nButtons & IN_ATTACK))
+				{
+					SendWeaponAnim(ACT_VM_HAULBACK); //replacing primary attack with "drop" functionality
+					m_fDrawbackFinished = false;
+				}
+			default:
+				break;
+			}
+		}
+	}
+
+	
+
+	BaseClass::ItemPostFrame();
+
+	if (m_bRedraw && IsViewModelSequenceFinished())
+		Reload();
+}
+
+// check a throw from vecSrc.  If not valid, move the position back along the line to vecEye
+void CWeaponFind::CheckThrowPosition(CBasePlayer *pPlayer, const Vector &vecEye, Vector &vecSrc)
+{
+	trace_t tr;
+
+	UTIL_TraceHull(vecEye, vecSrc, -Vector(GRENADE_RADIUS + 2, GRENADE_RADIUS + 2, GRENADE_RADIUS + 2), Vector(GRENADE_RADIUS + 2, GRENADE_RADIUS + 2, GRENADE_RADIUS + 2),
+		pPlayer->PhysicsSolidMaskForEntity(), pPlayer, pPlayer->GetCollisionGroup(), &tr);
+
+	if (tr.DidHit())
+		vecSrc = tr.endpos;
+}
+
+//-----------------------------------------------------------------------------
+// Purpose: 
+// Input  : *pPlayer - 
+//-----------------------------------------------------------------------------
+void CWeaponFind::LobGrenade(CBasePlayer *pPlayer)
+{
+#ifndef CLIENT_DLL
+	ReactivateFinds(true);
+	/*Vector	vecEye = pPlayer->EyePosition();
+	Vector	vForward, vRight;
+
+	pPlayer->EyeVectors(&vForward, &vRight, NULL);
+	Vector vecSrc = vecEye + vForward * 18.0f + vRight * 8.0f + Vector(0, 0, -8);
+	CheckThrowPosition(pPlayer, vecEye, vecSrc);
+
+	Vector vecThrow;
+	pPlayer->GetVelocity(&vecThrow, NULL);
+	vecThrow += vForward * 350 + Vector(0, 0, 50);
+	
+	CBaseGrenade *pGrenade = Fraggrenade_Create( vecSrc, vec3_angle, vecThrow, AngularImpulse(200,random->RandomInt(-600,600),0), pPlayer, GRENADE_TIMER, false );
+
+	if ( pGrenade )
+	{
+	pGrenade->SetDamage( GetHL2MPWpnData().m_iPlayerDamage );
+	pGrenade->SetDamageRadius( GRENADE_DAMAGE_RADIUS );
+	}*/
+#endif
+
+	WeaponSound(WPN_DOUBLE);
+
+	// player "shoot" animation
+	pPlayer->SetAnimation(PLAYER_ATTACK1);
+
+	m_bRedraw = true;
+}

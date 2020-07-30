@@ -2,9 +2,9 @@ WeaponData
 {
 	// Weapon data is loaded by both the Game and Client DLLs.
 	"printname"	"#Repose_Finds"
-	"viewmodel"				"models/weapons/v_grenade.mdl"
-	"playermodel"			"models/weapons/w_grenade.mdl"
-	"anim_prefix"			"Grenade"
+	"viewmodel"				"models/weapons/v_find.mdl"
+	"playermodel"			"models/weapons/w_find.mdl"
+	"anim_prefix"			"gauss"
 	"bucket"				"5"
 	"bucket_position"		"2"
 

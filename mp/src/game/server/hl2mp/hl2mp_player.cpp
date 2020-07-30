@@ -1296,8 +1296,8 @@ void CHL2MP_Player::Weapon_Drop( CBaseCombatWeapon *pWeapon, const Vector *pvecT
 		CBaseCombatWeapon *pFind = Weapon_OwnsThisType("weapon_find");
 		if (pFind)
 		{
-			for (int i = pFind->GetPrimaryAmmoCount(); i > 0; i--)
-				BaseClass::Weapon_Drop(pFind, pvecTarget, pVelocity); //TODO: reactivating finds here rather than dropping the weapon itself.
+			pFind->Delete();
+			UTIL_Remove(pFind);
 		}
 	}
 	BaseClass::Weapon_Drop( pWeapon, pvecTarget, pVelocity );
