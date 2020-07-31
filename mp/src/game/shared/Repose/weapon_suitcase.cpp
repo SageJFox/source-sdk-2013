@@ -469,14 +469,16 @@ public:
 		SetModel(FIND_MODEL);
 		BaseClass::Spawn();
 	}
+	void SetInitial(int);
 	void Precache(void)
 	{
-		UTIL_PrecacheOther("weapon_find");
+		//UTIL_PrecacheOther("weapon_find");
 		PrecacheModel(FIND_MODEL);
 	}
-	void Reactivate(void)
+
+	void SetOwnerTemporary(CBaseEntity* pOwner)
 	{
-		m_bActive = true;
+		SetOwnerEntity(pOwner);
 		m_flClearOwnerTime = gpGlobals->curtime + FIND_DROPTIME;
 	}
 	int GetType(void)
@@ -508,12 +510,11 @@ public:
 	bool MyTouch(CBasePlayer *pPlayer);
 private:
 	bool KeyValue(const char *szKeyName, const char *szValue);
-	bool m_bActive = true;
 	int m_nType = FIND_RANDOM;
 	int m_nTypeOriginal = FIND_RANDOM; //In case this find is randomized from being maxed out, we can return it to its level-designer designated type if it drops back below max.
-	CHL2MP_Player* m_pOwner = NULL;
+	//CHL2MP_Player* m_pOwner = NULL;
 	float m_flClearOwnerTime = FLT_MAX; //when the player willingly drops us, we want to delay removing them as our owner so they don't pick us up again immediately.
-	void Think(void);
+	//void Think(void);
 };
 
 LINK_ENTITY_TO_CLASS(item_find, CItemFind);
@@ -577,9 +578,9 @@ public:
 	}
 
 #ifndef CLIENT_DLL
-	void	Delete(void);
-
-	void	AddFind(CItemFind*);
+	void	UpdateOnRemove(void);
+	
+	void	AddFind(int);
 	void	ReactivateFinds(bool lob = false);
 	void	Operator_HandleAnimEvent(animevent_t *pEvent, CBaseCombatCharacter *pOperator);
 	int		CapabilitiesGet(void) { return bits_CAP_WEAPON_RANGE_ATTACK1; }
@@ -587,7 +588,6 @@ public:
 
 private:
 
-	//void	RollGrenade(CBasePlayer *pPlayer);
 	void	LobGrenade(CBasePlayer *pPlayer);
 	// check a throw from vecSrc.  If not valid, move the position back along the line to vecEye
 	void	CheckThrowPosition(CBasePlayer *pPlayer, const Vector &vecEye, Vector &vecSrc);
@@ -600,7 +600,7 @@ private:
 	CWeaponFind(const CWeaponFind &);
 
 #ifndef CLIENT_DLL
-	CItemFind* m_pFinds[2];
+	int	m_nFinds[2];
 	DECLARE_ACTTABLE();
 #endif
 };
@@ -619,28 +619,9 @@ bool CItemFind::MyTouch(CBasePlayer *pPlayer)
 	if (m_flClearOwnerTime <= gpGlobals->curtime)
 	{
 		m_flClearOwnerTime = FLT_MAX;
-		m_pOwner = NULL;
-		m_bActive = true;
+		SetOwnerEntity(NULL);
 	}
-	if (!m_bActive)
-	{
-		if (m_pOwner)
-		{
-			if (!m_pOwner->IsAlive() || m_pOwner->IsDisconnecting())
-			{
-				m_bActive = true;
-				m_flClearOwnerTime = gpGlobals->curtime;
-			}
-			else if (!m_pOwner->Weapon_OwnsThisType("weapon_find"))
-			{
-				m_bActive = true;
-				m_flClearOwnerTime = gpGlobals->curtime + FIND_DROPTIME;
-			}
-		}
-	}
-	if (!m_bActive)
-		return false;
-	if (pPlayer == m_pOwner)
+	if (pPlayer == GetOwnerEntity())
 		return false;
 	CWeaponSuitcase* pSuitcase = dynamic_cast<CWeaponSuitcase*>(pPlayer->Weapon_OwnsThisType("weapon_suitcase"));
 	CWeaponFind* pFindWep = dynamic_cast<CWeaponFind*>(pPlayer->Weapon_OwnsThisType("weapon_find"));
@@ -654,29 +635,44 @@ bool CItemFind::MyTouch(CBasePlayer *pPlayer)
 	{
 		if (pPlayer->GiveAmmo(1, pFindWep->GetPrimaryAmmoType(), true))
 		{
-			m_pOwner = dynamic_cast<CHL2MP_Player*>(pPlayer);
+			SetOwnerEntity(pPlayer);
 			m_flClearOwnerTime = FLT_MAX;
 			pFindWep->UpdateBodygroups();
-			pFindWep->AddFind(this);
-			m_bActive = false;
+			pFindWep->AddFind(m_nType);
+			UTIL_Remove(this);
+			return true;
 		}
 	}
 	else
 	{
 		pPlayer->GiveNamedItem("weapon_find");
-		m_pOwner = dynamic_cast<CHL2MP_Player*>(pPlayer);
+		SetOwnerEntity(pPlayer);
 		m_flClearOwnerTime = FLT_MAX;
-		m_bActive = false;
 		//set the find's skin to reflect this first find
 		pFindWep = dynamic_cast<CWeaponFind*>(pPlayer->Weapon_OwnsThisType("weapon_find"));
 		if (pFindWep)
 		{
-			pFindWep->AddFind(this);
+			pFindWep->AddFind(m_nType);
 			pFindWep->UpdateSkin(m_nSkin);
-			pFindWep->UpdateBodygroups();
+			UTIL_Remove(this);
+			return true;
 		}
 	}
 	return false;
+}
+
+//-----------------------------------------------------------------------------
+// Purpose: Sets our find's initial state, either with keyvalues or when spawned by the find weapon
+//-----------------------------------------------------------------------------
+
+void CItemFind::SetInitial(int nType)
+{
+	
+	if (nType >= FIND_COUNT || nType < FIND_RANDOM)
+		nType = FIND_RANDOM;
+	m_nType = nType;
+	m_nTypeOriginal = m_nType;
+	m_nSkin = m_nType + 1;
 }
 
 //-----------------------------------------------------------------------------
@@ -688,44 +684,10 @@ bool CItemFind::KeyValue(const char *szKeyName, const char *szValue)
 	// Set our find type
 	if (!stricmp(szKeyName, "type"))
 	{
-		m_nType = atoi(szValue);
-		if (m_nType >= FIND_COUNT)
-			m_nType = FIND_RANDOM;
-
-		m_nSkin = m_nType + 1;
-		m_nTypeOriginal = m_nType;
-		return(true);
+		SetInitial(atoi(szValue));
+		return true;
 	}
-
 	return(BaseClass::KeyValue(szKeyName, szValue));
-}
-//-----------------------------------------------------------------------------
-// Purpose: Reactivate us if our owner dies or drops us.
-//-----------------------------------------------------------------------------
-void CItemFind::Think(void)
-{
-	if (!m_bActive)
-	{
-		if (m_pOwner)
-		{
-			if (!m_pOwner->IsAlive() || m_pOwner->IsDisconnecting())
-			{
-				m_bActive = true;
-				m_flClearOwnerTime = gpGlobals->curtime - 1.0f;
-			}
-			else if (!m_pOwner->Weapon_OwnsThisType("weapon_find"))
-			{
-				m_bActive = true;
-				m_flClearOwnerTime = gpGlobals->curtime + FIND_DROPTIME;
-			}
-		}
-	}
-	if (m_flClearOwnerTime <= gpGlobals->curtime)
-	{
-		m_flClearOwnerTime = FLT_MAX;
-		m_pOwner = NULL;
-		m_bActive = true;
-	}
 }
 #endif // !CLIENT_DLL
 
@@ -802,9 +764,9 @@ void CWeaponFind::Precache(void)
 void CWeaponFind::Spawn(void)
 {
 #ifndef CLIENT_DLL
-	// null out our finds
+	// "null" out our finds
 	for (int i = 0; i < MAX_FINDS; i++)
-		m_pFinds[i] = NULL;
+		m_nFinds[i] = FIND_COUNT;
 #endif // !CLIENT_DLL
 	BaseClass::Spawn();
 }
@@ -848,55 +810,69 @@ void CWeaponFind::Operator_HandleAnimEvent(animevent_t *pEvent, CBaseCombatChara
 //-----------------------------------------------------------------------------
 // Purpose: Add a find to our list, so we know what we're dealing with
 //-----------------------------------------------------------------------------
-void CWeaponFind::AddFind(CItemFind* pFind)
+void CWeaponFind::AddFind(int nFind)
 {
 	for (int i = 0; i < MAX_FINDS; i++)
 	{
-		if (!m_pFinds[i])
+		if (m_nFinds[i] == FIND_COUNT)
 		{
-			m_pFinds[i] = pFind;
+			m_nFinds[i] = nFind;
 			return;
 		}
 	}
 }
 
+//-----------------------------------------------------------------------------
+// Purpose: Jettison our carried finds, either by lobbing or dropping them.
+//-----------------------------------------------------------------------------
 void CWeaponFind::ReactivateFinds(bool lob)
 {
-	for (int i = 0; i < MAX_FINDS; i++)
+	if (GetOwner())
 	{
-		if (m_pFinds[i])
+		for (int i = 0; i < MAX_FINDS; i++)
 		{
-			m_pFinds[i]->Reactivate();
-			CBasePlayer* pOwner = ToBasePlayer(GetOwner());
-			if (pOwner)
+			if (m_nFinds[i] != FIND_COUNT)
 			{
-				Vector vecZero = Vector(0.0f, 0.0f, 0.0f);
-				QAngle qRot = pOwner->GetAbsAngles();
-				if (!lob) //just drop them
+				CBaseEntity* pEnt = CreateEntityByName("item_find");
+				CItemFind* pFind = dynamic_cast<CItemFind*>(pEnt);
+				if (pFind)
 				{
-					Vector vecSpawn = pOwner->GetAbsOrigin();
-					vecSpawn.z += 8 * i; //don't spawn them all inside oneanother
-					m_pFinds[i]->Teleport(&vecSpawn, &qRot, &vecZero);
-				}
-				else //give'em a toss!
-				{
-					Vector	vecEye = pOwner->EyePosition();
-					Vector	vForward, vRight;
+					pFind->SetInitial(m_nFinds[i]);
+					pFind->SetOwnerTemporary(GetOwner());
+					pFind->Spawn();
+					CBasePlayer* pOwner = ToBasePlayer(GetOwner());
+					if (pOwner)
+					{
+						Vector vecZero = Vector(0.0f, 0.0f, 0.0f);
+						QAngle qRot = pOwner->GetAbsAngles();
 
-					pOwner->EyeVectors(&vForward, &vRight, NULL);
-					Vector vecSrc = vecEye + vForward * 18.0f + vRight * 8.0f + Vector(0, 0, -8);
-					CheckThrowPosition(pOwner, vecEye, vecSrc);
-					vecSrc.z += 8 * i;
+						if (!lob) //just drop them
+						{
+							Vector vecSpawn = pOwner->GetAbsOrigin();
+							vecSpawn.z += 8 * i; //don't spawn them all inside one-another
+							pFind->Teleport(&vecSpawn, &qRot, &vecZero);
+						}
+						else //give'em a toss!
+						{
+							Vector	vecEye = pOwner->EyePosition();
+							Vector	vForward, vRight;
 
-					Vector vecThrow;
-					pOwner->GetVelocity(&vecThrow, NULL);
-					vecThrow += vForward * 350 + Vector(0, 0, 50);
-					if(i)
-						vecThrow.z += RandomFloat(-2.5f, 2.5f); //stagger later papers some so they don't stack neatly
-					m_pFinds[i]->Teleport(&vecSrc, &qRot, &vecThrow); //A bit of a delay, but...
+							pOwner->EyeVectors(&vForward, &vRight, NULL);
+							Vector vecSrc = vecEye + vForward * 18.0f + vRight * 8.0f + Vector(0, 0, -8);
+							CheckThrowPosition(pOwner, vecEye, vecSrc);
+							vecSrc.z += 8 * i;
+
+							Vector vecThrow;
+							pOwner->GetVelocity(&vecThrow, NULL);
+							vecThrow += vForward * 350 + Vector(0, 0, 50);
+							if (i)
+								vecThrow.y += RandomFloat(-15.0f, 15.0f); //stagger later papers some so they don't stack neatly
+							pFind->Teleport(&vecSrc, &qRot, &vecThrow); //A bit of a delay, but...
+						}
+					}
 				}
+				m_nFinds[i] = FIND_COUNT;
 			}
-			m_pFinds[i] = NULL;
 		}
 	}
 }
@@ -905,10 +881,10 @@ void CWeaponFind::ReactivateFinds(bool lob)
 //-----------------------------------------------------------------------------
 // Purpose: 
 //-----------------------------------------------------------------------------
-void CWeaponFind::Delete(void)
+void CWeaponFind::UpdateOnRemove(void)
 {
 	ReactivateFinds();
-	BaseClass::Delete();
+	BaseClass::UpdateOnRemove();
 }
 #endif
 //-----------------------------------------------------------------------------
@@ -951,7 +927,9 @@ bool CWeaponFind::Reload(void)
 	if (!HasPrimaryAmmo())
 	{
 		pPlayer->SwitchToNextBestWeapon(this);
-		Remove();
+#ifndef CLIENT_DLL
+		UTIL_Remove(this);
+#endif // !CLIENT_DLL
 		return false;
 	}
 
@@ -1002,7 +980,9 @@ void CWeaponFind::PrimaryAttack(void)
 	if (!HasPrimaryAmmo())
 	{
 		pPlayer->SwitchToNextBestWeapon(this);
-		Remove();
+#ifndef CLIENT_DLL
+		UTIL_Remove(this);
+#endif // !CLIENT_DLL
 	}
 }
 
