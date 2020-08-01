@@ -1286,20 +1286,18 @@ void CHL2MP_Player::Weapon_Drop( CBaseCombatWeapon *pWeapon, const Vector *pvecT
 			}
 		}
 	}
-	//drop our briefcase and finds if we died
-	//if (IsDead())
-	{
-		CBaseCombatWeapon *pBriefcase = Weapon_OwnsThisType("weapon_suitcase");
-		if (pBriefcase)
-			BaseClass::Weapon_Drop(pBriefcase, pvecTarget, pVelocity);
 
-		CBaseCombatWeapon *pFind = Weapon_OwnsThisType("weapon_find");
-		if (pFind)
-		{
-			pFind->Delete();
-			UTIL_Remove(pFind);
-		}
+	//drop our briefcase and finds if we died
+	CBaseCombatWeapon *pBriefcase = Weapon_OwnsThisType("weapon_suitcase");
+	if (pBriefcase)
+	{
+		BaseClass::Weapon_Drop(pBriefcase, pvecTarget, pVelocity);
+		pBriefcase->SetOwnerEntity(NULL); //won't get cleaned up if this player dies again
 	}
+
+	CBaseCombatWeapon *pFind = Weapon_OwnsThisType("weapon_find");
+	if (pFind)
+		UTIL_Remove(pFind);
 	BaseClass::Weapon_Drop( pWeapon, pvecTarget, pVelocity );
 }
 

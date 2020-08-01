@@ -551,14 +551,19 @@ public:
 
 	void	UpdateBodygroups(void)
 	{
+		int nBodygroup = FindBodygroupByName("finds");
 		CBasePlayer* pOwner = ToBasePlayer(GetOwner());
 		if (pOwner)
 		{
-			SetBodygroup(1, min(0, max(MAX_FINDS, pOwner->GetAmmoCount(GetPrimaryAmmoType())) - 1));
-			CBaseViewModel *pViewModel = pOwner->GetViewModel();
+			int nCount = pOwner->GetAmmoCount(GetPrimaryAmmoType());
+			SetBodygroup(nBodygroup, max(0, min(MAX_FINDS, nCount) - 1));
 
+			CBaseViewModel *pViewModel = pOwner->GetViewModel();
 			if (pViewModel)
-				pViewModel->SetBodygroup(1, min(0, max(MAX_FINDS, pOwner->GetAmmoCount(GetPrimaryAmmoType())) - 1));
+			{
+				nBodygroup = pViewModel->FindBodygroupByName("finds");
+				pViewModel->SetBodygroup(nBodygroup, max(0, min(MAX_FINDS, nCount) - 1));
+			}
 		}
 	}
 	void	UpdateSkin(int nSkin)
@@ -591,6 +596,9 @@ private:
 	void	LobGrenade(CBasePlayer *pPlayer);
 	// check a throw from vecSrc.  If not valid, move the position back along the line to vecEye
 	void	CheckThrowPosition(CBasePlayer *pPlayer, const Vector &vecEye, Vector &vecSrc);
+	//Gotta update bodygroups shortly after re-giving the player this weapon, or else the old ammo count will stick until they pick up some more ammo.
+	//But we don't want to constantly spam the call to it in the postframe function.
+	float	flBodygroupSpawnRefresh = 0.0f;
 
 	CNetworkVar(bool, m_bRedraw);	//Draw the weapon again after throwing a grenade
 
@@ -638,6 +646,7 @@ bool CItemFind::MyTouch(CBasePlayer *pPlayer)
 			SetOwnerEntity(pPlayer);
 			m_flClearOwnerTime = FLT_MAX;
 			pFindWep->UpdateBodygroups();
+			pFindWep->UpdateSkin(m_nSkin);
 			pFindWep->AddFind(m_nType);
 			UTIL_Remove(this);
 			return true;
@@ -652,8 +661,9 @@ bool CItemFind::MyTouch(CBasePlayer *pPlayer)
 		pFindWep = dynamic_cast<CWeaponFind*>(pPlayer->Weapon_OwnsThisType("weapon_find"));
 		if (pFindWep)
 		{
-			pFindWep->AddFind(m_nType);
+			pFindWep->UpdateBodygroups();
 			pFindWep->UpdateSkin(m_nSkin);
+			pFindWep->AddFind(m_nType);
 			UTIL_Remove(this);
 			return true;
 		}
@@ -768,6 +778,7 @@ void CWeaponFind::Spawn(void)
 	for (int i = 0; i < MAX_FINDS; i++)
 		m_nFinds[i] = FIND_COUNT;
 #endif // !CLIENT_DLL
+	flBodygroupSpawnRefresh = gpGlobals->curtime + 0.05f;
 	BaseClass::Spawn();
 }
 
@@ -894,7 +905,7 @@ bool CWeaponFind::Deploy(void)
 {
 	m_bRedraw = false;
 	m_fDrawbackFinished = false;
-
+	UpdateBodygroups();
 	return BaseClass::Deploy();
 }
 
@@ -993,6 +1004,7 @@ void CWeaponFind::PrimaryAttack(void)
 void CWeaponFind::DecrementAmmo(CBaseCombatCharacter *pOwner)
 {
 	pOwner->RemoveAmmo(pOwner->GetAmmoCount(m_iPrimaryAmmoType), m_iPrimaryAmmoType); //use it all at once
+	UpdateBodygroups();
 }
 
 //-----------------------------------------------------------------------------
@@ -1020,7 +1032,8 @@ void CWeaponFind::ItemPostFrame(void)
 		}
 	}
 
-	
+	if (flBodygroupSpawnRefresh <= gpGlobals->curtime)
+		UpdateBodygroups();
 
 	BaseClass::ItemPostFrame();
 

@@ -33,17 +33,17 @@ WeaponData
 	{
 		"weapon"
 		{
-				"font"		"WeaponIcons"
+				"font"		"WeaponIconsRepose"
 				"character"	"k"
 		}
 		"weapon_s"
 		{	
-				"font"		"WeaponIconsSelected"
+				"font"		"WeaponIconsReposeSelected"
 				"character"	"k"
 		}
 		"ammo"
 		{
-				"font"		"WeaponIcons"
+				"font"		"WeaponIconsRepose"
 				"character"	"v"
 		}
 		"crosshair"
