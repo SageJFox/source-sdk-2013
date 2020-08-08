@@ -15,7 +15,10 @@
 #include "weapon_stunstick.h"
 #include "basegrenade_shared.h"
 #include "ai_route.h"
+//#include "hl2mp_player.h"
 #include "hl2_player.h"
+
+
 #include "iservervehicle.h"
 #include "items.h"
 #include "hl2_gamerules.h"
@@ -224,6 +227,7 @@ BEGIN_DATADESC( CNPC_MetroPolice )
 	//								m_FollowBehavior (auto saved by AI)
 
 	DEFINE_KEYFIELD( m_iManhacks, FIELD_INTEGER, "manhacks" ),
+//	DEFINE_KEYFIELD( m_ModelName, FIELD_STRING, "model"),
 	DEFINE_INPUTFUNC( FIELD_VOID, "EnableManhackToss", InputEnableManhackToss ),
 	DEFINE_INPUTFUNC( FIELD_STRING, "SetPoliceGoal", InputSetPoliceGoal ),
 	DEFINE_INPUTFUNC( FIELD_VOID, "ActivateBaton", InputActivateBaton ),
@@ -438,6 +442,9 @@ void CNPC_MetroPolice::NotifyDeadFriend( CBaseEntity* pFriend )
 	{
 		m_Sentences.Speak( "METROPOLICE_MANHACK_KILLED", SENTENCE_PRIORITY_NORMAL, SENTENCE_CRITERIA_NORMAL );
 		DevMsg("My manhack died!\n");
+		m_flAllowUpsetChange = 0.0f;
+		SetUpset(true, NULL, 15);
+		m_flAllowUpsetChange = gpGlobals->curtime + 1.0f;
 		m_hManhack = NULL;
 		return;
 	}
@@ -451,6 +458,10 @@ void CNPC_MetroPolice::NotifyDeadFriend( CBaseEntity* pFriend )
 	{
 		m_nIdleChatterType = METROPOLICE_CHATTER_ASK_QUESTION;
 	}
+
+	m_flAllowUpsetChange = 0.0f;
+	SetUpset(true,NULL, 30,30);
+	m_flAllowUpsetChange = gpGlobals->curtime + 1.0f;
 
 	if ( GetSquad()->NumMembers() < 2 )
 	{
@@ -576,7 +587,7 @@ void CNPC_MetroPolice::Precache( void )
 	{
 		SetModelName( AllocPooledString("models/police_cheaple.mdl" ) );
 	}
-	else
+	else if (!GetModelName())
 	{
 		SetModelName( AllocPooledString("models/police.mdl") );
 	}
@@ -608,6 +619,28 @@ bool CNPC_MetroPolice::CreateComponents()
 
 
 //-----------------------------------------------------------------------------
+// Purpose: Handles key values from the BSP before spawn is called.
+//-----------------------------------------------------------------------------
+
+bool CNPC_MetroPolice::KeyValue(const char *szKeyName, const char *szValue)
+{
+	//
+	// Set model
+	//
+	if (!stricmp(szKeyName, "model"))
+	{
+		if (szValue)
+			SetModelName(AllocPooledString(szValue));
+		else
+			SetModelName(AllocPooledString("models/police.mdl"));
+		return(true);
+	}
+
+	return(BaseClass::KeyValue(szKeyName, szValue));
+}
+
+
+//-----------------------------------------------------------------------------
 // Purpose: 
 //
 //
@@ -621,7 +654,12 @@ void CNPC_MetroPolice::Spawn( void )
 	AddSpawnFlags( SF_NPC_FADE_CORPSE );
 #endif // _XBOX
 
-	SetModel( STRING( GetModelName() ) );
+	SetModel(STRING(GetModelName()));
+
+	m_bIsUpsettable = true;
+	m_bIsOrganic = true;
+	m_bIsSynthetic = false;
+	m_nSubStats = STAT_BLUECOLLAR;
 
 	SetHullType(HULL_HUMAN);
 	SetHullSizeNormal();
@@ -681,7 +719,7 @@ void CNPC_MetroPolice::Spawn( void )
 
 		pWeapon = GetActiveWeapon();
 
-		if( !FClassnameIs( pWeapon, "weapon_pistol" ) )
+		if( !(FClassnameIs( pWeapon, "weapon_pistol" ) || FClassnameIs(pWeapon, "weapon_357")))
 		{
 			m_fWeaponDrawn = true;
 		}
@@ -706,9 +744,9 @@ void CNPC_MetroPolice::Spawn( void )
 	// Clear out spawnflag if we're missing the smg1
 	if( HasSpawnFlags( SF_METROPOLICE_ALWAYS_STITCH ) )
 	{
-		if ( !Weapon_OwnsThisType( "weapon_smg1" ) )
+		if (!(Weapon_OwnsThisType("weapon_smg1") || Weapon_OwnsThisType("weapon_ar2")))
 		{
-			Warning( "Warning! Metrocop is trying to use the stitch behavior but he has no smg1!\n" );
+			Warning( "Warning! Metrocop is trying to use the stitch behavior but he has no smg1/ar2!\n" );
 			RemoveSpawnFlags( SF_METROPOLICE_ALWAYS_STITCH );
 		}
 	}
@@ -1198,7 +1236,7 @@ void CNPC_MetroPolice::OnUpdateShotRegulator( )
 	BaseClass::OnUpdateShotRegulator();
 
 	// FIXME: This code (except the burst interval) could be used for all weapon types 
-	if( Weapon_OwnsThisType( "weapon_pistol" ) )
+	if ( Weapon_OwnsThisType( "weapon_pistol" ) )
 	{
 		if ( m_nBurstMode == BURST_NOT_ACTIVE )
 		{
@@ -2714,7 +2752,11 @@ float CNPC_MetroPolice::MaxYawSpeed( void )
 //-----------------------------------------------------------------------------
 Class_T	CNPC_MetroPolice::Classify ( void )
 {
-	return CLASS_METROPOLICE;
+	//return CLASS_METROPOLICE;
+	if (m_bIsUpset)
+		return CLASS_ANGRY;
+	else
+		return CLASS_NEUTRAL;
 }
 
 //-----------------------------------------------------------------------------
@@ -2741,7 +2783,7 @@ Disposition_t CNPC_MetroPolice::IRelationType(CBaseEntity *pTarget)
 {
 	Disposition_t disp = BaseClass::IRelationType(pTarget);
 
-	if ( pTarget == NULL )
+	/*if ( pTarget == NULL )
 		return disp;
 
 	// If the player's not a criminal, then we don't necessary hate him
@@ -2754,7 +2796,7 @@ Disposition_t CNPC_MetroPolice::IRelationType(CBaseEntity *pTarget)
 				return D_HT;
 			return D_NU;
 		}
-	}
+	}*/
 
 	return disp;
 }
@@ -3012,6 +3054,8 @@ bool CNPC_MetroPolice::HandleInteraction(int interactionType, void *data, CBaseC
 		{
 			if( pProp->NameMatches("cupcop_can") )
 				m_OnCupCopped.FireOutput( this, NULL );
+			SetUpset(true, (CHL2MP_Player*)pProp->GetOwnerEntity(), 15,10);
+			m_flAllowUpsetChange = gpGlobals->curtime + 2.0f;
 		}
 
 		return true;
@@ -3876,7 +3920,7 @@ void CNPC_MetroPolice::PlayFlinchGesture( void )
 	BaseClass::PlayFlinchGesture();
 
 	// To ensure old playtested difficulty stays the same, stop cops shooting for a bit after gesture flinches
-	GetShotRegulator()->FireNoEarlierThan( gpGlobals->curtime + 0.5 );
+	//GetShotRegulator()->FireNoEarlierThan( gpGlobals->curtime + 0.5 );
 }
 
 //-----------------------------------------------------------------------------
@@ -3899,13 +3943,14 @@ void CNPC_MetroPolice::AnnounceHarrassment( void )
 //-----------------------------------------------------------------------------
 void CNPC_MetroPolice::IncrementPlayerCriminalStatus( void )
 {
-	CBasePlayer *pPlayer = UTIL_PlayerByIndex( 1 );
+	CBasePlayer *pPlayer = //UTIL_PlayerByIndex( 1 );
+		UTIL_GetNearestPlayer(this, true);
 
 	if ( pPlayer )
 	{
 		AddLookTarget( pPlayer, 0.8f, 5.0f );
 
-		if ( m_nNumWarnings < METROPOLICE_MAX_WARNINGS )
+		//if ( m_nNumWarnings < METROPOLICE_MAX_WARNINGS )
 		{
 			m_nNumWarnings++;
 		}
@@ -4024,12 +4069,11 @@ int CNPC_MetroPolice::SelectSchedule( void )
 	if ( HasCondition( COND_METROPOLICE_PHYSOBJECT_ASSAULT ) )
 	{
 		ClearCondition( COND_METROPOLICE_PHYSOBJECT_ASSAULT );
-
 		// See which state our player relationship is in
 		if ( PlayerIsCriminal() == false )
 		{
 			m_Sentences.Speak( "METROPOLICE_HIT_BY_PHYSOBJECT", SENTENCE_PRIORITY_INVALID, SENTENCE_CRITERIA_ALWAYS );
-			m_nNumWarnings = METROPOLICE_MAX_WARNINGS;
+			m_nNumWarnings = max( METROPOLICE_MAX_WARNINGS, m_nNumWarnings );
 			AdministerJustice();
 		}
 		else if ( GlobalEntity_GetState( "gordon_precriminal" ) == GLOBAL_ON )
@@ -4065,7 +4109,7 @@ int CNPC_MetroPolice::SelectSchedule( void )
 	}
 
 	// See if the player is in our face (unless we're scripting)
-	if ( PlayerIsCriminal() == false )
+	//if ( PlayerIsCriminal() == false)
 	{
 		if ( !IsInAScript() && (HasCondition( COND_METROPOLICE_PLAYER_TOO_CLOSE ) || m_bPlayerTooClose) )
 		{
@@ -4124,12 +4168,15 @@ int CNPC_MetroPolice::SelectSchedule( void )
 	bool bHighHealth = ((float)GetHealth() / (float)GetMaxHealth() > 0.75f);
 
 	// This will cause the cops to run backwards + shoot at the same time
-	if ( !bHighHealth && !HasBaton() )
+	if (GetActiveWeapon() && !GetActiveWeapon()->ClassMatches("weapon_crowbar"))
 	{
-		if ( GetActiveWeapon() && (GetActiveWeapon()->m_iClip1 <= 5) )
+		if (!bHighHealth && !HasBaton())
 		{
-			m_Sentences.Speak( "METROPOLICE_COVER_LOW_AMMO" );
-			return SCHED_HIDE_AND_RELOAD;
+			if ((GetActiveWeapon()->m_iClip1 <= 5 && !GetActiveWeapon()->ClassMatches("weapon_357")) || GetActiveWeapon()->m_iClip1 <= 2 )
+			{
+				m_Sentences.Speak("METROPOLICE_COVER_LOW_AMMO");
+				return SCHED_HIDE_AND_RELOAD;
+			}
 		}
 	}
 
@@ -4149,7 +4196,7 @@ int CNPC_MetroPolice::SelectSchedule( void )
 	if ( !BehaviorSelectSchedule() )
 	{
 		// If we've warned the player at all, watch him like a hawk
-		if ( m_bKeepFacingPlayer && !PlayerIsCriminal() )
+		if ( m_bKeepFacingPlayer /*&& !PlayerIsCriminal()*/ )
 			return SCHED_TARGET_FACE;
 
 		switch( m_NPCState )
@@ -4957,14 +5004,22 @@ void CNPC_MetroPolice::BuildScheduleTestBits( void )
 WeaponProficiency_t CNPC_MetroPolice::CalcWeaponProficiency( CBaseCombatWeapon *pWeapon )
 {
 	if( FClassnameIs( pWeapon, "weapon_pistol" ) )
-	{
 		return WEAPON_PROFICIENCY_POOR;
-	}
 
 	if( FClassnameIs( pWeapon, "weapon_smg1" ) )
-	{
 		return WEAPON_PROFICIENCY_VERY_GOOD;
-	}
+
+	if (FClassnameIs(pWeapon, "weapon_shotgun"))
+		return WEAPON_PROFICIENCY_GOOD;
+
+	if (FClassnameIs(pWeapon, "weapon_dbshotgun"))
+		return WEAPON_PROFICIENCY_GOOD;
+
+	if (FClassnameIs(pWeapon, "weapon_ar2"))
+		return WEAPON_PROFICIENCY_VERY_GOOD;
+
+	if (FClassnameIs(pWeapon, "weapon_357"))
+		return WEAPON_PROFICIENCY_POOR;
 
 	return BaseClass::CalcWeaponProficiency( pWeapon );
 }
@@ -5155,15 +5210,18 @@ void CNPC_MetroPolice::PrecriminalUse( CBaseEntity *pActivator, CBaseEntity *pCa
 	// Don't respond if I'm busy hating the player
 	if ( IRelationType( pActivator ) == D_HT || ((GetState() != NPC_STATE_ALERT) && (GetState() != NPC_STATE_IDLE)) )
 		return;
-	if ( PlayerIsCriminal() )
-		return;
+	//if ( PlayerIsCriminal() )
+	//	return;
 
 	// Treat it like the player's bothered the cop
 	IncrementPlayerCriminalStatus();
 
 	// If we've hit max warnings, and we're allowed to chase, go for it
-	if ( m_nNumWarnings == METROPOLICE_MAX_WARNINGS )
+	if ( m_nNumWarnings >= METROPOLICE_MAX_WARNINGS )
 	{
+		CHL2MP_Player* pPlayer = (CHL2MP_Player*)pActivator;
+		if (pPlayer)
+			SetUpset(true, pPlayer, 5 + m_nNumWarnings,3);
 		AdministerJustice();
 	}
 }

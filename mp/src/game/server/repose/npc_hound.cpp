@@ -27,6 +27,7 @@
 #include "physics_npc_solver.h"
 #include "physics_prop_ragdoll.h"
 #include "ai_behavior_assault.h"
+#include "hl2mp_player.h"
 
 // memdbgon must be the last include file in a .cpp file!!!
 #include "tier0/memdbgon.h"
@@ -251,7 +252,7 @@ public:
 	void AttackHitSound( void );
 	void AttackMissSound( void );
 	void FootstepSound( bool fRightFoot );
-	void FootscuffSound( bool fRightFoot ) {}; // fast guy doesn't scuff
+	void FootscuffSound( bool fRightFoot ) {}; // hound doesn't scuff
 	void StopLoopingSounds( void );
 
 	void SoundInit( void );
@@ -390,10 +391,7 @@ void CHound::Precache( void )
 void CHound::OnScheduleChange( void )
 {
 	if ( m_flNextMeleeAttack > gpGlobals->curtime + 1 )
-	{
-		// Allow melee attacks again.
-		m_flNextMeleeAttack = gpGlobals->curtime + 0.5;
-	}
+		m_flNextMeleeAttack = gpGlobals->curtime + 0.5; // Allow melee attacks again.
 
 	BaseClass::OnScheduleChange();
 }
@@ -403,15 +401,10 @@ void CHound::OnScheduleChange( void )
 int CHound::SelectSchedule ( void )
 {
 	if ( HasCondition( COND_ZOMBIE_RELEASECRAB ) )
-	{
-		// Death waits for no man. Or zombie. Or something.
-		return SCHED_DIE_RAGDOLL; //SCHED_ZOMBIE_RELEASECRAB;
-	}
+		return SCHED_DIE_RAGDOLL;
 
 	if ( HasCondition( COND_HOUND_CLIMB_TOUCH ) )
-	{
 		return SCHED_HOUND_UNSTICK_JUMP;
-	}
 
 	switch ( m_NPCState )
 	{
@@ -489,10 +482,7 @@ int CHound::SelectSchedule ( void )
 
 			// If we have a new enemy, take it
 			if (pNewEnemy != NULL)
-			{
-				//Setup our ignore info
-				SetEnemy(pNewEnemy);
-			}
+				SetEnemy(pNewEnemy); //Setup our ignore info
 
 			ClearCondition(COND_HEAR_BUGBAIT);
 
@@ -566,9 +556,7 @@ void CHound::PrescheduleThink( void )
 
 	// Crudely detect the apex of our jump
 	if( IsNavJumping() && !m_fHitApex && GetAbsVelocity().z <= 0.0 )
-	{
 		OnNavJumpHitApex();
-	}
 
 	if( IsCurSchedule(SCHED_HOUND_RANGE_ATTACK1, false) )
 	{
@@ -636,9 +624,7 @@ void CHound::SetIdleSoundState( void )
 void CHound::SetAngrySoundState( void )
 {
 	if (( !m_pMoanSound ) || ( !m_pLayer2 ))
-	{
 		return;
-	}
 
 	if (m_flNextAngrySound < gpGlobals->curtime) //sound spams out without this when we fail to navigate to our target
 	{
@@ -676,11 +662,9 @@ void CHound::Spawn( void )
 	CapabilitiesClear();
 	CapabilitiesAdd( bits_CAP_MOVE_JUMP | bits_CAP_MOVE_GROUND | bits_CAP_INNATE_RANGE_ATTACK1 );
 
-
 	m_flNextAttack = gpGlobals->curtime;
 
 	m_pLayer2 = NULL;
-	//m_iClimbCount = 0;
 
 	EndNavJump();
 
@@ -691,6 +675,9 @@ void CHound::Spawn( void )
 	m_flIgnoreSoundTime = 0.0f;
 
 	BaseClass::Spawn();
+
+	m_bIsUpsettable = true;
+	m_nSubStats = STAT_ANIMALCONTROL;
 }
 
 //-----------------------------------------------------------------------------
@@ -1066,48 +1053,6 @@ void CHound::HandleAnimEvent( animevent_t *pEvent )
 		return;
 	}
 
-//=============================================================================
-#ifdef HL2_EPISODIC
-
-	// Do the leap attack
-	if ( pEvent->event == AE_HOUND_VEHICLE_LEAP )
-	{
-		VehicleLeapAttack();
-		return;
-	}
-
-	// Die while doing an SS in a vehicle
-	if ( pEvent->event == AE_HOUND_VEHICLE_SS_DIE )
-	{
-		if ( IsInAVehicle() )
-		{
-			// Get the vehicle's present speed as a baseline
-			Vector vecVelocity = vec3_origin;
-			CBaseEntity *pVehicle = m_PassengerBehavior.GetTargetVehicle();
-			if ( pVehicle )
-			{
-				pVehicle->GetVelocity( &vecVelocity, NULL );
-			}
-
-			// TODO: We need to make this content driven -- jdw
-			Vector vecForward, vecRight, vecUp;
-			GetVectors( &vecForward, &vecRight, &vecUp );
-
-			vecVelocity += ( vecForward * -2500.0f ) + ( vecRight * 200.0f ) + ( vecUp * 300 );
-			
-			// Always kill
-			float flDamage = GetMaxHealth() + 10;
-
-			// Take the damage and die
-			CTakeDamageInfo info( this, this, vecVelocity * 25.0f, WorldSpaceCenter(), flDamage, (DMG_CRUSH|DMG_VEHICLE) );
-			TakeDamage( info );
-		}
-		return;
-	}
-
-#endif // HL2_EPISODIC
-//=============================================================================
-
 	BaseClass::HandleAnimEvent( pEvent );
 }
 
@@ -1147,13 +1092,9 @@ void CHound::LeapAttack( void )
 		float height = ( vecEnemyPos.z - GetAbsOrigin().z );
 
 		if ( height < 16 )
-		{
 			height = 16;
-		}
 		else if ( height > 120 )
-		{
 			height = 120;
-		}
 		float speed = sqrt( 2 * gravity * height );
 		float time = speed / gravity;
 
@@ -1174,9 +1115,7 @@ void CHound::LeapAttack( void )
 #define CLAMP 1000.0
 		float distance = vecJumpDir.Length();
 		if ( distance > CLAMP )
-		{
 			vecJumpDir = vecJumpDir * ( CLAMP / distance );
-		}
 
 		// try speeding up a bit.
 		SetAbsVelocity( vecJumpDir );
@@ -1194,13 +1133,9 @@ void CHound::StartTask( const Task_t *pTask )
 	case TASK_HOUND_VERIFY_ATTACK:
 		// Simply ensure that the zombie still has a valid melee attack
 		if( HasCondition( COND_CAN_MELEE_ATTACK1 ) )
-		{
 			TaskComplete();
-		}
 		else
-		{
 			TaskFail("");
-		}
 		break;
 
 	case TASK_HOUND_JUMP_BACK:
@@ -1258,9 +1193,7 @@ void CHound::StartTask( const Task_t *pTask )
 				ApplyAbsVelocityImpulse( vecJumpDir * 300 + Vector( 0, 0, 200 ) );
 			}
 			else
-			{
 				DevMsg("UNHANDLED CASE! Stuck Hound with no enemy!\n");
-			}
 		}
 		break;
 
@@ -1291,14 +1224,9 @@ void CHound::StartTask( const Task_t *pTask )
 			float flDeltaYaw = GetMotor()->DeltaIdealYaw();
 
 			if( flDeltaYaw < 0 )
-			{
 				SetIdealActivity( (Activity)ACT_HOUND_LAND_RIGHT );
-			}
 			else
-			{
 				SetIdealActivity( (Activity)ACT_HOUND_LAND_LEFT );
-			}
-
 
 			TaskComplete();
 		}
@@ -1601,24 +1529,15 @@ void CHound::OnChangeActivity( Activity NewActivity )
 	}
 
 	if( NewActivity == ACT_JUMP )
-	{
 		BeginNavJump();
-	}
 	else if( GetActivity() == ACT_JUMP )
-	{
 		EndNavJump();
-	}
 
 	if ( NewActivity == ACT_LAND )
-	{
 		m_flNextAttack = gpGlobals->curtime + 1.0;
-	}
 
 	if ( NewActivity == ACT_GLIDE )
-	{
-		// Started a jump.
-		BeginNavJump();
-	}
+		BeginNavJump(); // Started a jump.
 	else if ( GetActivity() == ACT_GLIDE )
 	{
 		// Landed a jump
@@ -1708,9 +1627,7 @@ void CHound::BuildScheduleTestBits( void )
 void CHound::OnStateChange( NPC_STATE OldState, NPC_STATE NewState )
 {
 	if( NewState == NPC_STATE_COMBAT )
-	{
 		SetAngrySoundState();
-	}
 	else if( (m_pMoanSound) && ( NewState == NPC_STATE_IDLE || NewState == NPC_STATE_ALERT ) ) ///!!!HACKHACK - sjb
 	{
 		// Don't make this sound while we're slumped
@@ -1762,8 +1679,10 @@ Class_T	CHound::Classify( void )
 {
 	if ( IsSlumped() )
 		return CLASS_NONE;
-
-	return( CLASS_CITIZEN_REBEL ); //CLASS_ZOMBIE
+	if ( m_bIsUpset )
+		return CLASS_ANGRY;
+	else
+		return CLASS_NEUTRAL;
 }
 
 //-----------------------------------------------------------------------------
@@ -1901,6 +1820,7 @@ bool CHound::QueryHearSound(CSound *pSound)
 
 	if (pSound->m_iType == SOUND_BUGBAIT)
 	{
+		SetUpset(false);
 		//Must be more recent than the current
 		if (pSound->SoundExpirationTime() <= m_flIgnoreSoundTime)
 			return false;

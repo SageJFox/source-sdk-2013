@@ -38,6 +38,7 @@
 #include "rumble_shared.h"
 #include "saverestoretypes.h"
 #include "nav_mesh.h"
+#include "hl2mp_player.h"
 
 #ifdef NEXT_BOT
 #include "NextBot/NextBotManager.h"
@@ -107,6 +108,13 @@ BEGIN_DATADESC( CBaseCombatCharacter )
 	DEFINE_FIELD( m_bPreventWeaponPickup, FIELD_BOOLEAN ),
 
 	DEFINE_INPUTFUNC( FIELD_VOID, "KilledNPC", InputKilledNPC ),
+
+	/*DEFINE_FIELD(m_bIsUpset, FIELD_BOOLEAN),
+	DEFINE_FIELD(m_bIsUpsettable, FIELD_BOOLEAN),
+	DEFINE_FIELD(m_flAllowUpsetChange, FIELD_FLOAT),
+	DEFINE_FIELD(m_nSubStats, FIELD_INTEGER),
+	DEFINE_FIELD(m_bIsOrganic,FIELD_BOOLEAN),
+	DEFINE_FIELD(m_bIsSynthetic, FIELD_BOOLEAN),*/
 
 END_DATADESC()
 
@@ -2495,6 +2503,13 @@ int CBaseCombatCharacter::OnTakeDamage_Alive( const CTakeDamageInfo &info )
 
 		m_iHealth -= flIntegerDamage;
 	}
+	//REPOSE RELATIONSHIP
+	if (info.GetAttacker()->Classify() && !(info.GetAttacker()->InSameTeam(this))) //we don't want to get mad at the player if we hurt ourself on the environment, or a friend hurt us
+	{
+		m_flAllowUpsetChange = 0.0f; //we just got hurt, doesn't matter how placated we were
+		SetUpset(true, dynamic_cast<CHL2MP_Player*>(info.GetAttacker()), 25,15);
+		m_flAllowUpsetChange = gpGlobals->curtime + 1.0f;
+	}
 
 	return 1;
 }
@@ -3590,3 +3605,41 @@ float CBaseCombatCharacter::GetTimeSinceLastInjury( int team /*= TEAM_ANY */ ) c
 	return never;
 }
 
+
+
+//REPOSE RELATIONSHIPS
+
+void CBaseCombatCharacter::SetUpset(bool bUpset, CHL2MP_Player* pPlayer, int nDifficulty, int nSquadDifficulty)
+{
+	if (!m_bIsUpsettable)
+		return; //we're not the type of NPC to get upset (i.e. only enemies with CLASS_NEUTRAL as a default state)
+	if (m_flAllowUpsetChange > gpGlobals->curtime)
+		return; //we're not allowed to change our disposition yet 
+	if (nSquadDifficulty > 0)
+	{
+		/*AISquadIter_t iter;
+		CAI_BaseNPC *pSquadmate = m_pSquad->GetFirstMember(&iter);
+		while (pSquadmate)
+		{
+			pSquadmate->SetUpset(bUpset, pPlayer, nSquadDifficulty);
+		}*/
+	}
+
+	if (!pPlayer)
+	{
+		//we don't have a player that upset us, so just accept whatever is trying to be set
+		m_bIsUpset = bUpset;
+		return;
+	}
+	int nBonus = 0;
+	if (m_nSubStats & pPlayer->GetSubStats()) //if any of our substats match the player's proficiencies, award a bonus
+		nBonus = 2;
+
+	int nRandom = RandomInt(0, 20) + pPlayer->checkMod(CHA) + nBonus;
+
+	if (!m_bIsUpset)
+		m_bIsUpset = (nRandom >= nDifficulty ? false : bUpset); //return bUpset in case we weren't supposed to be getting upset either way
+	else //we're upset, player's attempted to calm us
+		m_bIsUpset = (nRandom >= nDifficulty ? bUpset : true);
+	Classify();
+}

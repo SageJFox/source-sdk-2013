@@ -472,7 +472,6 @@ public:
 	void SetInitial(int);
 	void Precache(void)
 	{
-		//UTIL_PrecacheOther("weapon_find");
 		PrecacheModel(FIND_MODEL);
 	}
 
@@ -512,9 +511,7 @@ private:
 	bool KeyValue(const char *szKeyName, const char *szValue);
 	int m_nType = FIND_RANDOM;
 	int m_nTypeOriginal = FIND_RANDOM; //In case this find is randomized from being maxed out, we can return it to its level-designer designated type if it drops back below max.
-	//CHL2MP_Player* m_pOwner = NULL;
 	float m_flClearOwnerTime = FLT_MAX; //when the player willingly drops us, we want to delay removing them as our owner so they don't pick us up again immediately.
-	//void Think(void);
 };
 
 LINK_ENTITY_TO_CLASS(item_find, CItemFind);
@@ -564,6 +561,7 @@ public:
 				nBodygroup = pViewModel->FindBodygroupByName("finds");
 				pViewModel->SetBodygroup(nBodygroup, max(0, min(MAX_FINDS, nCount) - 1));
 			}
+
 		}
 	}
 	void	UpdateSkin(int nSkin)
@@ -598,7 +596,7 @@ private:
 	void	CheckThrowPosition(CBasePlayer *pPlayer, const Vector &vecEye, Vector &vecSrc);
 	//Gotta update bodygroups shortly after re-giving the player this weapon, or else the old ammo count will stick until they pick up some more ammo.
 	//But we don't want to constantly spam the call to it in the postframe function.
-	float	flBodygroupSpawnRefresh = 0.0f;
+	float	flBodygroupSpawnRefresh = gpGlobals->curtime + 0.05f;
 
 	CNetworkVar(bool, m_bRedraw);	//Draw the weapon again after throwing a grenade
 
@@ -677,7 +675,6 @@ bool CItemFind::MyTouch(CBasePlayer *pPlayer)
 
 void CItemFind::SetInitial(int nType)
 {
-	
 	if (nType >= FIND_COUNT || nType < FIND_RANDOM)
 		nType = FIND_RANDOM;
 	m_nType = nType;
@@ -905,7 +902,6 @@ bool CWeaponFind::Deploy(void)
 {
 	m_bRedraw = false;
 	m_fDrawbackFinished = false;
-	UpdateBodygroups();
 	return BaseClass::Deploy();
 }
 
@@ -979,7 +975,6 @@ void CWeaponFind::PrimaryAttack(void)
 
 	// Note that this is a primary attack and prepare the grenade attack to pause.
 	m_AttackPaused = GRENADE_PAUSED_PRIMARY;
-	//SendWeaponAnim( ACT_VM_PULLBACK_HIGH );
 	SendWeaponAnim(ACT_VM_PULLBACK_LOW);
 
 	// Put both of these off indefinitely. We do not know how long
@@ -1032,10 +1027,10 @@ void CWeaponFind::ItemPostFrame(void)
 		}
 	}
 
+	BaseClass::ItemPostFrame();
+
 	if (flBodygroupSpawnRefresh <= gpGlobals->curtime)
 		UpdateBodygroups();
-
-	BaseClass::ItemPostFrame();
 
 	if (m_bRedraw && IsViewModelSequenceFinished())
 		Reload();
@@ -1061,24 +1056,6 @@ void CWeaponFind::LobGrenade(CBasePlayer *pPlayer)
 {
 #ifndef CLIENT_DLL
 	ReactivateFinds(true);
-	/*Vector	vecEye = pPlayer->EyePosition();
-	Vector	vForward, vRight;
-
-	pPlayer->EyeVectors(&vForward, &vRight, NULL);
-	Vector vecSrc = vecEye + vForward * 18.0f + vRight * 8.0f + Vector(0, 0, -8);
-	CheckThrowPosition(pPlayer, vecEye, vecSrc);
-
-	Vector vecThrow;
-	pPlayer->GetVelocity(&vecThrow, NULL);
-	vecThrow += vForward * 350 + Vector(0, 0, 50);
-	
-	CBaseGrenade *pGrenade = Fraggrenade_Create( vecSrc, vec3_angle, vecThrow, AngularImpulse(200,random->RandomInt(-600,600),0), pPlayer, GRENADE_TIMER, false );
-
-	if ( pGrenade )
-	{
-	pGrenade->SetDamage( GetHL2MPWpnData().m_iPlayerDamage );
-	pGrenade->SetDamageRadius( GRENADE_DAMAGE_RADIUS );
-	}*/
 #endif
 
 	WeaponSound(WPN_DOUBLE);

@@ -116,6 +116,8 @@ protected:
 	virtual void OnEndMoveAndShoot();
 
 private:
+	bool		KeyValue(const char *szKeyName, const char *szValue);
+
 	bool		PlayerIsCriminal( void );
 	void		ReleaseManhack( void );
 

@@ -1402,6 +1402,9 @@ void CHL2MPRules::InitDefaultAIRelationships(void)
 	CBaseCombatCharacter::SetDefaultRelationship(CLASS_ANTLION, CLASS_PLAYER_ALLY_VITAL, D_HT, 0);
 	CBaseCombatCharacter::SetDefaultRelationship(CLASS_ANTLION, CLASS_HACKED_ROLLERMINE, D_HT, 0);
 
+	CBaseCombatCharacter::SetDefaultRelationship(CLASS_ANTLION, CLASS_NEUTRAL, D_HT, 0);
+	CBaseCombatCharacter::SetDefaultRelationship(CLASS_ANTLION, CLASS_ANGRY, D_HT, 0);
+
 	// ------------------------------------------------------------
 	//	> CLASS_BARNACLE
 	//
@@ -1437,6 +1440,9 @@ void CHL2MPRules::InitDefaultAIRelationships(void)
 	CBaseCombatCharacter::SetDefaultRelationship(CLASS_BARNACLE, CLASS_PLAYER_ALLY_VITAL, D_HT, 0);
 	CBaseCombatCharacter::SetDefaultRelationship(CLASS_BARNACLE, CLASS_HACKED_ROLLERMINE, D_HT, 0);
 
+	CBaseCombatCharacter::SetDefaultRelationship(CLASS_BARNACLE, CLASS_NEUTRAL, D_HT, 0);
+	CBaseCombatCharacter::SetDefaultRelationship(CLASS_BARNACLE, CLASS_ANGRY, D_HT, 0);
+
 	// ------------------------------------------------------------
 	//	> CLASS_BULLSEYE
 	// ------------------------------------------------------------
@@ -1468,6 +1474,9 @@ void CHL2MPRules::InitDefaultAIRelationships(void)
 	CBaseCombatCharacter::SetDefaultRelationship(CLASS_BULLSEYE, CLASS_PLAYER_ALLY, D_NU, 0);
 	CBaseCombatCharacter::SetDefaultRelationship(CLASS_BULLSEYE, CLASS_PLAYER_ALLY_VITAL, D_NU, 0);
 	CBaseCombatCharacter::SetDefaultRelationship(CLASS_BULLSEYE, CLASS_HACKED_ROLLERMINE, D_NU, 0);
+
+	CBaseCombatCharacter::SetDefaultRelationship(CLASS_BULLSEYE, CLASS_NEUTRAL, D_NU, 0);
+	CBaseCombatCharacter::SetDefaultRelationship(CLASS_BULLSEYE, CLASS_ANGRY, D_NU, 0);
 
 	// ------------------------------------------------------------
 	//	> CLASS_BULLSQUID
@@ -1501,6 +1510,9 @@ void CHL2MPRules::InitDefaultAIRelationships(void)
 	CBaseCombatCharacter::SetDefaultRelationship(CLASS_BULLSQUID,			CLASS_PLAYER_ALLY,		D_HT, 0);
 	CBaseCombatCharacter::SetDefaultRelationship(CLASS_BULLSQUID,			CLASS_PLAYER_ALLY_VITAL,D_HT, 0);
 	CBaseCombatCharacter::SetDefaultRelationship(CLASS_BULLSQUID,			CLASS_HACKED_ROLLERMINE,D_HT, 0);
+
+	CBaseCombatCharacter::SetDefaultRelationship(CLASS_BULLSQUID, CLASS_NEUTRAL, D_HT, 0);
+	CBaseCombatCharacter::SetDefaultRelationship(CLASS_BULLSQUID, CLASS_ANGRY, D_HT, 0);
 	*/
 	// ------------------------------------------------------------
 	//	> CLASS_CITIZEN_PASSIVE
@@ -1534,6 +1546,9 @@ void CHL2MPRules::InitDefaultAIRelationships(void)
 	CBaseCombatCharacter::SetDefaultRelationship(CLASS_CITIZEN_PASSIVE, CLASS_PLAYER_ALLY_VITAL, D_NU, 0);
 	CBaseCombatCharacter::SetDefaultRelationship(CLASS_CITIZEN_PASSIVE, CLASS_HACKED_ROLLERMINE, D_NU, 0);
 
+	CBaseCombatCharacter::SetDefaultRelationship(CLASS_CITIZEN_PASSIVE, CLASS_NEUTRAL, D_NU, 0);
+	CBaseCombatCharacter::SetDefaultRelationship(CLASS_CITIZEN_PASSIVE, CLASS_ANGRY, D_NU, 0);
+
 	// ------------------------------------------------------------
 	//	> CLASS_CITIZEN_REBEL
 	// ------------------------------------------------------------
@@ -1565,6 +1580,9 @@ void CHL2MPRules::InitDefaultAIRelationships(void)
 	CBaseCombatCharacter::SetDefaultRelationship(CLASS_CITIZEN_REBEL, CLASS_PLAYER_ALLY, D_NU, 0);
 	CBaseCombatCharacter::SetDefaultRelationship(CLASS_CITIZEN_REBEL, CLASS_PLAYER_ALLY_VITAL, D_NU, 0);
 	CBaseCombatCharacter::SetDefaultRelationship(CLASS_CITIZEN_REBEL, CLASS_HACKED_ROLLERMINE, D_NU, 0);
+
+	CBaseCombatCharacter::SetDefaultRelationship(CLASS_CITIZEN_REBEL, CLASS_NEUTRAL, D_NU, 0);
+	CBaseCombatCharacter::SetDefaultRelationship(CLASS_CITIZEN_REBEL, CLASS_ANGRY, D_NU, 0);
 
 	// ------------------------------------------------------------
 	//	> CLASS_COMBINE
@@ -1598,6 +1616,9 @@ void CHL2MPRules::InitDefaultAIRelationships(void)
 	CBaseCombatCharacter::SetDefaultRelationship(CLASS_COMBINE, CLASS_PLAYER_ALLY_VITAL, D_HT, 0);
 	CBaseCombatCharacter::SetDefaultRelationship(CLASS_COMBINE, CLASS_HACKED_ROLLERMINE, D_HT, 0);
 
+	CBaseCombatCharacter::SetDefaultRelationship(CLASS_COMBINE, CLASS_NEUTRAL, D_HT, 0);
+	CBaseCombatCharacter::SetDefaultRelationship(CLASS_COMBINE, CLASS_ANGRY, D_HT, 0);
+
 	// ------------------------------------------------------------
 	//	> CLASS_COMBINE_GUNSHIP
 	// ------------------------------------------------------------
@@ -1629,6 +1650,9 @@ void CHL2MPRules::InitDefaultAIRelationships(void)
 	CBaseCombatCharacter::SetDefaultRelationship(CLASS_COMBINE_GUNSHIP, CLASS_PLAYER_ALLY, D_HT, 0);
 	CBaseCombatCharacter::SetDefaultRelationship(CLASS_COMBINE_GUNSHIP, CLASS_PLAYER_ALLY_VITAL, D_HT, 0);
 	CBaseCombatCharacter::SetDefaultRelationship(CLASS_COMBINE_GUNSHIP, CLASS_HACKED_ROLLERMINE, D_HT, 0);
+
+	CBaseCombatCharacter::SetDefaultRelationship(CLASS_COMBINE_GUNSHIP, CLASS_NEUTRAL, D_HT, 0);
+	CBaseCombatCharacter::SetDefaultRelationship(CLASS_COMBINE_GUNSHIP, CLASS_ANGRY, D_HT, 0);
 
 	// ------------------------------------------------------------
 	//	> CLASS_COMBINE_HUNTER
@@ -1662,6 +1686,9 @@ void CHL2MPRules::InitDefaultAIRelationships(void)
 	CBaseCombatCharacter::SetDefaultRelationship(CLASS_COMBINE_HUNTER, CLASS_PLAYER_ALLY_VITAL, D_HT, 0);
 	CBaseCombatCharacter::SetDefaultRelationship(CLASS_COMBINE_HUNTER, CLASS_HACKED_ROLLERMINE, D_HT, 0);
 
+	CBaseCombatCharacter::SetDefaultRelationship(CLASS_COMBINE_HUNTER, CLASS_NEUTRAL, D_HT, 0);
+	CBaseCombatCharacter::SetDefaultRelationship(CLASS_COMBINE_HUNTER, CLASS_ANGRY, D_HT, 0);
+
 	// ------------------------------------------------------------
 	//	> CLASS_CONSCRIPT
 	// ------------------------------------------------------------
@@ -1693,6 +1720,9 @@ void CHL2MPRules::InitDefaultAIRelationships(void)
 	CBaseCombatCharacter::SetDefaultRelationship(CLASS_CONSCRIPT, CLASS_PLAYER_ALLY, D_NU, 0);
 	CBaseCombatCharacter::SetDefaultRelationship(CLASS_CONSCRIPT, CLASS_PLAYER_ALLY_VITAL, D_NU, 0);
 	CBaseCombatCharacter::SetDefaultRelationship(CLASS_CONSCRIPT, CLASS_HACKED_ROLLERMINE, D_NU, 0);
+
+	CBaseCombatCharacter::SetDefaultRelationship(CLASS_CONSCRIPT, CLASS_NEUTRAL, D_NU, 0);
+	CBaseCombatCharacter::SetDefaultRelationship(CLASS_CONSCRIPT, CLASS_ANGRY, D_NU, 0);
 
 	// ------------------------------------------------------------
 	//	> CLASS_FLARE
@@ -1727,6 +1757,10 @@ void CHL2MPRules::InitDefaultAIRelationships(void)
 	CBaseCombatCharacter::SetDefaultRelationship(CLASS_FLARE, CLASS_PLAYER_ALLY_VITAL, D_NU, 0);
 	CBaseCombatCharacter::SetDefaultRelationship(CLASS_FLARE, CLASS_HACKED_ROLLERMINE, D_NU, 0);
 
+
+	CBaseCombatCharacter::SetDefaultRelationship(CLASS_FLARE, CLASS_NEUTRAL, D_NU, 0);
+	CBaseCombatCharacter::SetDefaultRelationship(CLASS_FLARE, CLASS_ANGRY, D_NU, 0);
+
 	// ------------------------------------------------------------
 	//	> CLASS_HEADCRAB
 	// ------------------------------------------------------------
@@ -1758,6 +1792,9 @@ void CHL2MPRules::InitDefaultAIRelationships(void)
 	CBaseCombatCharacter::SetDefaultRelationship(CLASS_HEADCRAB, CLASS_PLAYER_ALLY, D_HT, 0);
 	CBaseCombatCharacter::SetDefaultRelationship(CLASS_HEADCRAB, CLASS_PLAYER_ALLY_VITAL, D_HT, 0);
 	CBaseCombatCharacter::SetDefaultRelationship(CLASS_HEADCRAB, CLASS_HACKED_ROLLERMINE, D_FR, 0);
+
+	CBaseCombatCharacter::SetDefaultRelationship(CLASS_HEADCRAB, CLASS_NEUTRAL, D_HT, 0);
+	CBaseCombatCharacter::SetDefaultRelationship(CLASS_HEADCRAB, CLASS_ANGRY, D_HT, 0);
 
 	// ------------------------------------------------------------
 	//	> CLASS_HOUNDEYE
@@ -1791,6 +1828,9 @@ void CHL2MPRules::InitDefaultAIRelationships(void)
 	CBaseCombatCharacter::SetDefaultRelationship(CLASS_HOUNDEYE,			CLASS_PLAYER_ALLY,		D_HT, 0);
 	CBaseCombatCharacter::SetDefaultRelationship(CLASS_HOUNDEYE,			CLASS_PLAYER_ALLY_VITAL,D_HT, 0);
 	CBaseCombatCharacter::SetDefaultRelationship(CLASS_HOUNDEYE,			CLASS_HACKED_ROLLERMINE,D_HT, 0);
+
+	CBaseCombatCharacter::SetDefaultRelationship(CLASS_HOUNDEYE, CLASS_NEUTRAL, D_HT, 0);
+	CBaseCombatCharacter::SetDefaultRelationship(CLASS_HOUNDEYE, CLASS_ANGRY, D_HT, 0);
 	*/
 
 	// ------------------------------------------------------------
@@ -1825,6 +1865,9 @@ void CHL2MPRules::InitDefaultAIRelationships(void)
 	CBaseCombatCharacter::SetDefaultRelationship(CLASS_MANHACK, CLASS_PLAYER_ALLY_VITAL, D_HT, 0);
 	CBaseCombatCharacter::SetDefaultRelationship(CLASS_MANHACK, CLASS_HACKED_ROLLERMINE, D_HT, 0);
 
+	CBaseCombatCharacter::SetDefaultRelationship(CLASS_MANHACK, CLASS_NEUTRAL, D_HT, 0);
+	CBaseCombatCharacter::SetDefaultRelationship(CLASS_MANHACK, CLASS_ANGRY, D_HT, 0);
+
 	// ------------------------------------------------------------
 	//	> CLASS_METROPOLICE
 	// ------------------------------------------------------------
@@ -1856,6 +1899,9 @@ void CHL2MPRules::InitDefaultAIRelationships(void)
 	CBaseCombatCharacter::SetDefaultRelationship(CLASS_METROPOLICE, CLASS_PLAYER_ALLY, D_HT, 0);
 	CBaseCombatCharacter::SetDefaultRelationship(CLASS_METROPOLICE, CLASS_PLAYER_ALLY_VITAL, D_HT, 0);
 	CBaseCombatCharacter::SetDefaultRelationship(CLASS_METROPOLICE, CLASS_HACKED_ROLLERMINE, D_HT, 0);
+
+	CBaseCombatCharacter::SetDefaultRelationship(CLASS_METROPOLICE, CLASS_NEUTRAL, D_HT, 0);
+	CBaseCombatCharacter::SetDefaultRelationship(CLASS_METROPOLICE, CLASS_ANGRY, D_HT, 0);
 
 	// ------------------------------------------------------------
 	//	> CLASS_MILITARY
@@ -1889,6 +1935,9 @@ void CHL2MPRules::InitDefaultAIRelationships(void)
 	CBaseCombatCharacter::SetDefaultRelationship(CLASS_MILITARY, CLASS_PLAYER_ALLY_VITAL, D_HT, 0);
 	CBaseCombatCharacter::SetDefaultRelationship(CLASS_MILITARY, CLASS_HACKED_ROLLERMINE, D_HT, 0);
 
+	CBaseCombatCharacter::SetDefaultRelationship(CLASS_MILITARY, CLASS_NEUTRAL, D_HT, 0);
+	CBaseCombatCharacter::SetDefaultRelationship(CLASS_MILITARY, CLASS_ANGRY, D_HT, 0);
+
 	// ------------------------------------------------------------
 	//	> CLASS_MISSILE
 	// ------------------------------------------------------------
@@ -1921,6 +1970,9 @@ void CHL2MPRules::InitDefaultAIRelationships(void)
 	CBaseCombatCharacter::SetDefaultRelationship(CLASS_MISSILE, CLASS_PLAYER_ALLY_VITAL, D_HT, 0);
 	CBaseCombatCharacter::SetDefaultRelationship(CLASS_MISSILE, CLASS_HACKED_ROLLERMINE, D_HT, 0);
 
+	CBaseCombatCharacter::SetDefaultRelationship(CLASS_MISSILE, CLASS_NEUTRAL, D_HT, 0);
+	CBaseCombatCharacter::SetDefaultRelationship(CLASS_MISSILE, CLASS_ANGRY, D_HT, 0);
+
 	// ------------------------------------------------------------
 	//	> CLASS_NONE
 	// ------------------------------------------------------------
@@ -1951,6 +2003,9 @@ void CHL2MPRules::InitDefaultAIRelationships(void)
 	CBaseCombatCharacter::SetDefaultRelationship(CLASS_NONE, CLASS_PLAYER_ALLY, D_NU, 0);
 	CBaseCombatCharacter::SetDefaultRelationship(CLASS_NONE, CLASS_PLAYER_ALLY_VITAL, D_NU, 0);
 	CBaseCombatCharacter::SetDefaultRelationship(CLASS_NONE, CLASS_HACKED_ROLLERMINE, D_NU, 0);
+
+	CBaseCombatCharacter::SetDefaultRelationship(CLASS_NONE, CLASS_NEUTRAL, D_NU, 0);
+	CBaseCombatCharacter::SetDefaultRelationship(CLASS_NONE, CLASS_ANGRY, D_NU, 0);
 
 	// ------------------------------------------------------------
 	//	> CLASS_PLAYER
@@ -1984,6 +2039,9 @@ void CHL2MPRules::InitDefaultAIRelationships(void)
 	CBaseCombatCharacter::SetDefaultRelationship(CLASS_PLAYER, CLASS_PLAYER_ALLY_VITAL, D_LI, 0);
 	CBaseCombatCharacter::SetDefaultRelationship(CLASS_PLAYER, CLASS_HACKED_ROLLERMINE, D_LI, 0);
 
+	CBaseCombatCharacter::SetDefaultRelationship(CLASS_PLAYER, CLASS_NEUTRAL, D_NU, 0);
+	CBaseCombatCharacter::SetDefaultRelationship(CLASS_PLAYER, CLASS_ANGRY, D_HT, 0);
+
 	// ------------------------------------------------------------
 	//	> CLASS_PLAYER_ALLY
 	// ------------------------------------------------------------
@@ -2015,6 +2073,9 @@ void CHL2MPRules::InitDefaultAIRelationships(void)
 	CBaseCombatCharacter::SetDefaultRelationship(CLASS_PLAYER_ALLY, CLASS_PLAYER_ALLY, D_LI, 0);
 	CBaseCombatCharacter::SetDefaultRelationship(CLASS_PLAYER_ALLY, CLASS_PLAYER_ALLY_VITAL, D_LI, 0);
 	CBaseCombatCharacter::SetDefaultRelationship(CLASS_PLAYER_ALLY, CLASS_HACKED_ROLLERMINE, D_LI, 0);
+
+	CBaseCombatCharacter::SetDefaultRelationship(CLASS_PLAYER_ALLY, CLASS_NEUTRAL, D_NU, 0);
+	CBaseCombatCharacter::SetDefaultRelationship(CLASS_PLAYER_ALLY, CLASS_ANGRY, D_HT, 0);
 
 	// ------------------------------------------------------------
 	//	> CLASS_PLAYER_ALLY_VITAL
@@ -2048,6 +2109,9 @@ void CHL2MPRules::InitDefaultAIRelationships(void)
 	CBaseCombatCharacter::SetDefaultRelationship(CLASS_PLAYER_ALLY_VITAL, CLASS_PLAYER_ALLY_VITAL, D_LI, 0);
 	CBaseCombatCharacter::SetDefaultRelationship(CLASS_PLAYER_ALLY_VITAL, CLASS_HACKED_ROLLERMINE, D_LI, 0);
 
+	CBaseCombatCharacter::SetDefaultRelationship(CLASS_PLAYER_ALLY_VITAL, CLASS_NEUTRAL, D_NU, 0);
+	CBaseCombatCharacter::SetDefaultRelationship(CLASS_PLAYER_ALLY_VITAL, CLASS_ANGRY, D_HT, 0);
+
 	// ------------------------------------------------------------
 	//	> CLASS_SCANNER
 	// ------------------------------------------------------------	
@@ -2079,6 +2143,9 @@ void CHL2MPRules::InitDefaultAIRelationships(void)
 	CBaseCombatCharacter::SetDefaultRelationship(CLASS_SCANNER, CLASS_PLAYER_ALLY, D_HT, 0);
 	CBaseCombatCharacter::SetDefaultRelationship(CLASS_SCANNER, CLASS_PLAYER_ALLY_VITAL, D_HT, 0);
 	CBaseCombatCharacter::SetDefaultRelationship(CLASS_SCANNER, CLASS_HACKED_ROLLERMINE, D_HT, 0);
+
+	CBaseCombatCharacter::SetDefaultRelationship(CLASS_SCANNER, CLASS_NEUTRAL, D_HT, 0);
+	CBaseCombatCharacter::SetDefaultRelationship(CLASS_SCANNER, CLASS_ANGRY, D_HT, 0);
 
 	// ------------------------------------------------------------
 	//	> CLASS_STALKER
@@ -2112,6 +2179,9 @@ void CHL2MPRules::InitDefaultAIRelationships(void)
 	CBaseCombatCharacter::SetDefaultRelationship(CLASS_STALKER, CLASS_PLAYER_ALLY_VITAL, D_HT, 0);
 	CBaseCombatCharacter::SetDefaultRelationship(CLASS_STALKER, CLASS_HACKED_ROLLERMINE, D_HT, 0);
 
+	CBaseCombatCharacter::SetDefaultRelationship(CLASS_STALKER, CLASS_NEUTRAL, D_HT, 0);
+	CBaseCombatCharacter::SetDefaultRelationship(CLASS_STALKER, CLASS_ANGRY, D_HT, 0);
+
 	// ------------------------------------------------------------
 	//	> CLASS_VORTIGAUNT
 	// ------------------------------------------------------------	
@@ -2143,6 +2213,9 @@ void CHL2MPRules::InitDefaultAIRelationships(void)
 	CBaseCombatCharacter::SetDefaultRelationship(CLASS_VORTIGAUNT, CLASS_PLAYER_ALLY, D_LI, 0);
 	CBaseCombatCharacter::SetDefaultRelationship(CLASS_VORTIGAUNT, CLASS_PLAYER_ALLY_VITAL, D_LI, 0);
 	CBaseCombatCharacter::SetDefaultRelationship(CLASS_VORTIGAUNT, CLASS_HACKED_ROLLERMINE, D_LI, 0);
+
+	CBaseCombatCharacter::SetDefaultRelationship(CLASS_VORTIGAUNT, CLASS_NEUTRAL, D_LI, 0);
+	CBaseCombatCharacter::SetDefaultRelationship(CLASS_VORTIGAUNT, CLASS_ANGRY, D_LI, 0);
 
 	// ------------------------------------------------------------
 	//	> CLASS_ZOMBIE
@@ -2176,6 +2249,9 @@ void CHL2MPRules::InitDefaultAIRelationships(void)
 	CBaseCombatCharacter::SetDefaultRelationship(CLASS_ZOMBIE, CLASS_PLAYER_ALLY_VITAL, D_HT, 0);
 	CBaseCombatCharacter::SetDefaultRelationship(CLASS_ZOMBIE, CLASS_HACKED_ROLLERMINE, D_HT, 0);
 
+	CBaseCombatCharacter::SetDefaultRelationship(CLASS_ZOMBIE, CLASS_NEUTRAL, D_HT, 0);
+	CBaseCombatCharacter::SetDefaultRelationship(CLASS_ZOMBIE, CLASS_ANGRY, D_HT, 0);
+
 	// ------------------------------------------------------------
 	//	> CLASS_PROTOSNIPER
 	// ------------------------------------------------------------	
@@ -2207,6 +2283,9 @@ void CHL2MPRules::InitDefaultAIRelationships(void)
 	CBaseCombatCharacter::SetDefaultRelationship(CLASS_PROTOSNIPER, CLASS_PLAYER_ALLY, D_HT, 0);
 	CBaseCombatCharacter::SetDefaultRelationship(CLASS_PROTOSNIPER, CLASS_PLAYER_ALLY_VITAL, D_HT, 0);
 	CBaseCombatCharacter::SetDefaultRelationship(CLASS_PROTOSNIPER, CLASS_HACKED_ROLLERMINE, D_HT, 0);
+
+	CBaseCombatCharacter::SetDefaultRelationship(CLASS_PROTOSNIPER, CLASS_NEUTRAL, D_HT, 0);
+	CBaseCombatCharacter::SetDefaultRelationship(CLASS_PROTOSNIPER, CLASS_ANGRY, D_HT, 0);
 
 	// ------------------------------------------------------------
 	//	> CLASS_EARTH_FAUNA
@@ -2243,6 +2322,9 @@ void CHL2MPRules::InitDefaultAIRelationships(void)
 	CBaseCombatCharacter::SetDefaultRelationship(CLASS_EARTH_FAUNA, CLASS_PLAYER_ALLY_VITAL, D_HT, 0);
 	CBaseCombatCharacter::SetDefaultRelationship(CLASS_EARTH_FAUNA, CLASS_HACKED_ROLLERMINE, D_NU, 0);
 
+	CBaseCombatCharacter::SetDefaultRelationship(CLASS_EARTH_FAUNA, CLASS_NEUTRAL, D_HT, 0);
+	CBaseCombatCharacter::SetDefaultRelationship(CLASS_EARTH_FAUNA, CLASS_ANGRY, D_HT, 0);
+
 	// ------------------------------------------------------------
 	//	> CLASS_HACKED_ROLLERMINE
 	// ------------------------------------------------------------
@@ -2274,5 +2356,78 @@ void CHL2MPRules::InitDefaultAIRelationships(void)
 	CBaseCombatCharacter::SetDefaultRelationship(CLASS_HACKED_ROLLERMINE, CLASS_PLAYER_ALLY, D_LI, 0);
 	CBaseCombatCharacter::SetDefaultRelationship(CLASS_HACKED_ROLLERMINE, CLASS_PLAYER_ALLY_VITAL, D_LI, 0);
 	CBaseCombatCharacter::SetDefaultRelationship(CLASS_HACKED_ROLLERMINE, CLASS_HACKED_ROLLERMINE, D_LI, 0);
+
+	CBaseCombatCharacter::SetDefaultRelationship(CLASS_HACKED_ROLLERMINE, CLASS_NEUTRAL, D_NU, 0);
+	CBaseCombatCharacter::SetDefaultRelationship(CLASS_HACKED_ROLLERMINE, CLASS_ANGRY, D_NU, 0);
+
+	// ------------------------------------------------------------
+	//	> CLASS_NEUTRAL
+	// ------------------------------------------------------------
+	CBaseCombatCharacter::SetDefaultRelationship(CLASS_NEUTRAL, CLASS_NONE,					D_NU, 0);
+	CBaseCombatCharacter::SetDefaultRelationship(CLASS_NEUTRAL, CLASS_PLAYER,				D_NU, 0);
+	CBaseCombatCharacter::SetDefaultRelationship(CLASS_NEUTRAL, CLASS_ANTLION,				D_HT, 0);
+	CBaseCombatCharacter::SetDefaultRelationship(CLASS_NEUTRAL, CLASS_BARNACLE,				D_HT, 0);
+	CBaseCombatCharacter::SetDefaultRelationship(CLASS_NEUTRAL, CLASS_BULLSEYE,				D_NU, 0);
+	//CBaseCombatCharacter::SetDefaultRelationship(CLASS_NEUTRAL,	CLASS_BULLSQUID,		D_FR, 0);
+	CBaseCombatCharacter::SetDefaultRelationship(CLASS_NEUTRAL, CLASS_CITIZEN_PASSIVE,		D_NU, 0);
+	CBaseCombatCharacter::SetDefaultRelationship(CLASS_NEUTRAL, CLASS_CITIZEN_REBEL,		D_NU, 0);
+	CBaseCombatCharacter::SetDefaultRelationship(CLASS_NEUTRAL, CLASS_COMBINE,				D_HT, 0);
+	CBaseCombatCharacter::SetDefaultRelationship(CLASS_NEUTRAL, CLASS_COMBINE_GUNSHIP,		D_NU, 0);
+	CBaseCombatCharacter::SetDefaultRelationship(CLASS_NEUTRAL, CLASS_COMBINE_HUNTER,		D_HT, 0);
+	CBaseCombatCharacter::SetDefaultRelationship(CLASS_NEUTRAL, CLASS_CONSCRIPT,			D_NU, 0);
+	CBaseCombatCharacter::SetDefaultRelationship(CLASS_NEUTRAL, CLASS_FLARE,				D_NU, 0);
+	CBaseCombatCharacter::SetDefaultRelationship(CLASS_NEUTRAL, CLASS_HEADCRAB,				D_HT, 0);
+	//CBaseCombatCharacter::SetDefaultRelationship(CLASS_NEUTRAL,	CLASS_HOUNDEYE,			D_FR, 0);
+	CBaseCombatCharacter::SetDefaultRelationship(CLASS_NEUTRAL, CLASS_MANHACK,				D_HT, 0);
+	CBaseCombatCharacter::SetDefaultRelationship(CLASS_NEUTRAL, CLASS_METROPOLICE,			D_HT, 0);
+	CBaseCombatCharacter::SetDefaultRelationship(CLASS_NEUTRAL, CLASS_MILITARY,				D_HT, 0);
+	CBaseCombatCharacter::SetDefaultRelationship(CLASS_NEUTRAL, CLASS_MISSILE,				D_FR, 0);
+	CBaseCombatCharacter::SetDefaultRelationship(CLASS_NEUTRAL, CLASS_SCANNER,				D_HT, 0);
+	CBaseCombatCharacter::SetDefaultRelationship(CLASS_NEUTRAL, CLASS_STALKER,				D_HT, 0);
+	CBaseCombatCharacter::SetDefaultRelationship(CLASS_NEUTRAL, CLASS_VORTIGAUNT,			D_LI, 0);
+	CBaseCombatCharacter::SetDefaultRelationship(CLASS_NEUTRAL, CLASS_ZOMBIE,				D_HT, 0);
+	CBaseCombatCharacter::SetDefaultRelationship(CLASS_NEUTRAL, CLASS_PROTOSNIPER,			D_HT, 0);
+	CBaseCombatCharacter::SetDefaultRelationship(CLASS_NEUTRAL, CLASS_EARTH_FAUNA,			D_NU, 0);
+	CBaseCombatCharacter::SetDefaultRelationship(CLASS_NEUTRAL, CLASS_PLAYER_ALLY,			D_NU, 0);
+	CBaseCombatCharacter::SetDefaultRelationship(CLASS_NEUTRAL, CLASS_PLAYER_ALLY_VITAL,	D_NU, 0);
+	CBaseCombatCharacter::SetDefaultRelationship(CLASS_NEUTRAL, CLASS_HACKED_ROLLERMINE,	D_NU, 0);
+
+	CBaseCombatCharacter::SetDefaultRelationship(CLASS_NEUTRAL, CLASS_NEUTRAL,				D_LI, 0);
+	CBaseCombatCharacter::SetDefaultRelationship(CLASS_NEUTRAL, CLASS_ANGRY,				D_LI, 0);
+
+	// ------------------------------------------------------------
+	//	> CLASS_ANGRY
+	// ------------------------------------------------------------
+	CBaseCombatCharacter::SetDefaultRelationship(CLASS_ANGRY, CLASS_NONE,				D_NU, 0);
+	CBaseCombatCharacter::SetDefaultRelationship(CLASS_ANGRY, CLASS_PLAYER,				D_HT, 0);
+	CBaseCombatCharacter::SetDefaultRelationship(CLASS_ANGRY, CLASS_ANTLION,			D_HT, 0);
+	CBaseCombatCharacter::SetDefaultRelationship(CLASS_ANGRY, CLASS_BARNACLE,			D_FR, 0);
+	CBaseCombatCharacter::SetDefaultRelationship(CLASS_ANGRY, CLASS_BULLSEYE,			D_NU, 0);
+	//CBaseCombatCharacter::SetDefaultRelationship(CLASS_ANGRY,		CLASS_BULLSQUID,		D_FR, 0);
+	CBaseCombatCharacter::SetDefaultRelationship(CLASS_ANGRY, CLASS_CITIZEN_PASSIVE,	D_NU, 0);
+	CBaseCombatCharacter::SetDefaultRelationship(CLASS_ANGRY, CLASS_CITIZEN_REBEL,		D_NU, 0);
+	CBaseCombatCharacter::SetDefaultRelationship(CLASS_ANGRY, CLASS_COMBINE,			D_HT, 0);
+	CBaseCombatCharacter::SetDefaultRelationship(CLASS_ANGRY, CLASS_COMBINE_GUNSHIP,	D_NU, 0);
+	CBaseCombatCharacter::SetDefaultRelationship(CLASS_ANGRY, CLASS_COMBINE_HUNTER,		D_HT, 0);
+	CBaseCombatCharacter::SetDefaultRelationship(CLASS_ANGRY, CLASS_CONSCRIPT,			D_NU, 0);
+	CBaseCombatCharacter::SetDefaultRelationship(CLASS_ANGRY, CLASS_FLARE,				D_NU, 0);
+	CBaseCombatCharacter::SetDefaultRelationship(CLASS_ANGRY, CLASS_HEADCRAB,			D_HT, 0);
+	//CBaseCombatCharacter::SetDefaultRelationship(CLASS_ANGRY,		CLASS_HOUNDEYE,			D_HT, 0);
+	CBaseCombatCharacter::SetDefaultRelationship(CLASS_ANGRY, CLASS_MANHACK,			D_HT, 0);
+	CBaseCombatCharacter::SetDefaultRelationship(CLASS_ANGRY, CLASS_METROPOLICE,		D_HT, 0);
+	CBaseCombatCharacter::SetDefaultRelationship(CLASS_ANGRY, CLASS_MILITARY,			D_HT, 0);
+	CBaseCombatCharacter::SetDefaultRelationship(CLASS_ANGRY, CLASS_MISSILE,			D_FR, 0);
+	CBaseCombatCharacter::SetDefaultRelationship(CLASS_ANGRY, CLASS_SCANNER,			D_HT, 0);
+	CBaseCombatCharacter::SetDefaultRelationship(CLASS_ANGRY, CLASS_STALKER,			D_HT, 0);
+	CBaseCombatCharacter::SetDefaultRelationship(CLASS_ANGRY, CLASS_VORTIGAUNT,			D_LI, 0);
+	CBaseCombatCharacter::SetDefaultRelationship(CLASS_ANGRY, CLASS_ZOMBIE,				D_HT, 0);
+	CBaseCombatCharacter::SetDefaultRelationship(CLASS_ANGRY, CLASS_PROTOSNIPER,		D_NU, 0);
+	CBaseCombatCharacter::SetDefaultRelationship(CLASS_ANGRY, CLASS_EARTH_FAUNA,		D_NU, 0);
+	CBaseCombatCharacter::SetDefaultRelationship(CLASS_ANGRY, CLASS_PLAYER_ALLY,		D_HT, 0);
+	CBaseCombatCharacter::SetDefaultRelationship(CLASS_ANGRY, CLASS_PLAYER_ALLY_VITAL,	D_HT, 0);
+	CBaseCombatCharacter::SetDefaultRelationship(CLASS_ANGRY, CLASS_HACKED_ROLLERMINE,	D_NU, 0);
+
+	CBaseCombatCharacter::SetDefaultRelationship(CLASS_ANGRY, CLASS_NEUTRAL,			D_LI, 0);
+	CBaseCombatCharacter::SetDefaultRelationship(CLASS_ANGRY, CLASS_ANGRY,				D_LI, 0);
 }
 #endif

@@ -13,14 +13,16 @@
 #include "soundent.h"
 #include "BasePropDoor.h"
 #include "weapon_rpg.h"
-#include "hl2_player.h"
+
 #include "items.h"
 
 
 #ifdef HL2MP
 #include "hl2mp/weapon_crowbar.h"
+#include "hl2mp_player.h"
 #else
 #include "weapon_crowbar.h"
+#include "hl2_player.h"
 #endif
 
 #include "eventqueue.h"
@@ -532,6 +534,8 @@ void CNPC_Citizen::Spawn()
 
 	// Use render bounds instead of human hull for guys sitting in chairs, etc.
 	m_ActBusyBehavior.SetUseRenderBounds( HasSpawnFlags( SF_CITIZEN_USE_RENDER_BOUNDS ) );
+
+	m_bIsUpsettable = true;
 }
 
 //-----------------------------------------------------------------------------
@@ -825,14 +829,18 @@ string_t CNPC_Citizen::GetModelName() const
 //-----------------------------------------------------------------------------
 Class_T	CNPC_Citizen::Classify()
 {
-	if (GlobalEntity_GetState("gordon_precriminal") == GLOBAL_ON)
+	/*if (GlobalEntity_GetState("gordon_precriminal") == GLOBAL_ON)
 		return CLASS_CITIZEN_PASSIVE;
 
 	if (GlobalEntity_GetState("citizens_passive") == GLOBAL_ON)
 		return CLASS_CITIZEN_PASSIVE;
 
-	//REPOSE: most citizens aren't allies, don't automatically make them so.
-	return CLASS_CITIZEN_REBEL; //CLASS_PLAYER_ALLY;
+	return CLASS_PLAYER_ALLY;*/
+
+	if (m_bIsUpset)
+		return CLASS_ANGRY;
+	else
+		return CLASS_NEUTRAL;
 }
 
 //-----------------------------------------------------------------------------

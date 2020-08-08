@@ -29,6 +29,10 @@
 #include "ai_hull.h"
 #include "ai_utils.h"
 #include "physics_impact_damage.h"
+#include "ai_squad.h"
+#ifndef HL2MP_PLAYER_H
+class CHL2MP_Player;
+#endif	//!HL2MP_PLAYER_H
 
 class CNavArea;
 class CScriptedTarget;
@@ -536,6 +540,24 @@ protected:
 	CNavArea *m_lastNavArea;
 	CAI_MoveMonitor m_NavAreaUpdateMonitor;
 	int m_registeredNavTeam;	// ugly, but needed to clean up player team counts in nav mesh
+
+//REPOSE RELATIONSHIPS
+protected:
+	bool		m_bIsUpset = false;
+	bool		m_bIsUpsettable = false;
+	float		m_flAllowUpsetChange = FLT_MAX;
+	int			m_nSubStats;
+	bool		m_bIsOrganic = true;
+	bool		m_bIsSynthetic = false;
+
+public:
+	void	SetUpset(bool, CHL2MP_Player* pPlayer = NULL, int nDifficulty = 15, int nSquadDifficulty = 0);
+	//*any* interaction with this NPC is handled through substats, so don't include healing/weapon types here!
+	int		GetSubStats(void)
+	{
+		return m_nSubStats;
+	}
+
 };
 
 
