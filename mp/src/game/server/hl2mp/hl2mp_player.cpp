@@ -359,6 +359,9 @@ void CHL2MP_Player::Spawn(void)
 		addToStatBase(i, 1);
 		addToStatBase(i, -1);
 	}
+	//TODO: enable synthetic players, NPCs, etc.
+	m_bIsOrganic = true;
+	m_bIsSynthetic = false;
 }
 
 void CHL2MP_Player::PickupObject( CBaseEntity *pObject, bool bLimitMassAndSize )

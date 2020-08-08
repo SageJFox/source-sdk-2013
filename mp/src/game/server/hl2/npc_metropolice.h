@@ -298,6 +298,10 @@ private:
 	virtual bool IsWaitingToRappel( void ) { return m_RappelBehavior.IsWaitingToRappel(); }
 	void BeginRappel() { m_RappelBehavior.BeginRappel(); }
 
+	//REPOSE
+public:
+	void SetUpset(bool bUpset, CHL2MP_Player* pPlayer = NULL, float flTimer = 1.0f, int nDifficulty = 15, int nSquadDifficulty = 0);
+
 private:
 	enum
 	{

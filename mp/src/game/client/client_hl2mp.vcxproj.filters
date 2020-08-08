@@ -2491,9 +2491,6 @@
     <ClCompile Include="toolframework_client.cpp">
       <Filter>Tool Framework</Filter>
     </ClCompile>
-    <ClCompile Include="..\shared\hl2mp\weapon_healthkit.cpp">
-      <Filter>Source Files\HL2MP\Weapons</Filter>
-    </ClCompile>
     <ClCompile Include="hud.cpp">
       <Filter>Source Files\unsorted\HUD-VGUI</Filter>
     </ClCompile>
@@ -3533,6 +3530,12 @@
       <Filter>Source Files\Repose</Filter>
     </ClCompile>
     <ClCompile Include="..\shared\Repose\weapon_suitcase.cpp">
+      <Filter>Source Files\Repose</Filter>
+    </ClCompile>
+    <ClCompile Include="..\shared\Repose\weapon_healthkit.cpp">
+      <Filter>Source Files\Repose</Filter>
+    </ClCompile>
+    <ClCompile Include="..\shared\Repose\weapon_repairkit.cpp">
       <Filter>Source Files\Repose</Filter>
     </ClCompile>
   </ItemGroup>

@@ -545,19 +545,17 @@ protected:
 protected:
 	bool		m_bIsUpset = false;
 	bool		m_bIsUpsettable = false;
-	float		m_flAllowUpsetChange = FLT_MAX;
+	float		m_flAllowUpsetChange = 0.0f;
 	int			m_nSubStats;
 	bool		m_bIsOrganic = true;
 	bool		m_bIsSynthetic = false;
 
 public:
-	void	SetUpset(bool, CHL2MP_Player* pPlayer = NULL, int nDifficulty = 15, int nSquadDifficulty = 0);
+	void	SetUpset(bool, CHL2MP_Player* pPlayer = NULL, float flTimer = 1.0f, int nDifficulty = 15, int nSquadDifficulty = 0);
 	//*any* interaction with this NPC is handled through substats, so don't include healing/weapon types here!
-	int		GetSubStats(void)
-	{
-		return m_nSubStats;
-	}
-
+	int		GetSubStats(void) { return m_nSubStats; }
+	bool	IsOrganic(void) { return m_bIsOrganic; }
+	bool	IsSynthetic(void) { return m_bIsSynthetic; }
 };
 
 

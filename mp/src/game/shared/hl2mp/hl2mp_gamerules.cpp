@@ -949,6 +949,7 @@ CAmmoDef *GetAmmoDef()
 
 		//Repose
 		def.AddAmmoType("Healthkit", DMG_GENERIC, TRACER_NONE, "sk_healing", "sk_healing", "sk_healthkit", BULLET_IMPULSE(0,0), 0);
+		def.AddAmmoType("Repairkit", DMG_GENERIC, TRACER_NONE, "sk_healing", "sk_healing", "sk_healthkit", BULLET_IMPULSE(0, 0), 0);
 		def.AddAmmoType("Find", DMG_GENERIC, TRACER_NONE, 0, 0, "sk_max_find", BULLET_IMPULSE(0, 0), 0);
 
 		//=====================================================================

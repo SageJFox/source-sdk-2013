@@ -536,6 +536,10 @@ void CNPC_Citizen::Spawn()
 	m_ActBusyBehavior.SetUseRenderBounds( HasSpawnFlags( SF_CITIZEN_USE_RENDER_BOUNDS ) );
 
 	m_bIsUpsettable = true;
+	//TODO: enable synthetic players, NPCs, etc.
+	m_bIsOrganic = true;
+	m_bIsSynthetic = false;
+	m_nSubStats = STAT_BLUECOLLAR;
 }
 
 //-----------------------------------------------------------------------------
@@ -4333,3 +4337,21 @@ int CNPC_Citizen::DrawDebugTextOverlays( void )
 
 //REPOSE
 
+void CNPC_Citizen::SetUpset(bool bUpset, CHL2MP_Player* pPlayer, float flTimer, int nDifficulty, int nSquadDifficulty)
+{
+	if (nSquadDifficulty > 0)
+	{
+		AISquadIter_t iter;
+		CAI_BaseNPC *pSquadmate = m_pSquad->GetFirstMember(&iter);
+		while (pSquadmate)
+		{
+			CBaseCombatCharacter* pUpset = dynamic_cast<CBaseCombatCharacter*>(pSquadmate);
+			if (pUpset)
+			{
+				pUpset->SetUpset(bUpset, pPlayer, flTimer, nSquadDifficulty, 0);
+			}
+			pSquadmate = m_pSquad->GetNextMember(&iter);
+		}
+	}
+	BaseClass::SetUpset(bUpset, pPlayer, flTimer, nDifficulty, 0);
+}

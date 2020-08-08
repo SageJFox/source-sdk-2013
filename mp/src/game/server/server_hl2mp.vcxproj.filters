@@ -2461,9 +2461,6 @@
     <ClCompile Include="toolframework_server.cpp">
       <Filter>Tools Framework</Filter>
     </ClCompile>
-    <ClCompile Include="..\shared\hl2mp\weapon_healthkit.cpp">
-      <Filter>Source Files\HL2MP\Weapons</Filter>
-    </ClCompile>
     <ClCompile Include="hl2\npc_fastzombie.cpp">
       <Filter>Source Files\HL2 DLL</Filter>
     </ClCompile>
@@ -3584,6 +3581,12 @@
       <Filter>Source Files\Repose</Filter>
     </ClCompile>
     <ClCompile Include="..\shared\Repose\weapon_suitcase.cpp">
+      <Filter>Source Files\Repose</Filter>
+    </ClCompile>
+    <ClCompile Include="..\shared\Repose\weapon_healthkit.cpp">
+      <Filter>Source Files\Repose</Filter>
+    </ClCompile>
+    <ClCompile Include="..\shared\Repose\weapon_repairkit.cpp">
       <Filter>Source Files\Repose</Filter>
     </ClCompile>
   </ItemGroup>

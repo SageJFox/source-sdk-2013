@@ -443,8 +443,7 @@ void CNPC_MetroPolice::NotifyDeadFriend( CBaseEntity* pFriend )
 		m_Sentences.Speak( "METROPOLICE_MANHACK_KILLED", SENTENCE_PRIORITY_NORMAL, SENTENCE_CRITERIA_NORMAL );
 		DevMsg("My manhack died!\n");
 		m_flAllowUpsetChange = 0.0f;
-		SetUpset(true, NULL, 15);
-		m_flAllowUpsetChange = gpGlobals->curtime + 1.0f;
+		SetUpset(true, NULL, 1.0f, 15, 10);
 		m_hManhack = NULL;
 		return;
 	}
@@ -460,8 +459,7 @@ void CNPC_MetroPolice::NotifyDeadFriend( CBaseEntity* pFriend )
 	}
 
 	m_flAllowUpsetChange = 0.0f;
-	SetUpset(true,NULL, 30,30);
-	m_flAllowUpsetChange = gpGlobals->curtime + 1.0f;
+	SetUpset(true, NULL, 1.0f, 25, 25);
 
 	if ( GetSquad()->NumMembers() < 2 )
 	{
@@ -657,6 +655,8 @@ void CNPC_MetroPolice::Spawn( void )
 	SetModel(STRING(GetModelName()));
 
 	m_bIsUpsettable = true;
+	m_flAllowUpsetChange = 0.0f;
+	//TODO: enable synthetic players, NPCs, etc.
 	m_bIsOrganic = true;
 	m_bIsSynthetic = false;
 	m_nSubStats = STAT_BLUECOLLAR;
@@ -3054,8 +3054,7 @@ bool CNPC_MetroPolice::HandleInteraction(int interactionType, void *data, CBaseC
 		{
 			if( pProp->NameMatches("cupcop_can") )
 				m_OnCupCopped.FireOutput( this, NULL );
-			SetUpset(true, (CHL2MP_Player*)pProp->GetOwnerEntity(), 15,10);
-			m_flAllowUpsetChange = gpGlobals->curtime + 2.0f;
+			SetUpset(true, (CHL2MP_Player*)pProp->GetOwnerEntity(), 2.0f, 15, 10);
 		}
 
 		return true;
@@ -4918,7 +4917,8 @@ int CNPC_MetroPolice::OnTakeDamage_Alive( const CTakeDamageInfo &inputInfo )
 		m_nRecentDamage += info.GetDamage();
 		m_flRecentDamageTime = gpGlobals->curtime;
 	}
-
+	m_flAllowUpsetChange = 0.0f; //we just got hurt, doesn't matter how placated we were
+	SetUpset(true, (CHL2MP_Player*)info.GetAttacker(), 1.0f, 25, 15);
 	return BaseClass::OnTakeDamage_Alive( info ); 
 }
 
@@ -5225,6 +5225,28 @@ void CNPC_MetroPolice::PrecriminalUse( CBaseEntity *pActivator, CBaseEntity *pCa
 		AdministerJustice();
 	}
 }
+
+//REPOSE
+
+void CNPC_MetroPolice::SetUpset(bool bUpset, CHL2MP_Player* pPlayer, float flTimer, int nDifficulty, int nSquadDifficulty)
+{
+	if (nSquadDifficulty > 0)
+	{
+		AISquadIter_t iter;
+		CAI_BaseNPC *pSquadmate = m_pSquad->GetFirstMember(&iter);
+		while (pSquadmate)
+		{
+			CBaseCombatCharacter* pUpset = dynamic_cast<CBaseCombatCharacter*>(pSquadmate);
+			if (pUpset)
+			{
+				pUpset->SetUpset(bUpset, pPlayer, flTimer, nSquadDifficulty, 0);
+			}
+			pSquadmate = m_pSquad->GetNextMember(&iter);
+		}
+	}
+	BaseClass::SetUpset(bUpset, pPlayer, flTimer, nDifficulty, 0);
+}
+
 
 //-----------------------------------------------------------------------------
 //

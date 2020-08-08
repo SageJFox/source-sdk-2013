@@ -1,0 +1,72 @@
+// Healthkit
+
+WeaponData
+{
+	// Weapon data is loaded by both the Game and Client DLLs.
+	"printname"	"#Repose_Repairkit"
+	"viewmodel"				"models/weapons/v_healthkit.mdl"
+	"playermodel"			"models/weapons/w_smg1.mdl"	//FIXME: 
+	"anim_prefix"			"slam"
+	"bucket"				"0"
+	"bucket_position"		"3"
+
+	"clip_size"				"10"
+	"clip2_size"			"-1"
+
+	"default_clip"			"20"
+	"default_clip2"			"-1"
+
+	"primary_ammo"			"Repairkit"
+	"secondary_ammo"			"None"
+
+	"weight"				"0"
+	"item_flags"			"0"
+	"damage"			"1"
+
+	// Sounds for the weapon. There is a max of 16 sounds per category (i.e. max 16 "single_shot" sounds)
+	SoundData
+	{
+		"reload"			"Weapon_Healthkit.Reload"
+		"reload_npc"		"Weapon_Healthkit.NPC_Reload"
+		"empty"				"Weapon_Healthkit.Empty"
+		"single_shot"		"Weapon_Healthkit.Single"
+		"single_shot_npc"	"Weapon_Healthkit.NPC_Single"
+		"special1"			"Weapon_Healthkit.Special1"
+		"special2"			"Weapon_Healthkit.Special2"
+		"double_shot"		"Weapon_Healthkit.Double"
+		"burst"				"Weapon_Healthkit.Burst"
+	}
+
+	// Weapon Sprite data is loaded by the Client DLL.
+	TextureData
+	{
+		"weapon"
+		{
+				"font"		"WeaponIcons"
+				"character"	"+"
+		}
+		"weapon_s"
+		{	
+				"font"		"WeaponIconsSelected"
+				"character"	"+"
+		}
+		"ammo"
+		{
+				"font"		"WeaponIcons"
+				"character"	"+"
+		}
+		"crosshair"
+		{
+				"font"		"Crosshairs"
+				"character"	"Q"
+		}
+		"autoaim"
+		{
+				"file"		"sprites/crosshairs"
+				"x"			"0"
+				"y"			"48"
+				"width"		"24"
+				"height"	"24"
+		}
+	}
+}

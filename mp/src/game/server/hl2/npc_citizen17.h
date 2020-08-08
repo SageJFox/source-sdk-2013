@@ -227,6 +227,8 @@ public:
 	void			TossHealthKit( CBaseCombatCharacter *pThrowAt, const Vector &offset ); // create a healthkit and throw it at someone
 	void			InputForceHealthKitToss( inputdata_t &inputdata );
 #endif
+
+	void			SetUpset(bool bUpset, CHL2MP_Player* pPlayer = NULL, float flTimer = 1.0f, int nDifficulty = 15, int nSquadDifficulty = 0);
 	
 	//---------------------------------
 	// Inputs

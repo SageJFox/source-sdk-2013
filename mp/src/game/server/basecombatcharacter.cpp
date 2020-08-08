@@ -779,6 +779,8 @@ void CBaseCombatCharacter::Spawn( void )
 	m_aliveTimer.Start();
 	m_hasBeenInjured = 0;
 
+	m_flAllowUpsetChange = 0.0f;
+
 	for( int t=0; t<MAX_DAMAGE_TEAMS; ++t )
 	{
 		m_damageHistory[t].team = TEAM_INVALID;
@@ -2504,11 +2506,10 @@ int CBaseCombatCharacter::OnTakeDamage_Alive( const CTakeDamageInfo &info )
 		m_iHealth -= flIntegerDamage;
 	}
 	//REPOSE RELATIONSHIP
-	if (info.GetAttacker()->Classify() && !(info.GetAttacker()->InSameTeam(this))) //we don't want to get mad at the player if we hurt ourself on the environment, or a friend hurt us
+	//if ( info.GetAttacker()->Classify() != CLASS_NONE && !( info.GetAttacker()->InSameTeam(this) ) ) //we don't want to get mad at the player if we hurt ourself on the environment, or a friend hurt us
 	{
 		m_flAllowUpsetChange = 0.0f; //we just got hurt, doesn't matter how placated we were
-		SetUpset(true, dynamic_cast<CHL2MP_Player*>(info.GetAttacker()), 25,15);
-		m_flAllowUpsetChange = gpGlobals->curtime + 1.0f;
+		SetUpset(true, (CHL2MP_Player*)info.GetAttacker(), 1.0f, 25, 15);
 	}
 
 	return 1;
@@ -3609,37 +3610,37 @@ float CBaseCombatCharacter::GetTimeSinceLastInjury( int team /*= TEAM_ANY */ ) c
 
 //REPOSE RELATIONSHIPS
 
-void CBaseCombatCharacter::SetUpset(bool bUpset, CHL2MP_Player* pPlayer, int nDifficulty, int nSquadDifficulty)
+void CBaseCombatCharacter::SetUpset(bool bUpset, CHL2MP_Player* pPlayer, float flTimer, int nDifficulty, int nSquadDifficulty)
 {
 	if (!m_bIsUpsettable)
 		return; //we're not the type of NPC to get upset (i.e. only enemies with CLASS_NEUTRAL as a default state)
 	if (m_flAllowUpsetChange > gpGlobals->curtime)
 		return; //we're not allowed to change our disposition yet 
-	if (nSquadDifficulty > 0)
+	/*if (nSquadDifficulty > 0) //put this check in individual NPC's SetUpset function
 	{
-		/*AISquadIter_t iter;
+		AISquadIter_t iter;
 		CAI_BaseNPC *pSquadmate = m_pSquad->GetFirstMember(&iter);
 		while (pSquadmate)
 		{
 			pSquadmate->SetUpset(bUpset, pPlayer, nSquadDifficulty);
-		}*/
-	}
-
-	if (!pPlayer)
-	{
-		//we don't have a player that upset us, so just accept whatever is trying to be set
-		m_bIsUpset = bUpset;
-		return;
-	}
+			pSquadmate = m_pSquad->GetNextMember( &iter );
+		}
+	}*/
 	int nBonus = 0;
-	if (m_nSubStats & pPlayer->GetSubStats()) //if any of our substats match the player's proficiencies, award a bonus
-		nBonus = 2;
+	if (pPlayer)
+	{
+		nBonus = pPlayer->checkMod(CHA);
+		if (m_nSubStats & pPlayer->GetSubStats()) //if any of our substats match the player's proficiencies, award a bonus
+			nBonus += 2;
+	}
 
-	int nRandom = RandomInt(0, 20) + pPlayer->checkMod(CHA) + nBonus;
+	int nRandom = RandomInt(0, 20) + nBonus;
 
 	if (!m_bIsUpset)
 		m_bIsUpset = (nRandom >= nDifficulty ? false : bUpset); //return bUpset in case we weren't supposed to be getting upset either way
 	else //we're upset, player's attempted to calm us
 		m_bIsUpset = (nRandom >= nDifficulty ? bUpset : true);
 	Classify();
+	m_flAllowUpsetChange = gpGlobals->curtime + flTimer;
+	return;
 }
