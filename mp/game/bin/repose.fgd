@@ -50,7 +50,8 @@
 	]
 ]
 
-@PointClass base(Weapon) studio("models/weapons/w_healthkit.mdl") = weapon_healthkit : "Healthkit" []
+@PointClass base(Weapon) studio("models/weapons/w_healthkit.mdl") = weapon_healthkit : "Health kit" []
+@PointClass base(Weapon) studio("models/weapons/w_repairkit.mdl") = weapon_repairkit : "Repair kit" []
 @PointClass base(Weapon) studio("models/weapons/w_dbshotgun.mdl") = weapon_dbshotgun : "Double Barreled Shotgun" []
 //@PointClass base(Weapon) studio("models/weapons/w_find.mdl") = weapon_find : "The pickup-able version of finds" [] //NOT TO BE MANUALLY PLACED!
 @PointClass base(Item) studio("models/weapons/w_find.mdl") = item_find : "A Piece of Information Helpful During Negotiations"

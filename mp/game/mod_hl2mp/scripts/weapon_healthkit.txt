@@ -5,7 +5,7 @@ WeaponData
 	// Weapon data is loaded by both the Game and Client DLLs.
 	"printname"	"#Repose_Healthkit"
 	"viewmodel"				"models/weapons/v_healthkit.mdl"
-	"playermodel"			"models/weapons/w_smg1.mdl"	//FIXME: 
+	"playermodel"			"models/weapons/w_healthkit.mdl"	//FIXME: 
 	"anim_prefix"			"slam"
 	"bucket"				"0"
 	"bucket_position"		"2"
