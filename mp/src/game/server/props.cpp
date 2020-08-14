@@ -5076,7 +5076,11 @@ bool CPropDoorRotating::CheckDoorClear( doorCheck_e state )
 				NDebugOverlay::Box( tr.m_pEnt->GetAbsOrigin(), tr.m_pEnt->CollisionProp()->OBBMins(), tr.m_pEnt->CollisionProp()->OBBMaxs(), 220, 220, 0, true, 10.0f );
 			}
 		}
-
+		if ( tr.m_pEnt->HasSpawnFlags(1 << 12) && FClassnameIs(tr.m_pEnt, "func_breakable") ) //func_breakable spawnflag "Do NOT block rotating doors"
+		{
+			EntityPhysics_CreateSolver(this, tr.m_pEnt, true, 4.0f);
+			return true;
+		}
 		return false;
 	}
 
