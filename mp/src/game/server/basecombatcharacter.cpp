@@ -39,6 +39,7 @@
 #include "saverestoretypes.h"
 #include "nav_mesh.h"
 #include "hl2mp_player.h"
+#include "basehlcombatweapon.h"
 
 #ifdef NEXT_BOT
 #include "NextBot/NextBotManager.h"
@@ -1618,16 +1619,51 @@ void CBaseCombatCharacter::Event_Killed( const CTakeDamageInfo &info )
 	{
 		Weapon_Drop( m_hActiveWeapon );
 	}
+
+	if (pDroppedWeapon && IsNPC())
+		pDroppedWeapon->AddSpawnFlags(SF_NORESPAWN);
 	
 	// if flagged to drop a health kit
 	if (HasSpawnFlags(SF_NPC_DROP_HEALTHKIT))
 	{
-		CBaseEntity::Create( "item_healthvial", GetAbsOrigin(), GetAbsAngles() );
+		//CBaseEntity::Create( "item_healthvial", GetAbsOrigin(), GetAbsAngles() );
+		CBaseHLCombatWeapon* pKit;
+		int nKitChance = 50;
+		//alter the chances of what kit we drop based on our classification and the player's
+		if (IsOrganic())
+			nKitChance += 15;
+		if (IsSynthetic())
+			nKitChance -= 15;
+
+		CBasePlayer *pPlayer = ToBasePlayer(info.GetAttacker());
+		if (pPlayer)
+		{
+			if (pPlayer->IsOrganic())
+				nKitChance += 25;
+			if (pPlayer->IsSynthetic())
+				nKitChance -= 25;
+		}
+
+		if (RandomInt(0, 100) < nKitChance)
+			pKit = (CBaseHLCombatWeapon*)CBaseEntity::Create("weapon_healthkit", GetAbsOrigin(), GetAbsAngles());
+		else
+			pKit = (CBaseHLCombatWeapon*)CBaseEntity::Create("weapon_repairkit", GetAbsOrigin(), GetAbsAngles());
+
+		if (pKit)
+		{
+			//we only want to give the player 10 health from this kit, like an item_healthvial was dropped
+			if ( pKit->UsesClipsForAmmo1() )
+				pKit->SetPrimaryAmmoCount(0);
+			else
+				pKit->SetPrimaryAmmoCount(10);
+
+			pKit->AddSpawnFlags(SF_NORESPAWN);
+		}
 	}
 	// clear the deceased's sound channels.(may have been firing or reloading when killed)
 	EmitSound( "BaseCombatCharacter.StopWeaponSounds" );
 
-	// Tell my killer that he got me!
+	// Tell my killer that they got me!
 	if( info.GetAttacker() )
 	{
 		info.GetAttacker()->Event_KilledOther(this, info);

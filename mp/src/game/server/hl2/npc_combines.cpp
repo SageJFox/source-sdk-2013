@@ -25,6 +25,7 @@
 #include "gameweaponmanager.h"
 #include "vehicle_base.h"
 
+#include "basehlcombatweapon.h"
 // memdbgon must be the last include file in a .cpp file!!!
 #include "tier0/memdbgon.h"
 
@@ -342,10 +343,36 @@ void CNPC_CombineS::Event_Killed( const CTakeDamageInfo &info )
 		CHalfLife2 *pHL2GameRules = static_cast<CHalfLife2 *>(g_pGameRules);
 
 		// Attempt to drop health
-		if ( pHL2GameRules->NPC_ShouldDropHealth( pPlayer ) )
+		if (pHL2GameRules->NPC_ShouldDropHealth(pPlayer))
 		{
-			DropItem( "item_healthvial", WorldSpaceCenter()+RandomVector(-4,4), RandomAngle(0,360) );
-			pHL2GameRules->NPC_DroppedHealth();
+			CBaseHLCombatWeapon* pKit;
+			int nKitChance = 50;
+			//alter the chances of what kit we drop based on our classification and the player's
+			if (IsOrganic())
+				nKitChance += 15;
+			if (IsSynthetic())
+				nKitChance -= 15;
+			if (pPlayer->IsOrganic())
+				nKitChance += 25;
+			if (pPlayer->IsSynthetic())
+				nKitChance -= 25;
+
+			if (RandomInt(0, 100) < nKitChance)
+				pKit = (CBaseHLCombatWeapon*)DropItem("weapon_healthkit", WorldSpaceCenter() + RandomVector(-4, 4), RandomAngle(0, 360));
+			else
+				pKit = (CBaseHLCombatWeapon*)DropItem("weapon_repairkit", WorldSpaceCenter() + RandomVector(-4, 4), RandomAngle(0, 360));
+
+			if (pKit)
+			{
+				//we only want to give the player 10 health from this kit, like an item_healthvial was dropped
+				if (pKit->UsesClipsForAmmo1())
+					pKit->SetPrimaryAmmoCount(0);
+				else
+					pKit->SetPrimaryAmmoCount(10);
+
+				pKit->AddSpawnFlags(SF_NORESPAWN);
+				pHL2GameRules->NPC_DroppedHealth();
+			}
 		}
 		
 		if ( HasSpawnFlags( SF_COMBINE_NO_GRENADEDROP ) == false )
@@ -353,8 +380,13 @@ void CNPC_CombineS::Event_Killed( const CTakeDamageInfo &info )
 			// Attempt to drop a grenade
 			if ( pHL2GameRules->NPC_ShouldDropGrenade( pPlayer ) )
 			{
-				DropItem( "weapon_frag", WorldSpaceCenter()+RandomVector(-4,4), RandomAngle(0,360) );
-				pHL2GameRules->NPC_DroppedGrenade();
+				CBaseHLCombatWeapon* pFrag =
+					(CBaseHLCombatWeapon*)DropItem("weapon_frag", WorldSpaceCenter() + RandomVector(-4, 4), RandomAngle(0, 360));
+				if (pFrag)
+				{
+					pFrag->AddSpawnFlags(SF_NORESPAWN);
+					pHL2GameRules->NPC_DroppedGrenade();
+				}
 			}
 		}
 	}

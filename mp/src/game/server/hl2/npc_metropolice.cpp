@@ -3149,8 +3149,34 @@ void CNPC_MetroPolice::Event_Killed( const CTakeDamageInfo &info )
 		// Attempt to drop health
 		if ( pHL2GameRules->NPC_ShouldDropHealth( pPlayer ) )
 		{
-			DropItem( "item_healthvial", WorldSpaceCenter()+RandomVector(-4,4), RandomAngle(0,360) );
-			pHL2GameRules->NPC_DroppedHealth();
+			CBaseHLCombatWeapon* pKit;
+			int nKitChance = 50;
+			//alter the chances of what kit we drop based on our classification and the player's
+			if (IsOrganic())
+				nKitChance += 15;
+			if (IsSynthetic())
+				nKitChance -= 15;
+			if (pPlayer->IsOrganic())
+				nKitChance += 25;
+			if (pPlayer->IsSynthetic())
+				nKitChance -= 25;
+
+			if (RandomInt(0,100) < nKitChance)
+				pKit = (CBaseHLCombatWeapon*)DropItem("weapon_healthkit", WorldSpaceCenter() + RandomVector(-4, 4), RandomAngle(0, 360));
+			else
+				pKit = (CBaseHLCombatWeapon*)DropItem("weapon_repairkit", WorldSpaceCenter() + RandomVector(-4, 4), RandomAngle(0, 360));
+			
+			if (pKit)
+			{
+				//we only want to give the player 10 health from this kit, like an item_healthvial was dropped
+				if (pKit->UsesClipsForAmmo1())
+					pKit->SetPrimaryAmmoCount(0);
+				else
+					pKit->SetPrimaryAmmoCount(10);
+
+				pKit->AddSpawnFlags(SF_NORESPAWN);
+				pHL2GameRules->NPC_DroppedHealth();
+			}
 		}
 	}
 
@@ -4910,15 +4936,22 @@ int CNPC_MetroPolice::OnTakeDamage_Alive( const CTakeDamageInfo &inputInfo )
 	}
 #endif //0
 
-	if (info.GetAttacker() == GetEnemy())
+	if ( info.GetAttacker() == GetEnemy() )
 	{
 		// Keep track of recent damage by my attacker. If it seems like we're
 		// being killed, consider running off and hiding.
 		m_nRecentDamage += info.GetDamage();
 		m_flRecentDamageTime = gpGlobals->curtime;
 	}
-	m_flAllowUpsetChange = 0.0f; //we just got hurt, doesn't matter how placated we were
-	SetUpset(true, (CHL2MP_Player*)info.GetAttacker(), 1.0f, 25, 15);
+	CAI_BaseNPC* pPlayerSquadmate = (CAI_BaseNPC*)info.GetAttacker();
+	if ( info.GetAttacker()->IsPlayer() || ( pPlayerSquadmate && pPlayerSquadmate->IsInPlayerSquad() ) )
+	{
+		m_flAllowUpsetChange = 0.0f; //we just got hurt, doesn't matter how placated we were
+		if (IsInSquad())
+			SetUpset(true, (CHL2MP_Player*)info.GetAttacker(), 1.0f, 25, 15);
+		else
+			SetUpset(true, (CHL2MP_Player*)info.GetAttacker(), 1.0f, 25, 0);
+	}
 	return BaseClass::OnTakeDamage_Alive( info ); 
 }
 
