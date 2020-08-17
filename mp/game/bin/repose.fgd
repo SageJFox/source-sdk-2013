@@ -152,7 +152,7 @@
 
 @NPCClass base(BaseNPC,RappelNPC) studio() = npc_metropolice : "MetroPolice"
 [
-	model(studio) : "World model" : "models/police.mdl"
+	model(studio) : "World model" : "models/guard.mdl"
 
 	additionalequipment(choices) : "Weapons" : "weapon_pistol" =
 	[

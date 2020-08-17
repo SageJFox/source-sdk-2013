@@ -474,12 +474,12 @@ void CAI_ScriptConditions::EvaluationThink()
 	int iActorsDone = 0;
 
 #ifdef HL2_DLL
-	CBasePlayer* pPlayer = UTIL_GetNearestPlayer((CBaseEntity*)this);
+	CBasePlayer* pPlayer = GetPlayer();//UTIL_GetNearestPlayer((CBaseEntity*)this);
 	if (pPlayer)
 	{
 		if (pPlayer->GetFlags() & FL_NOTARGET)
 		{
-			ScrCondDbgMsg(("%s WARNING: Player is NOTARGET. This will affect all LOS conditiosn involving the player!\n", GetDebugName()));
+			ScrCondDbgMsg(("%s WARNING: Player is NOTARGET. This will affect all LOS conditions involving the player!\n", GetDebugName()));
 		}
 	}
 #endif
@@ -741,34 +741,8 @@ bool CAI_ScriptConditions::PlayerHasLineOfSight( CBaseEntity *pViewer, CBaseEnti
 {
 	CBaseCombatCharacter *pCombatantViewer = pViewer->MyCombatCharacterPointer();
 
-	if( pCombatantViewer )
-	{
-		// We always trace towards the player, so we handle players-in-vehicles
-		if ( pViewed->FVisible( pCombatantViewer ) )
-		{
-			// Line of sight exists.
-			if( fNot )
-			{
-				return false;
-			}
-			else
-			{
-				return true;
-			}
-		}
-		else
-		{
-			// No line of sight.
-			if( fNot )
-			{
-				return true;
-			}
-			else
-			{
-				return false;
-			}
-		}
-	}
+	if( pCombatantViewer ) // We always trace towards the player, so we handle players-in-vehicles
+		return (pViewed->FVisible(pCombatantViewer) ^ fNot);
 
 	return true;
 }
@@ -782,28 +756,7 @@ bool CAI_ScriptConditions::ActorInPlayersPVS( CBaseEntity *pActor, bool bNot )
 
 	bool bInPVS = !!UTIL_FindClientInPVS( pActor->edict());
 
-	if ( bInPVS )
-	{
-		if( bNot )
-		{
-			return false;
-		}
-		else
-		{
-			return true;
-		}
-	}
-	else
-	{
-		if( bNot )
-		{
-			return true;
-		}
-		else
-		{
-			return false;
-		}
-	}
+	return (bNot ^ bInPVS);
 }
 
 //-----------------------------------------------------------------------------

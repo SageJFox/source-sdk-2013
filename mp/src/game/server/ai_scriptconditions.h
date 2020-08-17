@@ -170,7 +170,46 @@ private:
 #ifndef HL2_EPISODIC
 	CBaseEntity *GetActor()		{ return m_hActor.Get();			}
 #endif
-	CBasePlayer *GetPlayer()	{ return UTIL_GetNearestPlayer(this)/*UTIL_GetLocalPlayer()*/; }
+//Get the player closest to our target if we have one, followed by NPC
+	CBasePlayer *GetPlayer()
+	{
+		CBasePlayer* pPlayer = NULL;
+		//start with our Target. If we have one, try to get the nearest player with LOS
+		if (m_hTarget.IsValid())
+			pPlayer = UTIL_GetNearestPlayer(m_hTarget.Get(), true);
+
+		//if we don't have a player yet, try the nearest player to our Actor, with LOS
+		if (!pPlayer)
+		{
+			if (GetActor())
+			{
+				pPlayer = UTIL_GetNearestPlayer(GetActor(), true);
+				//we don't have a player in the Actor's LOS, try nearest to Target
+				if (!pPlayer)
+				{
+					if (m_hTarget.IsValid())
+						pPlayer = UTIL_GetNearestPlayer(m_hTarget.Get());
+					//if we don't have a Target, get the player nearest to our Actor.
+					else
+						pPlayer = UTIL_GetNearestPlayer(GetActor());
+				}
+			}
+			//we don't have an Actor, so just try nearest to Target, no LOS
+			else if (m_hTarget.IsValid())
+				pPlayer = UTIL_GetNearestPlayer(m_hTarget.Get());
+		}
+		//technically by this point if we don't have a player we shouldn't be able to find one at all,
+		//but we need to return *something* and it's not impossible that something wound up screwy before now
+		if (!pPlayer)
+			pPlayer = UTIL_GetNearestPlayer(this, true);
+		if (!pPlayer)
+			pPlayer = UTIL_GetNearestPlayer(this);
+
+		if (pPlayer)
+			return pPlayer/*UTIL_GetLocalPlayer()*/;
+
+		return UTIL_PlayerByIndex(1); //last ditch effort, if we're a listen server, give us the host.
+	}
 
 	//---------------------------------
 
