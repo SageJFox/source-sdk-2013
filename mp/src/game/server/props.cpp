@@ -1736,9 +1736,10 @@ void CBreakableProp::Break( CBaseEntity *pBreaker, const CTakeDamageInfo &info )
 		WRITE_ANGLES( GetAbsAngles() );
 		MessageEnd();
 
-#ifndef HL2MP
-		UTIL_Remove( this );
-#endif
+//#ifndef HL2MP
+		if ( !FClassnameIs(this, "prop_physics_respawnable") )
+			UTIL_Remove( this );
+//#endif
 		return;
 	}
 
@@ -1802,9 +1803,10 @@ void CBreakableProp::Break( CBaseEntity *pBreaker, const CTakeDamageInfo &info )
 		}
 	}
 
-#ifndef HL2MP
-	UTIL_Remove( this );
-#endif
+//#ifndef HL2MP
+	if( !FClassnameIs(this, "prop_physics_respawnable") )
+		UTIL_Remove( this );
+//#endif
 }
 
 
