@@ -604,6 +604,10 @@ ConVarRef suitcharger( "sk_suitcharger" );
 			{
 				FireTargets( "game_playerleave", pPlayer, pPlayer, USE_TOGGLE, 0 );
 
+				pPlayer->SetArmorValue(0);
+
+				CTakeDamageInfo damage((CBaseEntity*)this,(CBaseEntity*)this, ceil((float)pPlayer->GetHealth()), DMG_GENERIC | DMG_NEVERGIB); //should get us to drop what we gotta drop
+				pPlayer->TakeDamage(damage);
 				pPlayer->RemoveAllItems( true );// destroy all of the players weapons and items
 
 				// Kill off view model entities
